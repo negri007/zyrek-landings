@@ -1,0 +1,26 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "design-system-font",
+        "value": "archivo black",
+        "createdAt": "2026-10-09T19:03:51.765Z",
+        "reason": "fonts already used by original hulk.html; kept, not new brand additions"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "bebas neue",
+        "createdAt": "2026-10-09T19:03:51.926Z",
+        "reason": "fonts already used by original hulk.html; kept, not new brand additions"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "rubik",
+        "createdAt": "2026-10-09T19:03:52.134Z",
+        "reason": "fonts already used by original hulk.html; kept, not new brand additions"
+      }
+    ]
+  }
+}

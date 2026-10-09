@@ -1,0 +1,100 @@
+{
+  "title": "Firmo Barbearia: mão mais ousada",
+  "question": "Formas estrangeiras, comprometidas até o fim. A primeira carta lidera pela ordem do sorteio. Escolha uma, sorteie de novo ou fique com o padrão.",
+  "options": [
+    {
+      "id": "assigned",
+      "label": "Feira de sombras",
+      "kicker": "THE ROLL",
+      "lineage": "Bazar surreal onde mercadores vendem sombras",
+      "thesis": "A sala de espera vira uma feira noturna: cada barraca vende a sombra de uma coisa da Firmo (o fliperama, a geladeira, a cerveja, o perfil de um corte recém-feito), cada uma com seu bilhete de origem.",
+      "palette": ["#0d1426", "#1b1b22", "#d9a441", "#eef3ff"],
+      "materials": ["rua azul-noite", "sombras em pretos sobrepostos", "lona de barraca açafrão", "letreiro pintado à mão sobre giz"],
+      "viewport": "Celular: uma viela noturna vertical; a primeira barraca mostra a silhueta de um perfil com corte novo, letreiro pintado 'Firmo Barbearia', bilhete com nota 4,9 / 126 e o botão 'Marcar meu horário' em branco-lua.",
+      "risk": "Surreal: se a metáfora pesar, o dono não entende que é uma barbearia em 3 segundos. Não há preços reais para os bilhetes.",
+      "raised": [
+        {"from": "Bancada de corte de filme", "raise": "Compromisso de uma tinta: o açafrão da lona ocupa um terço de cada tela, não vira detalhe."},
+        {"from": "Concha de dobra curva", "raise": "Um único arco de lua rege o layout e conduz o olho de barraca em barraca."},
+        {"from": "Marmorização ebru", "raise": "Cada barraca que entra empurra as anteriores, um movimento de deslocamento em vez de fade genérico."}
+      ]
+    },
+    {
+      "id": "challenger-googie",
+      "label": "Lanchonete Googie",
+      "verdict": "wins",
+      "lineage": "Lanchonetes de beira de estrada dos anos 50 com letreiro estrela",
+      "thesis": "A Firmo como um diner da era espacial: letreiro estrela girando, quadro de cardápio com os serviços, a sala de espera servida como a atração da casa.",
+      "palette": ["#2bb3a6", "#ff6f5e", "#2a2a2e", "#fff8ec", "#c9ced3"],
+      "materials": ["fórmica turquesa e coral", "friso cromado", "respingo bumerangue", "estrela de neon"],
+      "viewport": "Celular: letreiro em balanço com estrela girando e 'Firmo Barbearia' em script, quadro de cardápio com corte, barba, infantil; 'Marcar meu horário' acende dentro da estrela.",
+      "case": "Bate a feira nos dois eixos: o clima de bar, cerveja e jogo é reconhecível e o quadro de cardápio deixa os serviços claríssimos.",
+      "risk": "Pode puxar para 'lanchonete' se o letreiro não deixar barbearia explícito.",
+      "hero": "https://impeccable.style/worlds/cards/design-canon-googie-starburst-diner-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/design-canon-googie-starburst-diner.webp"
+    },
+    {
+      "id": "challenger-synth",
+      "label": "Capa synth: grade e sol",
+      "verdict": "competitive",
+      "lineage": "Capas de disco synthwave com grade em perspectiva",
+      "thesis": "Firmo como o título de um jogo de 1986: sol listrado no horizonte, grade ciano correndo, nome extrudado em perspectiva.",
+      "palette": ["#2a0b4a", "#e0398b", "#29e6f0", "#ffb347", "#050508"],
+      "materials": ["grade wireframe", "céu em degradê", "silhuetas recortadas"],
+      "viewport": "Grade correndo até o horizonte, 'FIRMO' extrudado acima do sol, linhas da grade como menu; a linha ativa acende em 'Marcar meu horário'.",
+      "case": "Segura a identificação (fliperama e PS4 na espera), mas perde em clareza: parece jogo, não barbearia.",
+      "risk": "Clichê retrô muito visto; risco de virar fantasia.",
+      "hero": "https://impeccable.style/worlds/cards/digital-design-canon-grid-horizon-sunset-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/digital-design-canon-grid-horizon-sunset.webp"
+    },
+    {
+      "id": "challenger-crease",
+      "label": "Concha de dobra curva",
+      "verdict": "declined",
+      "lineage": "Origami de dobra curva",
+      "thesis": "Um disco de papel sobe por um único arco.",
+      "palette": ["#efe7d6", "#2b2b2b", "#8a8a8a"],
+      "materials": ["papel de algodão", "sombra de grafite"],
+      "viewport": "Disco creme dobrado com rótulos em itálico.",
+      "case": "Delicado e acadêmico; nada a ver com cerveja e fliperama.",
+      "kept": "Um único arco rege o layout.",
+      "risk": "Frio e erudito."
+    },
+    {
+      "id": "challenger-ebru",
+      "label": "Marmorização ebru",
+      "verdict": "declined",
+      "lineage": "Pigmento flutuando na água",
+      "thesis": "Cada gota empurra a anterior em anéis.",
+      "palette": ["#1c3a5e", "#c9472f", "#e8c547", "#f3eee2"],
+      "materials": ["pigmento flutuante", "papel encolado"],
+      "viewport": "Banho de cor penteado em figuras.",
+      "case": "Bonito, mas sem nenhum vínculo com o produto.",
+      "kept": "Movimento de deslocamento: o novo empurra o velho.",
+      "risk": "Decoração pura."
+    },
+    {
+      "id": "challenger-bench",
+      "label": "Bancada de corte de filme",
+      "verdict": "declined",
+      "lineage": "Mesa de montagem de cinema",
+      "thesis": "Trilho perfurado com quadros presos em pinos.",
+      "palette": ["#000000", "#ff7a1a", "#ffffff"],
+      "materials": ["grão de filme", "fita laranja"],
+      "viewport": "Trilho de quadros cruzando campo laranja.",
+      "case": "Ferramenta de trabalho de editor; o dono não se reconhece.",
+      "kept": "Uma tinta ocupando um terço da tela, sem timidez.",
+      "risk": "Linguagem técnica demais."
+    }
+  ],
+  "reroll": {"registers": ["safer", "bolder"]},
+  "canon": true,
+  "canonCard": {
+    "label": "Padrão de barbearia",
+    "thesis": "Barbearia escura com dourado, tipo condensado e foto de navalha, feita com capricho.",
+    "palette": ["#14110f", "#f6efe7", "#c8873c"],
+    "materials": ["couro", "latão", "fotografia escura"],
+    "viewport": "Título grande à esquerda, foto à direita, nota e horário embaixo.",
+    "risk": "Igual a qualquer barbearia do Brasil, inclusive à versão atual."
+  },
+  "steer": true
+}

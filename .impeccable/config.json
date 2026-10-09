@@ -1,0 +1,194 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "gradient-text",
+        "value": "*",
+        "files": [
+          "landings-motion/firmo.html"
+        ],
+        "createdAt": "2026-10-07T19:50:52.896Z",
+        "reason": "model: extruded magenta-to-purple logotype is the synthwave world the user chose (Capa synth)"
+      },
+      {
+        "rule": "repeating-stripes-gradient",
+        "value": "*",
+        "files": [
+          "landings-motion/firmo.html"
+        ],
+        "createdAt": "2026-10-07T19:50:53.047Z",
+        "reason": "model: CRT scanlines over photos are the chosen world's material"
+      },
+      {
+        "rule": "dark-glow",
+        "value": "*",
+        "files": [
+          "landings-motion/firmo.html"
+        ],
+        "createdAt": "2026-10-07T19:50:53.202Z",
+        "reason": "model: the only remaining glow is the open/closed status lamp, a literal indicator light"
+      },
+      {
+        "rule": "tight-leading",
+        "value": "*",
+        "files": [
+          "landings-motion/firmo.html"
+        ],
+        "createdAt": "2026-10-07T19:50:53.353Z",
+        "reason": "model: 1.02 leading only on uppercase display headings"
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "landings-motion/firmo.html"
+        ],
+        "createdAt": "2026-10-07T19:50:53.510Z",
+        "reason": "model: full-bleed photo inside its frame and FAQ rows ruled by border are intentional"
+      },
+      {
+        "rule": "clipped-overflow-container",
+        "value": "*",
+        "files": [
+          "landings-motion/firmo.html"
+        ],
+        "createdAt": "2026-10-07T19:50:53.682Z",
+        "reason": "model: overflow-x clip keeps sideways reveal offsets from creating horizontal scroll"
+      },
+      {
+        "rule": "flat-type-hierarchy",
+        "value": "*",
+        "files": [
+          "landings-motion/firmo.html"
+        ],
+        "createdAt": "2026-10-07T19:50:53.848Z",
+        "reason": "model: h1 measured from its visually-hidden text; visible logotype is 84-232px"
+      },
+      {
+        "rule": "low-contrast",
+        "value": "*",
+        "files": [
+          "landings-motion/firmo.html"
+        ],
+        "createdAt": "2026-10-07T19:50:58.393Z",
+        "reason": "model: all 5 hits read the 0.2% #ff2d95 horizon gradient stop as background; the text renders over the dark grid canvas, verified in mobile and desktop captures"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "*",
+        "files": [
+          "landings-motion/da-vinti.html"
+        ],
+        "createdAt": "2026-10-07T20:11:59.315Z",
+        "reason": "model: DESIGN.md is scoped to the Firmo world only; PRODUCT.md gives every business page its own bespoke world (Da Vinti world recorded at finish)"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "*",
+        "files": [
+          "landings-motion/da-vinti.html"
+        ],
+        "createdAt": "2026-10-07T20:11:59.478Z",
+        "reason": "model: DESIGN.md is scoped to the Firmo world only; PRODUCT.md gives every business page its own bespoke world (Da Vinti world recorded at finish)"
+      },
+      {
+        "rule": "design-system-radius",
+        "value": "*",
+        "files": [
+          "landings-motion/da-vinti.html"
+        ],
+        "createdAt": "2026-10-07T20:11:59.659Z",
+        "reason": "model: DESIGN.md is scoped to the Firmo world only; PRODUCT.md gives every business page its own bespoke world (Da Vinti world recorded at finish)"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "*",
+        "files": [
+          "landings-motion/da-vinti.html"
+        ],
+        "createdAt": "2026-10-07T20:11:59.824Z",
+        "reason": "model: DESIGN.md is scoped to the Firmo world only; PRODUCT.md gives every business page its own bespoke world (Da Vinti world recorded at finish)"
+      },
+      {
+        "rule": "nested-cards",
+        "value": "*",
+        "files": [
+          "landings-motion/da-vinti.html"
+        ],
+        "createdAt": "2026-10-07T20:11:59.983Z",
+        "reason": "model: tear-off sheets on the calendar plate and review slips on a folha are the chosen calendar object, not UI card nesting"
+      },
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "landings-motion/da-vinti.html"
+        ],
+        "createdAt": "2026-10-07T20:12:00.130Z",
+        "reason": "model: the flagged pseudo-elements are perforation hole rows across the top of paper sheets, not side stripes"
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "landings-motion/da-vinti.html"
+        ],
+        "createdAt": "2026-10-07T20:12:00.285Z",
+        "reason": "model: folha sections have clamp(18px,4vw,56px) side padding; FAQ rows are ruled lists"
+      },
+      {
+        "rule": "clipped-overflow-container",
+        "value": "*",
+        "files": [
+          "landings-motion/da-vinti.html"
+        ],
+        "createdAt": "2026-10-07T20:12:00.454Z",
+        "reason": "model: overflow clip on hero/main keeps the swinging calendar and sideways reveals from causing horizontal scroll"
+      },
+      {
+        "rule": "low-contrast",
+        "value": "*",
+        "files": [
+          "landings-motion/da-vinti.html"
+        ],
+        "createdAt": "2026-10-07T20:13:34.821Z",
+        "reason": "model: #cfe3d4 text sits on the green card (detector resolved the paper colour as background, verified in desktop capture); #ffb3a8 is 56-88px display text at 3.9:1, above the 3:1 large-text bar"
+      },
+      {
+        "rule": "overused-font",
+        "value": "fraunces",
+        "createdAt": "2026-10-09T19:51:17.519Z",
+        "reason": "serif already used for the review quote in the original garage.html; kept"
+      },
+      {
+        "rule": "shape-assembled-illustration",
+        "value": "*",
+        "files": [
+          "landings-motion/garage.html"
+        ],
+        "createdAt": "2026-10-09T19:51:17.669Z",
+        "reason": "user asked for a photo-less before/after illustration; intentional authored SVG"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "rubik",
+        "createdAt": "2026-10-09T19:54:37.673Z",
+        "reason": "fonts already used by the original pages; kept"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "archivo black",
+        "createdAt": "2026-10-09T19:54:37.815Z",
+        "reason": "fonts already used by the original pages; kept"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "bebas neue",
+        "createdAt": "2026-10-09T19:54:38.035Z",
+        "reason": "fonts already used by the original pages; kept"
+      }
+    ]
+  }
+}

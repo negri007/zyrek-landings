@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Pizzaria Da Vinti · demonstração</title>
+<meta name="description" content="Pizzaria do Ana Jacinta desde 2017. Massa no ponto, muito recheio e sabores da casa como a Moda da Vinti com borda de chocolate. No salão ou na sua casa, todas as noites a partir das 18h30.">
+<meta name="theme-color" content="#0e6b37">
+<meta property="og:title" content="Pizzaria Da Vinti">
+<meta property="og:description" content="Toda noite tem pizza no Ana Jacinta, desde 2017. Nota 4,6 em 221 avaliações.">
+<meta property="og:image" content="fotos/da-vinti-4.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Archivo:wdth,wght@62..125,400..900&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="fotos/da-vinti-4.jpg">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Restaurant", "name": "Pizzaria Da Vinti", "servesCuisine": "Pizza", "address": "Av. Osvaldo da Silva, 515 - Ana Jacinta, Presidente Prudente - SP", "telephone": "+55 (18) 99820-7790", "menu": "https://whatsmenu.com.br/cardapiopizzariadavinti", "aggregateRating": {"@type": "AggregateRating", "ratingValue": "4.6", "reviewCount": "221"}, "openingHours": ["Su-Fr 18:30-23:00", "Sa 18:30-23:30"]}</script>
+<script>
+  (function () {
+    var calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    document.documentElement.classList.add(calm ? "calm" : "moving");
+  })();
+</script>
+<style>
+:root{
+  --card:#0e6b37;
+  --card-deep:#0a5229;
+  --paper:#f5f2e9;
+  --paper-edge:#e6e1d2;
+  --green:#0b4a27;
+  --green-ink:#0e6b37;
+  --red:#d02a1e;
+  --red-deep:#a81f15;
+  --soft:#285c3d;
+  --on-card:#f5f2e9;
+  --on-card-soft:#cfe3d4;
+  --didone:"Abril Fatface", "Times New Roman", serif;
+  --body:"Archivo", system-ui, sans-serif;
+  --ease-out:cubic-bezier(.16,1,.3,1);
+  --bar-h:58px;
+  --module:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='14' viewBox='0 0 28 14'%3E%3Cpath d='M0 14L7 0l7 14z' fill='%23d02a1e'/%3E%3Cpath d='M14 14L21 0l7 14z' fill='%230e6b37'/%3E%3C/svg%3E");
+  --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .3 0 0 0 0 .25 0 0 0 0 .15 0 0 0 .5 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+*{box-sizing:border-box}
+html{background:var(--card);-webkit-text-size-adjust:100%;scrollbar-color:var(--red) var(--card-deep)}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+.lenis.lenis-stopped{overflow:hidden}
+html:not(.lenis){scroll-behavior:smooth}
+html.calm{scroll-behavior:auto}
+body{margin:0;color:var(--green);font-family:var(--body);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased;background-color:var(--card);background-image:radial-gradient(rgba(0,0,0,.09) 1px,transparent 1.4px);background-size:6px 6px}
+::selection{background:var(--red);color:var(--paper)}
+::-webkit-scrollbar{width:10px}
+::-webkit-scrollbar-track{background:var(--card-deep)}
+::-webkit-scrollbar-thumb{background:var(--red);border:2px solid var(--card-deep)}
+img{display:block;max-width:100%}
+a{color:var(--red);text-underline-offset:4px;text-decoration-thickness:1.5px}
+a:hover{color:var(--red-deep)}
+:focus-visible{outline:2.5px solid var(--red);outline-offset:4px}
+.on-card :focus-visible{outline-color:var(--paper)}
+h1,h2,h3{margin:0;font-weight:400;text-wrap:balance}
+p{margin:0}
+.sr{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.skip{position:absolute;left:-999px;top:8px;z-index:90;background:var(--paper);color:var(--green);padding:10px 14px;font-weight:700}
+.skip:focus{left:12px}
+.wrap{width:min(1120px,100% - 32px);margin-inline:auto}
+.caps{font-family:var(--body);font-stretch:72%;font-weight:700;text-transform:uppercase;letter-spacing:.12em;font-size:13px}
+.todo{display:inline-block;padding:0 6px;font-size:.82em;font-weight:700;color:var(--paper);background:var(--red);letter-spacing:.02em}
+svg.ico{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* demo strip + bar */
+.demo{background:var(--paper);color:var(--green);font-size:12.5px;font-weight:600;text-align:center;padding:6px 16px;line-height:1.35;border-bottom:1.5px dashed var(--green-ink)}
+.bar{position:sticky;top:0;z-index:60;height:var(--bar-h);display:flex;align-items:center;background:var(--card-deep);color:var(--on-card);box-shadow:0 6px 16px -10px rgba(0,0,0,.6)}
+.bar .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:flex;align-items:baseline;gap:8px;color:var(--on-card);text-decoration:none}
+.brand b{font-family:var(--didone);font-weight:400;font-size:24px;letter-spacing:.01em;line-height:1}
+.brand span{font-stretch:72%;font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--on-card-soft)}
+.bar nav{display:none;gap:26px}
+.bar nav a{color:var(--on-card-soft);text-decoration:none;font-stretch:80%;font-weight:600;font-size:14px;letter-spacing:.08em;text-transform:uppercase;background:linear-gradient(var(--paper),var(--paper)) 0 100%/0 1.5px no-repeat;transition:background-size .35s var(--ease-out),color .2s}
+.bar nav a:hover{color:var(--paper);background-size:100% 1.5px}
+@media (min-width:900px){.bar nav{display:flex}}
+
+/* buttons: printed red stamp */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:54px;padding:0 24px;border:0;border-radius:3px;background:var(--red);color:var(--paper);font-family:var(--body);font-stretch:82%;font-weight:800;font-size:17px;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;white-space:nowrap;cursor:pointer;box-shadow:0 8px 18px -8px rgba(0,0,0,.45);transition:transform .15s ease,background .2s}
+.btn:hover{color:var(--paper);background:#b8241a}
+.btn:active{transform:scale(.98)}
+.btn svg{width:20px;height:20px}
+.btn.small{min-height:44px;padding:0 16px;font-size:14px}
+.btn.ink{background:transparent;color:var(--green);box-shadow:inset 0 0 0 2px var(--green)}
+.btn.ink:hover{background:var(--green);color:var(--paper)}
+.on-card .btn.ink{color:var(--paper);box-shadow:inset 0 0 0 2px var(--paper)}
+.on-card .btn.ink:hover{background:var(--paper);color:var(--green)}
+
+/* ========== Hero: the hanging calendar ========== */
+.hero{position:relative;padding:58px 0 64px}
+.hero .wrap{display:grid;gap:40px;align-items:start}
+.hang{position:relative;width:min(100%,440px);margin:0 auto;transform-origin:50% -34px}
+.nail{position:absolute;left:50%;top:-40px;width:120px;height:46px;translate:-50% 0;pointer-events:none}
+.calendar{position:relative;margin-top:14px;background-color:var(--card);background-image:var(--grain),linear-gradient(160deg,rgba(255,255,255,.06),rgba(0,0,0,.08));padding:26px 16px 20px;border-radius:5px;color:var(--on-card);box-shadow:0 1px 0 rgba(255,255,255,.12) inset,0 24px 40px -18px rgba(0,0,0,.75)}
+.calendar::before{content:"";position:absolute;left:16px;right:16px;top:12px;height:8px;background:var(--module) 0 0/auto 8px;background-repeat:round no-repeat}
+.calendar::after{content:"";position:absolute;left:50%;top:-5px;width:12px;height:12px;translate:-50% 0;border-radius:50%;background:var(--card-deep);box-shadow:inset 0 2px 3px rgba(0,0,0,.6)}
+.plate{position:relative;color:var(--on-card)}
+.head{display:grid;grid-template-columns:1fr;gap:12px;padding-top:6px}
+.photo{position:relative;aspect-ratio:16/9;overflow:hidden;border:5px solid var(--paper);border-radius:2px;background:var(--paper-edge);box-shadow:0 6px 12px -8px rgba(0,0,0,.6)}
+.photo img{width:100%;height:118%;object-fit:cover;object-position:50% 38%}
+.ident{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:2px 12px}
+.ident h1{font-family:var(--didone);font-size:clamp(36px,10.4vw,48px);line-height:.95;color:var(--paper);letter-spacing:-.005em}
+.ident h1 em{font-style:normal}
+.ident .since{color:var(--on-card-soft)}
+.addr-line{font-size:13.5px;line-height:1.4;color:var(--on-card-soft);border-top:1.5px solid rgba(245,242,233,.55);padding-top:8px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:2px 12px}
+.addr-line b{color:var(--paper);font-weight:700}
+
+/* tear-off block */
+.block{position:relative;margin-top:26px;height:var(--block-h,330px)}
+.staple{position:absolute;z-index:6;top:-5px;width:26px;height:7px;border-radius:2px;background:linear-gradient(180deg,#e9ecea,#9aa39c 60%,#6f7873);box-shadow:0 1px 2px rgba(0,0,0,.45)}
+.staple.l{left:22%}.staple.r{right:22%}
+.stubs{position:absolute;z-index:4;left:0;right:0;top:0;height:9px;pointer-events:none}
+.stubs svg{position:absolute;left:0;top:0;width:100%;height:9px}
+.under{position:absolute;inset:6px 4px -6px 4px;background:var(--paper-edge);border-radius:1px;box-shadow:0 3px 0 #d8d2c0,0 6px 0 #cdc6b2,0 9px 0 #c2bba6}
+.sheet{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;text-align:center;padding:22px 18px 16px;background:var(--paper);background-image:var(--grain);border-radius:1px;user-select:none}
+.sheet::before{content:"";position:absolute;left:0;right:0;top:0;height:10px;background:radial-gradient(circle at 5px 0,var(--card-deep) 2.2px,transparent 2.6px) 0 0/10px 10px repeat-x;opacity:.8}
+.sheet .month{display:flex;justify-content:space-between;width:100%;color:var(--green-ink)}
+.dwrap{position:relative;display:inline-block;margin-top:8px;padding:0 .22em}
+.sheet .dnum{font-family:var(--didone);font-size:clamp(108px,31vw,146px);line-height:.86;color:var(--green);font-variant-numeric:lining-nums}
+.pen{position:absolute;left:-14%;right:-14%;top:-16%;bottom:-14%;width:128%;height:130%;overflow:visible;pointer-events:none;color:var(--red)}
+.pen path{fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round}
+.sheet[data-sunday="true"] .dnum{color:var(--red)}
+.sheet .wday{font-stretch:75%;font-weight:800;font-size:19px;letter-spacing:.2em;text-transform:uppercase;color:var(--green);margin-top:2px}
+.sheet[data-sunday="true"] .wday{color:var(--red)}
+.sheet .open{margin-top:12px;font-weight:700;font-size:15.5px;color:var(--green)}
+.sheet .thought{margin-top:auto;padding-top:10px;border-top:1px dashed var(--green-ink);width:100%;font-size:15px;line-height:1.45;color:var(--green)}
+.sheet .thought .caps{display:block;color:var(--red);font-size:11.5px;margin-bottom:3px}
+.sheet .thought cite{display:block;font-style:normal;font-size:12px;color:var(--soft);margin-top:4px}
+.grip{position:absolute;z-index:3;left:0;right:0;top:0;height:42%;display:flex;align-items:flex-start;justify-content:center;padding-top:14px;border:0;background:transparent;cursor:grab;touch-action:none;color:var(--red);font-family:var(--body);font-stretch:72%;font-weight:800;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase}
+.grip span{display:inline-flex;align-items:center;gap:5px;padding:0 4px;background:var(--paper)}
+.grip svg{width:12px;height:12px}
+.grip:focus-visible{outline-offset:-4px}
+.sheet.dragging .grip{cursor:grabbing}
+.sheet .month{margin-top:16px}
+.plate-foot{display:grid;gap:10px;margin-top:22px}
+.plate-foot .btn{width:100%}
+.plate-foot .sub{display:flex;justify-content:center;gap:18px;font-size:14.5px;font-weight:600}
+.plate-foot .sub{color:var(--on-card-soft)}
+.plate-foot .sub a{color:var(--paper)}
+
+.side{display:none}
+@media (min-width:900px){
+  .hero{padding:70px 0 90px}
+  .hero .wrap{grid-template-columns:minmax(0,440px) minmax(0,1fr);gap:72px;align-items:center}
+  .hang{margin:0}
+  .side{display:grid;gap:26px;color:var(--on-card)}
+  .side h2{font-family:var(--didone);font-size:clamp(56px,6vw,88px);line-height:.95;color:var(--paper)}
+  .side h2 em{font-style:normal;text-decoration:underline;text-decoration-thickness:4px;text-underline-offset:10px}
+  .side p{max-width:44ch;color:var(--on-card-soft);font-size:19px}
+  .side .row{display:flex;gap:14px;flex-wrap:wrap}
+}
+
+/* ========== Sheets (sections) ========== */
+.folha{position:relative;margin:0 auto 46px;width:min(1120px,100% - 24px);background:var(--paper);background-image:var(--grain);color:var(--green);border-radius:2px;padding:46px clamp(18px,4vw,56px) clamp(36px,5vw,60px);box-shadow:0 3px 0 var(--paper-edge),0 20px 36px -22px rgba(0,0,0,.65)}
+.folha::before{content:"";position:absolute;left:0;right:0;top:0;height:12px;background:radial-gradient(circle at 6px 0,var(--card) 2.6px,transparent 3px) 0 0/12px 12px repeat-x}
+.folha::after{content:"";position:absolute;left:clamp(18px,4vw,56px);right:clamp(18px,4vw,56px);top:22px;height:8px;background:var(--module) 0 0/auto 8px;background-repeat:round no-repeat}
+.folha > h2,.folha .house h2{margin-top:18px}
+.folha h2{font-family:var(--didone);font-size:clamp(40px,8.5vw,76px);line-height:.98;color:var(--green-ink);margin-bottom:16px}
+.folha h2 em{font-style:normal;color:var(--red)}
+.folha .lede{max-width:58ch;font-size:clamp(16.5px,2vw,19px);color:var(--soft)}
+
+/* month grid */
+.month-grid{margin-top:34px}
+.month-grid caption{caption-side:top;text-align:left;padding-bottom:16px;font-family:var(--didone);font-size:clamp(24px,4vw,34px);color:var(--red);text-transform:capitalize}
+.month-grid table{width:100%;border-collapse:collapse;table-layout:fixed;font-variant-numeric:lining-nums tabular-nums}
+.month-grid th{padding:0 0 10px;font-stretch:72%;font-weight:800;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--green-ink);text-align:center}
+.month-grid th:first-child,.month-grid td:first-child .n{color:var(--red)}
+.month-grid td{position:relative;height:clamp(46px,9vw,74px);text-align:center;vertical-align:middle;border-top:1px solid rgba(14,107,55,.25)}
+.month-grid .n{position:relative;z-index:1;font-family:var(--didone);font-size:clamp(20px,4.4vw,34px);line-height:1;color:var(--green)}
+.month-grid .ring{position:absolute;left:50%;top:50%;width:clamp(48px,11.6vw,70px);height:clamp(40px,9.6vw,58px);translate:-50% -50%;overflow:visible;pointer-events:none}
+.month-grid .ring path{fill:none;stroke:var(--red);stroke-linecap:round;stroke-linejoin:round}
+.month-grid .ring .p1{stroke-width:2.3}
+.month-grid .ring .p2{stroke-width:1;opacity:.75}
+.month-grid td.today .ring .p1{stroke-width:3.4}
+.month-grid td.today .tag{position:absolute;left:50%;bottom:-2px;translate:-50% 0;font-stretch:70%;font-weight:800;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--paper);background:var(--red);padding:0 4px;line-height:1.5;z-index:2}
+.month-grid td.sat .n::after{content:"";position:absolute;left:-4px;right:-4px;bottom:-5px;height:2px;background:var(--red);border-radius:2px}
+.legend{display:flex;flex-wrap:wrap;gap:10px 26px;margin-top:22px;font-size:15px;color:var(--soft)}
+.legend span{display:inline-flex;align-items:center;gap:8px}
+.legend svg{width:30px;height:22px;fill:none;stroke:var(--red);stroke-width:2.2;stroke-linecap:round}
+
+/* two ways */
+.ways{display:grid;gap:0;margin-top:40px;border-top:2px solid var(--green-ink)}
+.way{display:grid;grid-template-columns:52px 1fr;gap:4px 16px;padding:22px 0;border-bottom:1px solid rgba(14,107,55,.3)}
+.way svg{grid-row:span 2;width:44px;height:44px;color:var(--red);fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.way h3{font-stretch:78%;font-weight:800;font-size:22px;letter-spacing:.02em;text-transform:uppercase;color:var(--green-ink);line-height:1.15}
+.way p{color:var(--soft)}
+@media (min-width:900px){
+  .ways{grid-template-columns:repeat(3,1fr);gap:0 40px;border-top:0}
+  .way{grid-template-columns:1fr;border-top:2px solid var(--green-ink);border-bottom:0;padding-top:20px}
+  .way svg{grid-row:auto;margin-bottom:6px}
+}
+
+/* house pizzas */
+.house{display:grid;gap:36px;margin-top:10px}
+.menu-list{list-style:none;margin:0;padding:0;counter-reset:m}
+.menu-list li{display:grid;grid-template-columns:auto 1fr;gap:2px 14px;align-items:baseline;padding:18px 0;border-bottom:1px dashed rgba(14,107,55,.5);counter-increment:m}
+.menu-list li::before{content:counter(m);grid-row:span 2;font-family:var(--didone);font-size:44px;line-height:.9;color:var(--red);min-width:30px}
+.menu-list h3{font-family:var(--didone);font-size:clamp(26px,4.6vw,36px);line-height:1.05;color:var(--green-ink)}
+.menu-list p{color:var(--soft);font-size:16px}
+.pizza-shot{position:relative;margin:0}
+.pizza-shot .frame{position:relative;overflow:hidden;aspect-ratio:4/3;border-radius:2px;box-shadow:0 2px 0 var(--paper-edge),0 18px 30px -18px rgba(0,0,0,.6)}
+.pizza-shot img{width:100%;height:114%;object-fit:cover}
+.pizza-shot figcaption{margin-top:10px;font-size:14px;color:var(--soft)}
+.house-note{margin-top:18px;font-size:16px;color:var(--soft)}
+@media (min-width:900px){
+  .house{grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:64px;align-items:start}
+  .pizza-shot .frame{aspect-ratio:4/5}
+}
+
+/* reviews */
+.rev{display:grid;gap:34px}
+.score{display:flex;align-items:flex-end;gap:18px}
+.score b{font-family:var(--didone);font-weight:400;font-size:clamp(110px,26vw,190px);line-height:.8;color:var(--red);font-variant-numeric:lining-nums}
+.score span{display:grid;gap:2px;padding-bottom:10px;font-size:16px;color:var(--soft)}
+.score span strong{font-stretch:75%;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--green-ink);font-size:15px}
+.notes{display:grid;gap:18px}
+.note{position:relative;padding:22px 22px 18px;background:#fbf9f3;border-radius:1px;box-shadow:0 1px 0 var(--paper-edge),0 10px 22px -16px rgba(0,0,0,.55)}
+.note::before{content:"";position:absolute;left:0;right:0;top:0;height:8px;background:radial-gradient(circle at 4px 0,var(--paper) 1.8px,transparent 2.2px) 0 0/8px 8px repeat-x}
+.note .caps{color:var(--red);font-size:11.5px}
+.note blockquote{margin:6px 0 10px;font-size:clamp(17px,2.2vw,19.5px);line-height:1.5;color:var(--green)}
+.note footer{font-size:13px;color:var(--soft)}
+@media (min-width:900px){
+  .rev{grid-template-columns:minmax(0,.8fr) minmax(0,1.6fr);gap:56px;align-items:start}
+  .score{flex-direction:column;align-items:flex-start;gap:26px}
+  .score span{padding-bottom:0}
+  .notes{grid-template-columns:1fr 1fr}
+  .note:nth-child(1){rotate:-1deg}
+  .note:nth-child(2){rotate:.8deg;margin-top:26px}
+  .note:nth-child(3){rotate:.4deg;grid-column:span 2;max-width:76%;justify-self:center}
+}
+
+/* where */
+.where{display:grid;gap:30px}
+.where .lines{display:grid;gap:16px}
+.where .line{display:flex;gap:14px;align-items:flex-start;font-size:18px}
+.where .line svg{color:var(--red);margin-top:3px}
+.where .line a{color:var(--green)}
+.hours{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.hours caption{text-align:left;padding-bottom:8px;color:var(--green-ink)}
+.hours th,.hours td{padding:13px 0;border-bottom:1px solid rgba(14,107,55,.3);text-align:left;font-weight:500}
+.hours td{text-align:right;font-weight:700;color:var(--green)}
+.hours th{color:var(--soft)}
+.hours tr.today th,.hours tr.today td{color:var(--red)}
+.status{display:inline-flex;align-items:center;gap:10px;font-weight:700;font-size:16px;color:var(--green)}
+.status svg{width:34px;height:24px;fill:none;stroke:var(--red);stroke-width:2.2;stroke-linecap:round}
+.actions{display:flex;flex-wrap:wrap;gap:12px}
+@media (min-width:900px){.where{grid-template-columns:1fr 1fr;gap:64px;align-items:start}}
+
+/* faq */
+.faq{border-top:2px solid var(--green-ink)}
+.faq details{border-bottom:1px solid rgba(14,107,55,.3)}
+.faq summary{list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px;min-height:64px;padding:12px 0;cursor:pointer;font-stretch:80%;font-weight:800;font-size:clamp(18px,2.6vw,22px);text-transform:uppercase;letter-spacing:.02em;color:var(--green-ink)}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary svg{width:20px;height:20px;color:var(--red);transition:transform .35s var(--ease-out)}
+.faq details[open] summary svg{transform:rotate(45deg)}
+.faq details p{padding:0 0 20px;color:var(--soft);max-width:60ch}
+
+/* last sheet */
+.last{text-align:center}
+.last .q{font-family:var(--didone);font-size:clamp(46px,10vw,96px);line-height:.95;color:var(--green-ink)}
+.last .a{display:block;font-family:var(--didone);font-size:clamp(90px,22vw,180px);line-height:.9;color:var(--red);margin:6px 0 18px}
+.last p{color:var(--soft);margin:0 auto 26px;max-width:40ch;font-size:18px}
+.last .row{display:flex;justify-content:center;flex-wrap:wrap;gap:12px}
+
+.foot{color:var(--on-card-soft);font-size:14px;padding:6px 0 calc(110px + env(safe-area-inset-bottom))}
+.foot p+p{margin-top:6px}
+@media (min-width:900px){.foot{padding-bottom:40px}}
+
+/* phone dock */
+.dock{position:fixed;z-index:70;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));display:flex}
+.dock .btn{flex:1;box-shadow:0 14px 28px -10px rgba(0,0,0,.7)}
+.moving .dock{transition:transform .5s var(--ease-out),opacity .4s ease}
+.dock.away{transform:translateY(150%);opacity:0;pointer-events:none}
+@media (min-width:900px){.dock{display:none}}
+
+main{overflow-x:clip}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<a class="skip" href="#conteudo">Pular para o conteúdo</a>
+<div class="demo" role="note">Demonstração criada por Gabriel Negri · não é o site oficial da Pizzaria Da Vinti</div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M5 3.5h11.5l2.5 2.5v14.5H5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8.5 9h7M8.5 12.5h7M8.5 16h4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4.5 19.5l1.2-3.6A8 8 0 1 1 9 19.1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 10.5h6M9 13.5h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-circle" viewBox="0 0 40 28"><path d="M22 3.5C11 2.6 2.8 7.6 3.4 14.6c.6 6.6 9.4 10.4 18.6 9.6 9.6-.8 15.6-5.6 14.8-11.8C36 6.2 27.6 2.4 17.4 3.6"/></symbol>
+  </defs>
+</svg>
+
+<header class="bar on-card">
+  <div class="wrap">
+    <a class="brand" href="#topo"><b>Da Vinti</b><span>Pizzaria</span></a>
+    <nav aria-label="Principal">
+      <a href="#bairro">Todo dia</a><a href="#casa">Pizzas da casa</a><a href="#avaliacoes">Avaliações</a><a href="#onde">Onde fica</a>
+    </nav>
+    <a class="btn small menu-link" href="https://whatsmenu.com.br/cardapiopizzariadavinti" target="_blank" rel="noopener" data-press><svg aria-hidden="true"><use href="#i-menu"/></svg>Cardápio</a>
+  </div>
+</header>
+
+<main id="conteudo">
+
+<section id="topo" class="hero" aria-labelledby="h-nome">
+  <div class="wrap">
+    <div class="hang" id="hang">
+      <svg class="nail" viewBox="0 0 120 46" aria-hidden="true"><path d="M60 6 L18 46 M60 6 L102 46" stroke="#e9e3cf" stroke-width="1.6" fill="none"/><circle cx="60" cy="6" r="5.5" fill="#9aa39c"/><circle cx="58.5" cy="4.5" r="2" fill="#dfe5e0"/></svg>
+      <div class="calendar">
+        <div class="plate">
+          <div class="head">
+            <div class="photo"><img src="fotos/da-vinti-4.jpg" width="810" height="1080" alt="Pizza meio calabresa, meio mussarela, com muito recheio e orégano, ainda na caixa." id="heroImg" referrerpolicy="no-referrer"></div>
+            <div class="ident">
+              <h1 id="h-nome">Pizzaria <em>Da Vinti</em></h1>
+              <span class="caps since">Ana Jacinta · desde 2017</span>
+            </div>
+            <p class="addr-line"><span><b>Av. Osvaldo da Silva, 515</b> · Ana Jacinta</span><span>(18) 99820-7790</span></p>
+          </div>
+
+          <div class="block" id="block" aria-roledescription="calendário de arrancar">
+            <span class="staple l" aria-hidden="true"></span><span class="staple r" aria-hidden="true"></span>
+            <div class="under" aria-hidden="true"></div>
+            <div class="stubs" id="stubs" aria-hidden="true"></div>
+            <div id="sheets" aria-live="polite">
+              <article class="sheet" data-sunday="false">
+                <p class="month caps"><span>Presidente Prudente</span><span>Todo dia</span></p>
+                <p class="dnum" aria-hidden="true">18h30</p>
+                <p class="wday">Aberta todas as noites</p>
+                <p class="open">Domingo a sexta até 23h · sábado até 23h30</p>
+                <p class="thought"><span class="caps">Pensamento do dia</span>“Muito boa a pizza, sem comentários, top demais e com preços muito bons pela qualidade que oferece.”<cite>Avaliação no Google</cite></p>
+              </article>
+            </div>
+          </div>
+
+          <div class="plate-foot">
+            <a class="btn" id="heroCta" href="https://whatsmenu.com.br/cardapiopizzariadavinti" target="_blank" rel="noopener" data-press><svg aria-hidden="true"><use href="#i-menu"/></svg>Pedir pelo cardápio</a>
+            <p class="sub"><a href="https://wa.me/5518998207790?text=Ol%C3%A1%21%20Vi%20a%20p%C3%A1gina%20da%20Pizzaria%20Da%20Vinti%20e%20quero%20fazer%20um%20pedido." data-press>Pedir no WhatsApp</a><span aria-hidden="true">·</span><a href="#onde">Como chegar</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="side on-card">
+      <h2>Toda noite tem pizza no <em>Ana Jacinta</em>.</h2>
+      <p>Massa no ponto, muito recheio e sabores da casa como a Moda da Vinti com borda de chocolate. No salão ou na sua casa, todas as noites.</p>
+      <div class="row">
+        <a class="btn" href="https://whatsmenu.com.br/cardapiopizzariadavinti" target="_blank" rel="noopener" data-press><svg aria-hidden="true"><use href="#i-menu"/></svg>Pedir pelo cardápio</a>
+        <a class="btn ink" href="https://wa.me/5518998207790?text=Ol%C3%A1%21%20Vi%20a%20p%C3%A1gina%20da%20Pizzaria%20Da%20Vinti%20e%20quero%20fazer%20um%20pedido." data-press><svg aria-hidden="true"><use href="#i-chat"/></svg>WhatsApp</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="bairro" class="folha" aria-labelledby="h-bairro" data-folha>
+  <h2 id="h-bairro">Todo dia <em>circulado</em>.</h2>
+  <p class="lede">Desde 2017 a Da Vinti abre todas as noites, de domingo a domingo, a partir das 18h30. No salão com a família ou na sua casa, com motoboys que os clientes elogiam pela educação.</p>
+
+  <div class="month-grid" id="monthGrid">
+    <p class="sr" id="monthSr">Aberta todos os dias do mês, das 18h30 às 23h; aos sábados até 23h30.</p>
+  </div>
+  <p class="legend" aria-hidden="true">
+    <span><svg viewBox="0 0 100 64" preserveAspectRatio="none"><path d="M58 6C30 3 6 16 7 34c1 17 24 27 50 25 25-2 41-14 39-31C94 12 74 3 48 6" stroke-width="4.5"/><path d="M60 9C36 7 13 18 13 33c0 14 20 22 44 21" stroke-width="2"/></svg>aberta das 18h30 às 23h</span>
+    <span><svg viewBox="0 0 40 28"><path d="M6 20h28"/></svg>sábado vai até 23h30</span>
+  </p>
+
+  <div class="ways">
+    <div class="way">
+      <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 20h32M12 20v20M36 20v20M6 14l18-8 18 8"/><path d="M19 28h10v12H19z"/></svg>
+      <h3>Salão para a família</h3><p>Ambiente familiar para jantar com calma.</p>
+    </div>
+    <div class="way">
+      <svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="12" cy="34" r="6"/><circle cx="37" cy="34" r="6"/><path d="M18 34h13l4-12h-9M22 16h8l3 6M6 22h12v8H6z"/></svg>
+      <h3>Delivery</h3><p>Motoboys elogiados pela educação nas avaliações.</p>
+    </div>
+    <div class="way">
+      <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 6c-8 6-12 12-12 19a12 12 0 0 0 24 0c0-7-4-13-12-19z"/><path d="M24 16v24M24 24l-5-4M24 30l5-4"/></svg>
+      <h3>Opção sem glúten</h3><p>Massa sem glúten preparada com cuidado. <span class="todo">[confirmar disponibilidade]</span></p>
+    </div>
+  </div>
+</section>
+
+<section id="casa" class="folha" aria-labelledby="h-casa" data-folha>
+  <div class="house">
+    <div>
+      <h2 id="h-casa">Muito <em>recheio</em>, massa no ponto.</h2>
+      <p class="lede">Da produção direto para a sua mesa. Os sabores que levam o nome da casa:</p>
+      <ol class="menu-list">
+        <li><h3>Moda da Vinti</h3><p>Com borda de chocolate.</p></li>
+        <li><h3>Catucheddar</h3><p>Sabor da casa.</p></li>
+        <li><h3>Fraldinha no alho</h3><p>Sabor da casa.</p></li>
+      </ol>
+      <p class="house-note">Cardápio completo, preços e bordas no <a href="https://whatsmenu.com.br/cardapiopizzariadavinti" target="_blank" rel="noopener">cardápio online</a>.</p>
+    </div>
+    <figure class="pizza-shot" data-reveal="shot">
+      <div class="frame"><img id="shotImg" src="fotos/da-vinti-3.jpg" width="682" height="788" alt="Pizza com brócolis e bacon cobrindo a massa até a borda." decoding="async" referrerpolicy="no-referrer"></div>
+      <figcaption>Recheio até a borda.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="avaliacoes" class="folha" aria-labelledby="h-rev" data-folha>
+  <h2 id="h-rev">O que o bairro <em>diz</em>.</h2>
+  <div class="rev">
+    <div class="score" aria-label="Nota 4,6 de 5 em 221 avaliações no Google"><b id="scoreNum">4,6</b><span><strong>de 5 no Google</strong><span id="revCount">221 avaliações</span></span></div>
+    <div class="notes">
+      <article class="note"><blockquote>“Muito boa a pizza, sem comentários, top demais e com preços muito bons pela qualidade que oferece.”</blockquote><footer>Avaliação no Google</footer></article>
+      <article class="note"><blockquote>“Ambiente familiar com atendimento excepcional, rapidez na produção com ingredientes de qualidade e belíssima apresentação.”</blockquote><footer>Avaliação no Google</footer></article>
+      <article class="note"><blockquote>“Pizza muito boa, atendimento incrível. Pessoas educadas e atenciosas, tanto no local quanto na entrega.”</blockquote><footer>Avaliação no Google</footer></article>
+    </div>
+  </div>
+</section>
+
+<section id="onde" class="folha" aria-labelledby="h-onde" data-folha>
+  <h2 id="h-onde">Como <em>chegar</em>.</h2>
+  <div class="where">
+    <div class="lines">
+      <p class="status" id="status"><svg viewBox="0 0 40 28" aria-hidden="true"><use href="#i-circle"/></svg><span id="statusText">Aberta todas as noites a partir das 18h30</span></p>
+      <p class="line"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.1-7-11.5a7 7 0 0 1 14 0C19 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><span>Av. Osvaldo da Silva, 515 - Ana Jacinta<br>Presidente Prudente - SP</span></p>
+      <p class="line"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3.5h3.5l1.8 4.6-2.3 1.4a11 11 0 0 0 6.5 6.5l1.4-2.3 4.6 1.8V19a1.5 1.5 0 0 1-1.6 1.5A16.5 16.5 0 0 1 3.5 5.1 1.5 1.5 0 0 1 5 3.5z"/></svg><span><a href="tel:+5518998207790">(18) 99820-7790</a></span></p>
+      <p class="line"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17 7h.01" stroke-width="2.6"/></svg><span><a href="https://www.instagram.com/pizzaria_da_vinti/" target="_blank" rel="noopener">@pizzaria_da_vinti</a></span></p>
+      <div class="actions">
+        <a class="btn" href="https://whatsmenu.com.br/cardapiopizzariadavinti" target="_blank" rel="noopener" data-press><svg aria-hidden="true"><use href="#i-menu"/></svg>Cardápio online</a>
+        <a class="btn ink" href="https://www.google.com/maps/search/?api=1&query=Pizzaria%20Da%20Vinti%20Presidente%20Prudente&query_place_id=ChIJqzj8MePzk5QR2TLdFsAz_rM" target="_blank" rel="noopener" data-press>Abrir no Google Maps<svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+      </div>
+    </div>
+    <table class="hours" id="hours">
+      <caption class="caps">Horário de funcionamento</caption>
+      <tbody>
+        <tr data-days="0 1 2 3 4 5"><th scope="row">Domingo a sexta</th><td>18h30 às 23h</td></tr>
+        <tr data-days="6"><th scope="row">Sábado</th><td>18h30 às 23h30</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="duvidas" class="folha" aria-labelledby="h-faq" data-folha>
+  <h2 id="h-faq">Perguntas <em>frequentes</em>.</h2>
+  <div class="faq">
+    <details><summary>Tem massa sem glúten?<svg aria-hidden="true"><use href="#i-plus"/></svg></summary><p><span class="todo">[confirmar dias e sabores]</span></p></details>
+    <details><summary>Faz entrega em quais bairros?<svg aria-hidden="true"><use href="#i-plus"/></svg></summary><p><span class="todo">[confirmar área de entrega]</span></p></details>
+    <details><summary>Abre todos os dias?<svg aria-hidden="true"><use href="#i-plus"/></svg></summary><p>Sim, a partir das 18h30.</p></details>
+  </div>
+</section>
+
+<section class="folha last" aria-labelledby="h-last" data-folha id="hoje">
+  <h2 class="q" id="h-last">Hoje tem pizza?</h2>
+  <span class="a" aria-hidden="true">Tem.</span>
+  <p>A partir das 18h30, no salão ou na sua casa.</p>
+  <div class="row">
+    <a class="btn" id="endCta" href="https://whatsmenu.com.br/cardapiopizzariadavinti" target="_blank" rel="noopener" data-press><svg aria-hidden="true"><use href="#i-menu"/></svg>Pedir pelo cardápio</a>
+    <a class="btn ink" href="https://wa.me/5518998207790?text=Ol%C3%A1%21%20Vi%20a%20p%C3%A1gina%20da%20Pizzaria%20Da%20Vinti%20e%20quero%20fazer%20um%20pedido." data-press><svg aria-hidden="true"><use href="#i-chat"/></svg>WhatsApp</a>
+  </div>
+</section>
+</main>
+
+<footer class="foot on-card">
+  <div class="wrap">
+    <p>Pizzaria Da Vinti · Av. Osvaldo da Silva, 515 - Ana Jacinta, Presidente Prudente - SP</p>
+    <p>© <span id="ano">2026</span> · Página de demonstração feita por Gabriel Negri</p>
+  </div>
+</footer>
+
+<div class="dock away" id="dock">
+  <a class="btn" href="https://whatsmenu.com.br/cardapiopizzariadavinti" target="_blank" rel="noopener" data-press><svg aria-hidden="true"><use href="#i-menu"/></svg>Pedir pelo cardápio</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/motion@12.43.0/dist/motion.js"></script>
+<script>
+(function () {
+  "use strict";
+  var doc = document.documentElement;
+  var M = window.Motion || null;
+  var moving = doc.classList.contains("moving") && !!M;
+  if (!M) { doc.classList.remove("moving"); doc.classList.add("calm"); }
+  document.getElementById("ano").textContent = new Date().getFullYear();
+
+  /* ---------- Time in Presidente Prudente ---------- */
+  var TZ = "America/Sao_Paulo";
+  function partsOf(d) {
+    var o = {};
+    new Intl.DateTimeFormat("en-US", { timeZone: TZ, year: "numeric", month: "numeric", day: "numeric", hour: "numeric", minute: "numeric", hour12: false })
+      .formatToParts(d).forEach(function (x) { o[x.type] = x.value; });
+    return { y: +o.year, m: +o.month, d: +o.day, h: (+o.hour) % 24, min: +o.minute };
+  }
+  var now = partsOf(new Date());
+  var MONTHS = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
+  var DAYS = ["Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado"];
+  function dow(y, m, d) { return new Date(Date.UTC(y, m - 1, d)).getUTCDay(); }
+  function addDays(y, m, d, n) { var t = new Date(Date.UTC(y, m - 1, d + n)); return { y: t.getUTCFullYear(), m: t.getUTCMonth() + 1, d: t.getUTCDate() }; }
+  var mins = now.h * 60 + now.min;
+  var todayDow = dow(now.y, now.m, now.d);
+  function closeOf(w) { return w === 6 ? "23h30" : "23h"; }
+  function closeMins(w) { return w === 6 ? 1410 : 1380; }
+  /* after midnight but before closing of the previous night counts as that night */
+  var lateNight = mins < 60;
+
+  /* ---------- Tear-off sheets ---------- */
+  var facts = [
+    { k: "Pensamento do dia", t: "“Muito boa a pizza, sem comentários, top demais e com preços muito bons pela qualidade que oferece.”", c: "Avaliação no Google" },
+    { k: "Lembrete do dia", t: "Desde 2017 servindo o Ana Jacinta e a região." },
+    { k: "Pensamento do dia", t: "“Ambiente familiar com atendimento excepcional, rapidez na produção com ingredientes de qualidade e belíssima apresentação.”", c: "Avaliação no Google" },
+    { k: "Lembrete do dia", t: "Moda da Vinti: sabor da casa com borda de chocolate." },
+    { k: "Pensamento do dia", t: "“Pizza muito boa, atendimento incrível. Pessoas educadas e atenciosas, tanto no local quanto na entrega.”", c: "Avaliação no Google" },
+    { k: "Lembrete do dia", t: "Salão para a família jantar com calma." },
+    { k: "Lembrete do dia", t: "Motoboys elogiados pela educação nas avaliações." }
+  ];
+  function openLine(i, w) {
+    if (i === 0) {
+      if (lateNight) return "Hoje abre às 18h30";
+      if (mins < 1110) return "Hoje abre às 18h30, até " + closeOf(w);
+      if (mins < closeMins(w)) return "Aberta agora, até " + closeOf(w);
+      return "Hoje já fechou · amanhã às 18h30";
+    }
+    return (i === 1 ? "Amanhã" : "Aberta") + " das 18h30 às " + closeOf(w);
+  }
+  var sheetsEl = document.getElementById("sheets");
+  var sheetData = [];
+  for (var i = 0; i < 7; i++) {
+    var dt = addDays(now.y, now.m, now.d, i);
+    sheetData.push({ dt: dt, w: dow(dt.y, dt.m, dt.d), i: i });
+  }
+  /* hand-drawn pen marks: a few authored loops, two passes each for pressure */
+  var LOOPS = [
+    ["M58 6C30 3 6 16 7 34c1 17 24 27 50 25 25-2 41-14 39-31C94 12 74 3 48 6", "M60 9C36 7 13 18 13 33c0 14 20 22 44 21"],
+    ["M42 5C20 7 4 20 6 36c2 15 23 24 48 22 27-2 42-16 40-32C92 11 72 2 50 4 40 5 33 8 29 12", "M47 8C27 9 11 21 12 35"],
+    ["M64 7C38 1 9 13 8 32c-1 18 22 29 50 27 26-2 42-15 40-32-2-15-22-23-46-21", "M30 13c-12 6-18 14-17 23"],
+    ["M50 4C26 4 5 17 7 35c2 16 25 25 49 23 26-2 41-15 39-32C93 10 70 1 44 6 34 8 26 13 22 18", "M85 18c6 5 8 11 6 17"]
+  ];
+  var STRIKE = ["M10 52C34 38 62 22 92 8", "M14 56C38 42 64 27 90 14"];
+  function penSVG(kind, seed) {
+    var ps = kind === "strike" ? STRIKE : LOOPS[seed % LOOPS.length];
+    return '<svg class="pen" viewBox="0 0 100 64" preserveAspectRatio="none" aria-hidden="true"><path class="p1" d="' + ps[0] + '" stroke-width="3.2"/><path class="p2" d="' + ps[1] + '" stroke-width="1.3" opacity=".8"/></svg>';
+  }
+  function closedToday(w) { return !lateNight && mins >= closeMins(w); }
+  function sheetHTML(s) {
+    var f = facts[s.i % facts.length];
+    var mark = s.i === 0 && closedToday(s.w) ? "strike" : "ring";
+    return '<button class="grip" type="button" tabindex="-1"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v14M6 12l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><b class="gl">Puxe para arrancar</b></span></button>' +
+      '<p class="month caps"><span>' + MONTHS[s.dt.m - 1] + " " + s.dt.y + '</span><span>' + (s.i === 0 ? "Hoje" : s.i === 1 ? "Amanhã" : "") + '</span></p>' +
+      '<div class="dwrap"><p class="dnum">' + s.dt.d + '</p>' + penSVG(mark, s.dt.d) + '</div>' +
+      '<p class="wday">' + DAYS[s.w] + '</p>' +
+      '<p class="open">' + openLine(s.i, s.w) + '</p>' +
+      '<p class="thought"><span class="caps">' + f.k + '</span>' + f.t + (f.c ? "<cite>" + f.c + "</cite>" : "") + '</p>';
+  }
+  function makeSheet(sd, top) {
+    var a = document.createElement("article");
+    a.className = "sheet";
+    a.dataset.sunday = sd.w === 0 ? "true" : "false";
+    a.setAttribute("aria-label", DAYS[sd.w] + ", " + sd.dt.d + " de " + MONTHS[sd.dt.m - 1]);
+    a.innerHTML = sheetHTML(sd);
+    if (!top) a.setAttribute("aria-hidden", "true");
+    return a;
+  }
+  function stock() {
+    sheetsEl.innerHTML = "";
+    for (var j = sheetData.length - 1; j >= 0; j--) sheetsEl.appendChild(makeSheet(sheetData[j], j === 0));
+    armTop();
+  }
+  var block = document.getElementById("block");
+  function fitBlock() {
+    var h = 0;
+    sheetsEl.querySelectorAll(".sheet").forEach(function (s) { s.style.position = "relative"; h = Math.max(h, s.offsetHeight); s.style.position = ""; });
+    block.style.setProperty("--block-h", (h + 4) + "px");
+  }
+  function topSheet() { var all = sheetsEl.querySelectorAll(".sheet:not([data-tearing])"); return all[all.length - 1]; }
+
+  /* torn stub fringe left on the perforation after each tear */
+  var stubs = document.getElementById("stubs");
+  function addStub() {
+    var pts = "M0 0H100V3", x = 100;
+    while (x > 0) { x -= 3 + Math.random() * 4; pts += "L" + Math.max(0, x).toFixed(1) + " " + (3 + Math.random() * 6).toFixed(1); }
+    pts += "L0 2Z";
+    stubs.insertAdjacentHTML("beforeend", '<svg viewBox="0 0 100 9" preserveAspectRatio="none"><path d="' + pts + '" fill="#ebe6d8"/></svg>');
+    if (stubs.children.length > 3) stubs.removeChild(stubs.firstChild);
+  }
+
+  function tear(dir) {
+    var s = topSheet();
+    if (!s || s.dataset.tearing) return;
+    if (sheetsEl.querySelectorAll(".sheet:not([data-tearing])").length <= 1) { stubs.innerHTML = ""; stock(); if (moving) M.animate(topSheet(), { y: [-24, 0], opacity: [0, 1] }, { type: "spring", bounce: 0.3, visualDuration: 0.5 }); focusGrip(); return; }
+    s.dataset.tearing = "1";
+    s.setAttribute("aria-hidden", "true");
+    var g = s.querySelector(".grip"); if (g) g.tabIndex = -1;
+    var next = s.previousElementSibling;
+    if (next) next.removeAttribute("aria-hidden");
+    addStub();
+    armTop(s);
+    var done = function () { s.remove(); };
+    if (moving) {
+      var d = dir || 1;
+      M.animate(s, { y: [0, -14, window.innerHeight * 0.9], rotate: [0, -3 * d, 26 * d], x: [0, 6 * d, 120 * d], opacity: [1, 1, 0] }, { duration: 0.9, ease: [0.3, 0, 0.7, 1], times: [0, 0.15, 1] }).then(done);
+      M.animate(document.getElementById("hang"), { rotate: [0, -2 * d, 1 * d, 0] }, { duration: 0.9, ease: "easeOut" });
+    } else done();
+    focusGrip();
+  }
+  function focusGrip() { setTimeout(function () { var t = topSheet(); var g = t && t.querySelector(".grip"); if (g && document.activeElement && document.activeElement.classList.contains("grip")) g.focus(); }, 20); }
+
+  /* arm the top sheet: its grip is the only focusable control and the drag handle */
+  function armTop(leaving) {
+    var all = sheetsEl.querySelectorAll(".sheet:not([data-tearing])");
+    var t = all[all.length - 1];
+    if (!t || t.dataset.armed) return;
+    t.dataset.armed = "1";
+    var g = t.querySelector(".grip");
+    g.tabIndex = 0;
+    g.querySelector(".gl").textContent = all.length <= 1 ? "Voltar para hoje" : "Puxe para arrancar";
+    g.setAttribute("aria-label", all.length <= 1 ? "Voltar para a folha de hoje" : "Arrancar a folha e ver o próximo dia");
+    var sx = 0, sy = 0, dx = 0, dy = 0, moved = false, pid = null;
+    function move(e) {
+      if (e.pointerId !== pid) return;
+      dx = e.clientX - sx; dy = e.clientY - sy;
+      if (Math.abs(dx) + Math.abs(dy) > 6) moved = true;
+      var ly = dy > 0 ? dy * 0.6 : dy * 0.12;
+      t.style.transform = "translate(" + (dx * 0.4).toFixed(1) + "px," + ly.toFixed(1) + "px) rotate(" + (dx * 0.04).toFixed(2) + "deg)";
+    }
+    function end(e, cancelled) {
+      if (e.pointerId !== pid) return;
+      pid = null;
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", up);
+      window.removeEventListener("pointercancel", cancel);
+      g.removeEventListener("lostpointercapture", cancel);
+      t.classList.remove("dragging");
+      if (!cancelled && (dy > 70 || Math.abs(dx) > 110)) { t.style.transform = ""; tear(dx < 0 ? -1 : 1); return; }
+      if (moving && t.style.transform) M.animate(t, { transform: [t.style.transform, "translate(0px,0px) rotate(0deg)"] }, { type: "spring", bounce: 0.45, visualDuration: 0.4 }).then(function () { t.style.transform = ""; });
+      else t.style.transform = "";
+    }
+    function up(e) { end(e, false); }
+    function cancel(e) { end(e, true); }
+    g.addEventListener("pointerdown", function (e) {
+      if (e.button !== 0 || pid !== null) return;
+      pid = e.pointerId; sx = e.clientX; sy = e.clientY; dx = dy = 0; moved = false;
+      try { g.setPointerCapture(pid); } catch (err) {}
+      t.classList.add("dragging");
+      window.addEventListener("pointermove", move);
+      window.addEventListener("pointerup", up);
+      window.addEventListener("pointercancel", cancel);
+      g.addEventListener("lostpointercapture", cancel);
+    });
+    g.addEventListener("click", function (e) { if (moved) { e.preventDefault(); moved = false; return; } tear(1); });
+  }
+  stock();
+  fitBlock();
+  window.addEventListener("resize", fitBlock);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitBlock);
+
+  /* ---------- Month grid with pen circles ---------- */
+  (function month() {
+    var host = document.getElementById("monthGrid");
+    var first = dow(now.y, now.m, 1);
+    var days = new Date(Date.UTC(now.y, now.m, 0)).getUTCDate();
+    var heads = ["D", "S", "T", "Q", "Q", "S", "S"];
+    var full = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
+    var h = '<table aria-describedby="monthSr"><caption>' + MONTHS[now.m - 1] + " " + now.y + '</caption><thead><tr>';
+    for (var k = 0; k < 7; k++) h += '<th scope="col"><abbr title="' + full[k] + '" style="text-decoration:none">' + heads[k] + "</abbr></th>";
+    h += "</tr></thead><tbody><tr>";
+    for (var b = 0; b < first; b++) h += "<td></td>";
+    for (var d = 1; d <= days; d++) {
+      var w = (first + d - 1) % 7;
+      var cls = (d === now.d ? "today " : "") + (w === 6 ? "sat" : "");
+      h += '<td class="' + cls + '"><span class="n">' + d + '</span><svg class="ring" viewBox="0 0 100 64" preserveAspectRatio="none" aria-hidden="true" style="rotate:' + ((d * 47) % 11 - 5) + 'deg"><path class="p1" d="' + LOOPS[d % 4][0] + '"/><path class="p2" d="' + LOOPS[d % 4][1] + '"/></svg>' + (d === now.d ? '<span class="tag">hoje</span>' : "") + "</td>";
+      if (w === 6 && d !== days) h += "</tr><tr>";
+    }
+    var tail = (first + days) % 7;
+    if (tail) for (var t = tail; t < 7; t++) h += "<td></td>";
+    h += "</tr></tbody></table>";
+    host.insertAdjacentHTML("beforeend", h);
+  })();
+
+  /* ---------- Status & hours ---------- */
+  (function status() {
+    var txt = document.getElementById("statusText");
+    var w = lateNight ? (todayDow + 6) % 7 : todayDow;
+    var isOpen = lateNight || (mins >= 1110 && mins < closeMins(w));
+    if (isOpen) txt.textContent = "Aberta agora · até " + closeOf(w);
+    else if (mins < 1110) txt.textContent = "Fechada agora · abre hoje às 18h30";
+    else txt.textContent = "Fechada agora · abre amanhã às 18h30";
+    var icon = document.querySelector("#status svg");
+    icon.setAttribute("viewBox", "0 0 100 64");
+    icon.innerHTML = isOpen ? '<path d="' + LOOPS[0][0] + '" stroke-width="5"/>' : '<path d="' + STRIKE[0] + '" stroke-width="6"/><path d="' + STRIKE[1] + '" stroke-width="3"/>';
+    document.querySelectorAll("#hours tr").forEach(function (r) {
+      if ((" " + r.dataset.days + " ").indexOf(" " + todayDow + " ") > -1) r.classList.add("today");
+    });
+  })();
+
+  /* ---------- Dock ---------- */
+  var dock = document.getElementById("dock");
+  var seen = new Set();
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) { e.isIntersecting ? seen.add(e.target) : seen.delete(e.target); });
+    dock.classList.toggle("away", seen.size > 0);
+  }, { threshold: 0.05 });
+  ["topo", "endCta"].forEach(function (id) { io.observe(document.getElementById(id)); });
+
+  if (!moving) return;
+
+  /* ================= Motion ================= */
+  var animate = M.animate, scroll = M.scroll, inView = M.inView, stagger = M.stagger, press = M.press;
+  var hang = document.getElementById("hang");
+
+  /* the calendar sways on its nail with scroll velocity */
+  var sway = 0, swayV = 0, raf = 0;
+  function swayTick() {
+    swayV += -sway * 0.06; swayV *= 0.9; sway += swayV;
+    hang.style.rotate = sway.toFixed(3) + "deg";
+    if (Math.abs(sway) > 0.01 || Math.abs(swayV) > 0.01) raf = requestAnimationFrame(swayTick); else { hang.style.rotate = "0deg"; raf = 0; }
+  }
+  function kick(v) { swayV += Math.max(-0.6, Math.min(0.6, v)); if (!raf) raf = requestAnimationFrame(swayTick); }
+  if (window.Lenis) {
+    var lenis = new Lenis({ lerp: 0.11, anchors: { offset: -64 }, autoRaf: true });
+    lenis.on("scroll", function (e) { if (window.scrollY < window.innerHeight * 1.2) kick(e.velocity * 0.012); });
+  }
+
+  /* hang in: the calendar swings onto the nail, the sheets riffle to today */
+  animate(hang, { rotate: [-5, 0] }, { type: "spring", bounce: 0.5, visualDuration: 1 });
+  /* riffle: the last few days' sheets flip off the pad until today shows */
+  (function riffle() {
+    var past = [];
+    for (var r = 1; r <= 4; r++) {
+      var dt = addDays(now.y, now.m, now.d, -r);
+      past.push({ dt: dt, w: dow(dt.y, dt.m, dt.d), i: 7 });
+    }
+    var els = past.map(function (sd) { var el = makeSheet(sd, false); el.dataset.tearing = "1"; el.querySelector(".thought").style.visibility = "hidden"; sheetsEl.appendChild(el); return el; });
+    els.reverse();
+    for (var q = 0; q < els.length; q++) {
+      (function (el, k) {
+        el.style.transformOrigin = "50% 0"; animate(el, { transform: ["perspective(600px) translateY(0px) rotateX(0deg)", "perspective(600px) translateY(-20px) rotateX(75deg)"], opacity: [1, 0] }, { duration: 0.26, delay: 0.55 + (els.length - 1 - k) * 0.15, ease: "easeIn" }).then(function () { el.remove(); });
+      })(els[q], q);
+    }
+  })();
+  animate(".side > *", { y: [24, 0] }, { duration: 0.8, delay: stagger(0.1, { startDelay: 0.35 }), ease: [0.16, 1, 0.3, 1] });
+  animate("#sheets .sheet:last-child .grip span", { y: [0, 4, 0] }, { duration: 0.9, delay: 1.6, repeat: 2, ease: "easeInOut" });
+
+  /* scroll: the photo on the card drifts slightly as the calendar passes */
+  scroll(animate(".hero .photo img", { transform: ["translateY(0%)", "translateY(-8%)"] }, { ease: "linear" }), { target: document.getElementById("topo"), offset: ["start start", "end start"] });
+
+  /* sheets of the page: each one is pinned on like a new folha */
+  document.querySelectorAll("[data-folha]").forEach(function (f, i) {
+    animate(f, { y: 60, rotate: i % 2 ? 1.2 : -1.2, opacity: 0 }, { duration: 0 });
+    inView(f, function () {
+      animate(f, { y: [60, 0], rotate: [i % 2 ? 1.2 : -1.2, 0], opacity: [0, 1] }, { type: "spring", bounce: 0.25, visualDuration: 0.7 });
+    }, { amount: 0.08 });
+  });
+
+  /* pen circles draw around every open night */
+  var rings = document.querySelectorAll(".month-grid .ring .p1");
+  rings.forEach(function (p) { var L = p.getTotalLength(); p.style.strokeDasharray = L; p.style.strokeDashoffset = L; });
+  inView("#monthGrid", function () {
+    rings.forEach(function (p, k) {
+      animate(p, { strokeDashoffset: [p.getTotalLength(), 0] }, { duration: 0.35, delay: 0.15 + k * 0.035, ease: "easeOut" });
+      animate(p.nextElementSibling, { opacity: [0, 0.75] }, { duration: 0.2, delay: 0.4 + k * 0.035 });
+    });
+    animate(".month-grid td.today .tag", { scale: [0, 1] }, { type: "spring", bounce: 0.5, visualDuration: 0.4, delay: 0.3 + rings.length * 0.035 });
+  }, { amount: 0.3 });
+
+  var ways = document.querySelectorAll(".way");
+  animate(ways, { opacity: 0, y: 24 }, { duration: 0 });
+  inView(".ways", function () { animate(ways, { opacity: [0, 1], y: [24, 0] }, { duration: 0.6, delay: stagger(0.1), ease: [0.16, 1, 0.3, 1] }); }, { amount: 0.25 });
+
+  /* house: numbers stamp in, the photo is taped on */
+  var items = document.querySelectorAll(".menu-list li");
+  animate(items, { opacity: 0, x: -24 }, { duration: 0 });
+  inView(".menu-list", function () { animate(items, { opacity: [0, 1], x: [-24, 0] }, { duration: 0.55, delay: stagger(0.12), ease: [0.16, 1, 0.3, 1] }); }, { amount: 0.3 });
+  var shot = document.querySelector(".pizza-shot");
+  animate(shot, { opacity: 0, rotate: 6, scale: 0.94 }, { duration: 0 });
+  inView(".house", function () {
+    animate(shot, { opacity: [0, 1], rotate: [6, -1.5], scale: [0.94, 1] }, { type: "spring", bounce: 0.35, visualDuration: 0.7, delay: 0.15 });
+  }, { amount: 0.2 });
+  scroll(animate("#shotImg", { transform: ["translateY(-8%)", "translateY(0%)"] }, { ease: "linear" }), { target: shot, offset: ["start end", "end start"] });
+
+  /* reviews: notes are dealt like torn sheets */
+  var notes = document.querySelectorAll(".note");
+  animate(notes, { opacity: 0, y: -40 }, { duration: 0 });
+  inView(".notes", function () {
+    notes.forEach(function (n, k) { animate(n, { opacity: [0, 1], y: [-40, 0], rotate: [k % 2 ? -8 : 8, getComputedStyle(n).rotate === "none" ? 0 : parseFloat(getComputedStyle(n).rotate)] }, { type: "spring", bounce: 0.35, visualDuration: 0.6, delay: k * 0.14 }); });
+  }, { amount: 0.15 });
+
+  /* status pen mark draws */
+  var stPaths = document.querySelectorAll("#status svg path");
+  stPaths.forEach(function (p) { var L = p.getTotalLength(); p.style.strokeDasharray = L; p.style.strokeDashoffset = L; });
+  inView("#status", function () {
+    stPaths.forEach(function (p, k) { animate(p, { strokeDashoffset: [p.getTotalLength(), 0] }, { duration: 0.45, delay: k * 0.15, ease: "easeOut" }); });
+  });
+  /* today's numeral gets its pen mark drawn */
+  var todayPen = document.querySelectorAll("#sheets .sheet:last-child .pen path");
+  todayPen.forEach(function (p) { var L = p.getTotalLength(); p.style.strokeDasharray = L; p.style.strokeDashoffset = L; animate(p, { strokeDashoffset: [L, 0] }, { duration: 0.6, delay: 1.35, ease: "easeOut" }); });
+
+  /* last sheet: "Tem." is stamped */
+  inView(".last", function () {
+    animate(".last .a", { scale: [1.8, 1], rotate: [-8, -3], opacity: [0, 1] }, { type: "spring", bounce: 0.3, visualDuration: 0.45, delay: 0.25 });
+  }, { amount: 0.4 });
+
+  document.querySelectorAll(".faq details").forEach(function (d) {
+    d.addEventListener("toggle", function () { if (d.open) animate(d.querySelector("p"), { opacity: [0, 1], y: [-8, 0] }, { duration: 0.3, ease: "easeOut" }); });
+  });
+
+  /* stamp press */
+  press("[data-press]", function (el) {
+    animate(el, { scale: 0.96, rotate: -0.6 }, { type: "spring", bounce: 0, visualDuration: 0.12 });
+    return function () { animate(el, { scale: 1, rotate: 0 }, { type: "spring", bounce: 0.55, visualDuration: 0.35 }); };
+  });
+})();
+</script>
+</body>
+</html>

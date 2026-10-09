@@ -1,0 +1,124 @@
+{
+  "title": "Pizzaria Da Vinti: escolha o mundo visual",
+  "question": "O sorteio caiu na folhinha de arrancar. Fique com ela, troque por uma alternativa ou sorteie de novo.",
+  "options": [
+    {
+      "id": "assigned",
+      "label": "Folhinha de arrancar",
+      "kicker": "THE ROLL",
+      "lineage": "O bloquinho de calendário diário que o comércio do bairro dá no fim do ano e fica pendurado na cozinha",
+      "thesis": "A Da Vinti como a folhinha da cozinha do Ana Jacinta: cada dia é uma folha, e toda folha diz que hoje tem pizza a partir das 18h30.",
+      "palette": ["#f7f4ec", "#0f7a3d", "#d7261e", "#1b1b1b"],
+      "materials": ["papel jornal de bloquinho", "duas tintas de gráfica (verde e vermelho da caixa)", "picote de arrancar", "círculo de caneta marcando o dia"],
+      "viewport": "Celular: o cabeçalho impresso 'Pizzaria Da Vinti · Ana Jacinta · desde 2017' com endereço e telefone, e a folha de hoje com o número do dia enorme, o dia da semana, 'aberta hoje das 18h30 às 23h' e um 'pensamento do dia' que é uma avaliação real. O botão 'Pedir pelo cardápio' vem impresso em vermelho no pé da folha.",
+      "risk": "Se o papel e a impressão ficarem tímidos, vira um card branco com um número grande. Precisa de picote, registro de tinta e a folha sendo arrancada para convencer.",
+      "raised": [
+        {"from": "Cartaz de cabaré", "raise": "Impressa em exatamente duas tintas, verde e vermelho, sobre papel, sem meio-tom: compromisso total de gráfica."},
+        {"from": "Painel de jacks", "raise": "Aberto e fechado aparecem como marca de caneta (dia circulado, dia riscado), não como cor."},
+        {"from": "Seis instrumentos de voo", "raise": "Cada folha guarda uma verdade só: um fato por bloco, nada repetido."},
+        {"from": "Ficha pastel", "raise": "A moldura decorativa se repete em módulos inteiros, como borda de gráfica, nunca cortada no meio."}
+      ]
+    },
+    {
+      "id": "model-pick",
+      "label": "Panfleto e ímã de geladeira",
+      "kicker": "IMPECCABLE’S PICK",
+      "lineage": "Panfletos de delivery de bairro e ímãs de geladeira com o telefone da pizzaria",
+      "thesis": "A página é o panfleto que fica preso na geladeira de metade do Ana Jacinta: sabores numerados, telefone grande, 'ligou, chegou'.",
+      "palette": ["#ffffff", "#d7261e", "#0f7a3d", "#ffd23f"],
+      "materials": ["couché brilhante", "ímã recortado", "foto de pizza estourada"],
+      "viewport": "Ímã recortado no topo com logo e telefone, sabores da casa numerados como no panfleto, botão do cardápio grande.",
+      "risk": "É a leitura mais óbvia de pizzaria de bairro e pode parecer panfleto barato de verdade se a execução não tiver capricho."
+    },
+    {
+      "id": "challenger-brick",
+      "label": "Manual de montar",
+      "verdict": "competitive",
+      "lineage": "Livreto de instruções de bloquinhos de montar",
+      "thesis": "A pizza da casa explicada como manual de montagem: passos numerados, peças em destaque 1:1, setas sem palavras.",
+      "palette": ["#7cc6f0", "#111111", "#d7261e", "#ffd23f"],
+      "materials": ["página azul-céu", "contorno preto", "grade de pinos"],
+      "viewport": "Passo 1 massa, passo 2 molho, passo 3 muito recheio, passo 4 borda de chocolate; o último passo é pedir pelo cardápio.",
+      "case": "Ganha em clareza (os sabores e a borda ficam óbvios), mas perde em identificação: não fala do bairro nem do salão.",
+      "risk": "Sem ilustração de qualidade, vira infográfico.",
+      "hero": "https://impeccable.style/worlds/cards/games-toys-physics-play-brick-build-instructions-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/games-toys-physics-play-brick-build-instructions.webp"
+    },
+    {
+      "id": "challenger-cabaret",
+      "label": "Cartaz de cabaré",
+      "verdict": "declined",
+      "lineage": "Cartazes de cabaré de Berlim em duas tintas",
+      "thesis": "Amarelo-ácido e preto, programa da noite inclinado.",
+      "palette": ["#e8ff1f", "#000000"],
+      "materials": ["papel barato", "duas tintas"],
+      "viewport": "Programa da noite em coluna escalonada.",
+      "case": "Sombrio demais para uma pizzaria familiar.",
+      "kept": "Duas tintas só, sem meio-tom.",
+      "risk": "Afasta família."
+    },
+    {
+      "id": "challenger-jackfield",
+      "label": "Painel de jacks",
+      "verdict": "declined",
+      "lineage": "Patch bay de estúdio",
+      "thesis": "Estado desenhado pelo traço, não pela cor.",
+      "palette": ["#0a0a0a", "#ffb000"],
+      "materials": ["vidro preto", "linha âmbar"],
+      "viewport": "Faixas numeradas com linhas de ligação.",
+      "case": "Ferramenta técnica, sem relação com pizza.",
+      "kept": "Estado por marca (círculo, risco), não por cor.",
+      "risk": "Frio."
+    },
+    {
+      "id": "challenger-sixpack",
+      "label": "Seis instrumentos de voo",
+      "verdict": "declined",
+      "lineage": "Painel de avião à noite",
+      "thesis": "Seis mostradores, cada um com uma verdade.",
+      "palette": ["#0b0b0b", "#e8e8e8", "#3dff7a"],
+      "materials": ["mostrador", "ponteiro luminoso"],
+      "viewport": "Nota, avaliações e horário como mostradores.",
+      "case": "O dono não se reconhece num cockpit.",
+      "kept": "Um fato por bloco.",
+      "risk": "Fantasia técnica."
+    },
+    {
+      "id": "challenger-pastel",
+      "label": "Ficha pastel",
+      "verdict": "declined",
+      "lineage": "Ficha de personagem pastel",
+      "thesis": "Mascote fofo com acessórios estranhos em rosa-bala.",
+      "palette": ["#ff9ecb", "#9ff0d1", "#111111"],
+      "materials": ["contorno grosso", "borda de motivo"],
+      "viewport": "Mascote central com borda repetida.",
+      "case": "Tom errado para o público e para o produto.",
+      "kept": "Borda repetida em módulos inteiros.",
+      "risk": "Estranho."
+    },
+    {
+      "id": "challenger-understory",
+      "label": "Floresta luminosa",
+      "verdict": "declined",
+      "lineage": "Sub-bosque alienígena",
+      "thesis": "Caminhos que acendem na aproximação.",
+      "palette": ["#06080a", "#5ff2ff", "#c9a3ff"],
+      "materials": ["esporos", "brilho"],
+      "viewport": "Raízes pulsando no escuro.",
+      "case": "Nenhuma relação com pizza ou bairro.",
+      "kept": "Só o elemento em foco recebe o tom mais forte.",
+      "risk": "Decoração."
+    }
+  ],
+  "reroll": {"registers": ["safer", "bolder"]},
+  "canon": true,
+  "canonCard": {
+    "label": "Padrão de pizzaria",
+    "thesis": "Pizzaria rústica com toalha xadrez, madeira, bandeira da Itália e serifa clássica, feita com capricho.",
+    "palette": ["#2b1a12", "#f3e7d3", "#c0392b", "#2e7d32"],
+    "materials": ["madeira", "xadrez vermelho", "lousa"],
+    "viewport": "Foto grande de pizza com título em serifa e botão de pedido.",
+    "risk": "Igual a toda pizzaria, inclusive à versão atual."
+  },
+  "steer": true
+}

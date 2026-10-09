@@ -1,0 +1,28 @@
+# dependências e builds
+node_modules/
+
+# segredos
+.env
+.env.*
+!.env.example
+
+# temporários e caches
+*.log
+*.tmp
+tmp/
+temp/
+.DS_Store
+Thumbs.db
+__pycache__/
+*.pyc
+.impeccable/hook.cache.json
+**/.impeccable/hook.cache.json
+
+# configuração local da ferramenta
+.claude/settings.local.json
+
+# páginas e pastas de teste
+_test*.html
+_t[0-9]*.html
+test/
+tests/

@@ -1,0 +1,123 @@
+{
+  "title": "Firmo Barbearia: escolha o mundo visual",
+  "question": "O sorteio caiu no cartaz lambe-lambe de gráfica. Fique com ele, troque por uma alternativa ou sorteie de novo.",
+  "options": [
+    {
+      "id": "assigned",
+      "label": "Lambe-lambe de gráfica",
+      "kicker": "THE ROLL",
+      "lineage": "Cartazes de show e de evento das gráficas do interior paulista, colados em série nos muros",
+      "thesis": "A Firmo anunciada como um show: HOJE tem fliperama, cerveja gelada e corte com o Bruno, colado em série no muro do Centro.",
+      "palette": ["#ff2e88", "#f4f53c", "#1fe07a", "#121212", "#cfcdc8"],
+      "materials": ["papel fluorescente", "tipos de madeira condensados em preto", "cola e rugas de papel colado", "parede cinza da própria barbearia"],
+      "viewport": "Celular: um cartaz rosa-choque ocupa a tela, 'HOJE' gigante, a frase da sala de espera em tipo de madeira, a faixa miúda de serviço (endereço, horário, nota 4,9) e o botão 'Marcar meu horário' como o ingresso do cartaz.",
+      "risk": "Se a tipografia ficar tímida ou o papel for só cor chapada, vira 'site colorido' em vez de cartaz.",
+      "raised": [
+        {"from": "Coluna de tensegridade", "raise": "Os cartazes obedecem a uma grade de colagem real (série repetida, emendas alinhadas), não a uma grade de site."},
+        {"from": "Ciclorama da aurora", "raise": "O cartaz sabe a hora: selo 'ABERTO AGORA / FECHA ÀS 18H30' calculado do horário real."},
+        {"from": "Capa com faixa obi", "raise": "Colisão de densidade: rosto do cartaz quase vazio contra uma faixa de rodapé lotada de serviço (local, horário, telefone, nota)."},
+        {"from": "Flagship de moda", "raise": "Uma foto da sala de espera ganha escala de tela inteira e segura o scroll antes de cortar."}
+      ]
+    },
+    {
+      "id": "model-pick",
+      "label": "Fliperama em modo de atração",
+      "kicker": "IMPECCABLE’S PICK",
+      "lineage": "Tela de demonstração dos fliperamas de bar e de padaria",
+      "thesis": "A barbearia como uma máquina em modo de atração: PRESS START marca o horário, as avaliações viram a tabela de recordes.",
+      "palette": ["#0b0b14", "#ff3fa4", "#2ee6ff", "#ffe14a"],
+      "materials": ["fósforo de CRT", "pixel", "adesivo da lateral do gabinete"],
+      "viewport": "Tela preta de CRT, nome em letreiro pixelado piscando, 'APERTE START' abre o WhatsApp, recordes 4,9 / 126 na linha de baixo.",
+      "risk": "É a leitura mais óbvia de 'fliperama na espera' e pode soar fantasia gamer em vez de barbearia de verdade."
+    },
+    {
+      "id": "challenger-teletext",
+      "label": "Revista de teletexto",
+      "verdict": "declined",
+      "lineage": "Teletexto de TV europeia",
+      "thesis": "Páginas numeradas em grade de 40 colunas sobre preto.",
+      "palette": ["#000000", "#ffff00", "#00ffff", "#ffffff"],
+      "materials": ["mosaico de blocos", "fonte bitmap"],
+      "viewport": "Página 100 com serviços como linhas numeradas.",
+      "case": "Teletexto não existe na cultura brasileira; o dono não se reconhece.",
+      "kept": "Avaliações giram como subpáginas que dá para segurar.",
+      "risk": "Novidade retrô sem raiz local."
+    },
+    {
+      "id": "challenger-obi",
+      "label": "Capa com faixa obi",
+      "verdict": "declined",
+      "lineage": "Capas de disco boutique de Shibuya",
+      "thesis": "Face quase vazia contra uma faixa lotada de créditos.",
+      "palette": ["#f2efe8", "#e23b2e", "#111111"],
+      "materials": ["papel de capa", "faixa impressa"],
+      "viewport": "Marca geométrica pequena, faixa densa no terço inferior.",
+      "case": "Sofisticação de nicho que afasta o público do Centro de Prudente.",
+      "kept": "Colisão de densidade entre cartaz vazio e rodapé lotado.",
+      "risk": "Fria demais para uma barbearia de bairro."
+    },
+    {
+      "id": "challenger-fashion",
+      "label": "Flagship de moda",
+      "verdict": "declined",
+      "lineage": "Sites de casas de moda",
+      "thesis": "Serifa monumental e foto em tela cheia.",
+      "palette": ["#f1ede6", "#141414", "#8a6f4e"],
+      "materials": ["fotografia em tela cheia", "espaço vazio"],
+      "viewport": "Uma foto, uma palavra enorme.",
+      "case": "Promete luxo que a Firmo não vende; as fotos são de celular.",
+      "kept": "Paciência com uma foto em tela cheia.",
+      "risk": "Pretensioso para o preço justo que os clientes elogiam."
+    },
+    {
+      "id": "challenger-tensegrity",
+      "label": "Coluna de tensegridade",
+      "verdict": "declined",
+      "lineage": "Escultura cinética",
+      "thesis": "Layout que obedece a uma rede de forças.",
+      "palette": ["#d9d6cf", "#151515", "#d1252b"],
+      "materials": ["haste de carbono", "corda vermelha"],
+      "viewport": "Coluna que respira com rótulos presos aos nós.",
+      "case": "Sem relação com o público nem com o produto.",
+      "kept": "Posição obedece a uma estrutura real, não a uma grade genérica.",
+      "risk": "Abstrato demais."
+    },
+    {
+      "id": "challenger-cyclorama",
+      "label": "Ciclorama da aurora",
+      "verdict": "declined",
+      "lineage": "Luz de palco",
+      "thesis": "Faixas de luz da noite ao dia.",
+      "palette": ["#050505", "#1d3fbf", "#e86a8a", "#ffffff"],
+      "materials": ["luz", "horizonte infinito"],
+      "viewport": "Faixa cobalto subindo no preto.",
+      "case": "Bonito, mas não fala de barbearia nem de sala de espera.",
+      "kept": "O estado do dia (aberto, fechado) como estrutura.",
+      "risk": "Atmosfera sem conteúdo."
+    },
+    {
+      "id": "challenger-rail",
+      "label": "Trilho de linhas de emissão",
+      "verdict": "declined",
+      "lineage": "Espectrograma de laboratório",
+      "thesis": "Tudo pendurado num trilho calibrado.",
+      "palette": ["#2a2a2a", "#e8e2d4", "#ffd400"],
+      "materials": ["linhas finas", "carvão"],
+      "viewport": "Trilho com marcas de 1px.",
+      "case": "Ferramenta de operação, não peça de persuasão.",
+      "kept": "Texto miúdo sempre num só tamanho.",
+      "risk": "Ilegível para o dono no celular."
+    }
+  ],
+  "reroll": {"registers": ["safer", "bolder"]},
+  "canon": true,
+  "canonCard": {
+    "label": "Padrão de barbearia",
+    "thesis": "Barbearia escura com dourado, tipo condensado e foto de navalha, feita com capricho.",
+    "palette": ["#14110f", "#f6efe7", "#c8873c"],
+    "materials": ["couro", "latão", "fotografia escura"],
+    "viewport": "Título grande à esquerda, foto à direita, nota e horário embaixo.",
+    "risk": "Igual a qualquer barbearia do Brasil, inclusive à versão atual."
+  },
+  "steer": true
+}

@@ -1,0 +1,13 @@
+Landings de demonstração - Presidente Prudente (7/10/2026)
+Dados: Google Maps e Instagram, via Apify.
+
+1. Abra qualquer .html no navegador. As fotos carregam direto do Google
+   e do Instagram (precisa de internet).
+2. IMPORTANTE: rode hoje "python baixar_fotos.py" dentro desta pasta.
+   Ele salva as fotos em fotos/ e as páginas passam a usar os arquivos
+   locais. Os links do Instagram expiram em poucos dias.
+3. Fotos com a etiqueta "Foto: <nome> via Google" foram tiradas por
+   clientes. Na versão final, troque pelas fotos do próprio negócio.
+4. Textos entre [colchetes] precisam ser confirmados com o dono.
+5. Antes de publicar de verdade: tire a faixa "Demonstração" e a linha
+   <meta name="robots" content="noindex, nofollow">.

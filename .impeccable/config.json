@@ -188,6 +188,60 @@
         "value": "bebas neue",
         "createdAt": "2026-10-09T19:54:38.035Z",
         "reason": "fonts already used by the original pages; kept"
+      },
+      {
+        "rule": "low-contrast",
+        "value": "*",
+        "files": [
+          "landings-motion/planet-patas.html"
+        ],
+        "createdAt": "2026-10-10T05:06:54.792Z",
+        "reason": "model: no #dbe4ff text sits on the orange band; the sign band text is #fff (4.88:1) and #dbe4ff only renders on sign blue (7.7:1), verified in mobile and desktop captures"
+      },
+      {
+        "rule": "dark-glow",
+        "value": "*",
+        "files": [
+          "landings-motion/planet-patas.html"
+        ],
+        "createdAt": "2026-10-10T05:06:54.792Z",
+        "reason": "model: the flagged shadows are solid 0-blur rings (2-3px) outlining the route stop plaques, a drawn stroke, not a glow"
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "landings-motion/planet-patas.html"
+        ],
+        "createdAt": "2026-10-10T05:06:54.792Z",
+        "reason": "model: sections are full-bleed colour fields; the inset lives on the inner .wrap (road gutter + 18-32px)"
+      },
+      {
+        "rule": "clipped-overflow-container",
+        "value": "*",
+        "files": [
+          "landings-motion/planet-patas.html"
+        ],
+        "createdAt": "2026-10-10T05:06:54.792Z",
+        "reason": "model: body overflow-x clip keeps sideways reveal offsets and the road from creating horizontal scroll"
+      },
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "landings-motion/planet-patas.html"
+        ],
+        "createdAt": "2026-10-10T05:06:54.792Z",
+        "reason": "model: .shelf::after is the blue shelf lip under each service (the store's real blue shelves); border-right is the FAQ chevron"
+      },
+      {
+        "rule": "repeating-stripes-gradient",
+        "value": "*",
+        "files": [
+          "landings-motion/planet-patas.html"
+        ],
+        "createdAt": "2026-10-10T05:06:54.792Z",
+        "reason": "model: stripes are the shop's roll-up door (porta de enrolar) and the road's lane dashes, the chosen táxi-dog world's material"
       }
     ]
   }

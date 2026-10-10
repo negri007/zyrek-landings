@@ -643,6 +643,11 @@
       "world": "Pizzaria Da Vinti (Folhinha de arrancar)",
       "governs": "landings-motion/da-vinti.html",
       "location": "scopedWorlds[\"landings-motion/da-vinti.html\"]"
+    },
+    {
+      "world": "Planet Patas (Táxi dog)",
+      "governs": "landings-motion/planet-patas.html",
+      "location": "scopedWorlds[\"landings-motion/planet-patas.html\"]"
     }
   ],
   "worldsRule": "One world per business page. Worlds must not be mixed: no token, rule, texture, component or motion from one world applies to another page.",
@@ -1265,6 +1270,670 @@
           "Don't set Abril Fatface under 24px or use it for body text.",
           "Don't use green or red dots, pills or fills to say open or closed.",
           "Don't drift toward the rustic checkered-tablecloth pizzeria with a hero photo under a serif headline."
+        ]
+      }
+    },
+    "landings-motion/planet-patas.html": {
+      "title": "Design System: Planet Patas (Táxi dog)",
+      "scope": {
+        "governs": [
+          "landings-motion/planet-patas.html"
+        ],
+        "projectWide": false,
+        "statement": "This world governs landings-motion/planet-patas.html only. Its tokens, livery, road, vans, plaques, checker and motion are not project-wide defaults and must not be mixed with the Firmo or Da Vinti worlds or carried to any other business page.",
+        "markdownSection": "DESIGN.md, part '# Design System: Planet Patas (Táxi dog)'; its fenced yaml block holds the normative tokens."
+      },
+      "tokens": {
+        "format": "yaml (DESIGN.md token block)",
+        "source": "name: Planet Patas (Táxi dog)\ndescription: \"Scoped visual world for landings-motion/planet-patas.html only: the shop's real sign as livery (royal sign blue, white rounded Nunito, an orange-red band) and the page as the táxi dog's round trip, casa to Planet Patas to casa, on one unbroken road. Not a project-wide system.\"\ngoverns: landings-motion/planet-patas.html\ncolors:\n  sign: \"#1d3a9c\"\n  sign-deep: \"#11286e\"\n  sign-ink: \"#0e1c4d\"\n  band: \"#c9431a\"\n  band-hot: \"#b93c15\"\n  gold: \"#ffc23d\"\n  paper: \"#ffffff\"\n  tint: \"#eef3ff\"\n  tint-2: \"#dfe8ff\"\n  muted: \"#46557f\"\n  on-blue: \"#dbe4ff\"\n  on-deep: \"#b8c6f2\"\n  asphalt: \"#262a36\"\n  dash: \"#f4f6fb\"\ntypography:\n  display:\n    fontFamily: \"Nunito, ui-rounded, Arial Rounded MT Bold, system-ui, sans-serif\"\n    fontSize: \"clamp(2.3rem, 9vw, 5rem)\"\n    fontWeight: 900\n    lineHeight: 1.04\n    letterSpacing: \"-0.015em\"\n  hero:\n    fontFamily: \"Nunito, ui-rounded, Arial Rounded MT Bold, system-ui, sans-serif\"\n    fontSize: \"clamp(2.45rem, 10.4vw, 4.6rem)\"\n    fontWeight: 900\n    lineHeight: 1\n    letterSpacing: \"-0.02em\"\n  headline:\n    fontFamily: \"Nunito, ui-rounded, Arial Rounded MT Bold, system-ui, sans-serif\"\n    fontSize: \"clamp(2.05rem, 7.6vw, 3.9rem)\"\n    fontWeight: 900\n    lineHeight: 1.04\n    letterSpacing: \"-0.015em\"\n  stop-title:\n    fontFamily: \"Nunito, ui-rounded, Arial Rounded MT Bold, system-ui, sans-serif\"\n    fontSize: \"clamp(1.7rem, 6.6vw, 2.5rem)\"\n    fontWeight: 900\n    lineHeight: 1.05\n  title:\n    fontFamily: \"Nunito, ui-rounded, Arial Rounded MT Bold, system-ui, sans-serif\"\n    fontSize: \"1.35rem\"\n    fontWeight: 900\n    lineHeight: 1.15\n  wordmark:\n    fontFamily: \"Nunito, ui-rounded, Arial Rounded MT Bold, system-ui, sans-serif\"\n    fontSize: \"25px\"\n    fontWeight: 1000\n    lineHeight: 1\n    letterSpacing: \"-0.01em\"\n  rating:\n    fontFamily: \"Nunito, ui-rounded, Arial Rounded MT Bold, system-ui, sans-serif\"\n    fontSize: \"34px\"\n    fontWeight: 1000\n    lineHeight: 1\n    letterSpacing: \"-0.02em\"\n  body:\n    fontFamily: \"Nunito, ui-rounded, Arial Rounded MT Bold, system-ui, sans-serif\"\n    fontSize: \"17px\"\n    fontWeight: 500\n    lineHeight: 1.6\n  lede:\n    fontFamily: \"Nunito, ui-rounded, Arial Rounded MT Bold, system-ui, sans-serif\"\n    fontSize: \"clamp(1.08rem, 2.6vw, 1.3rem)\"\n    fontWeight: 500\n    lineHeight: 1.6\n  button:\n    fontFamily: \"Nunito, ui-rounded, Arial Rounded MT Bold, system-ui, sans-serif\"\n    fontSize: \"17px\"\n    fontWeight: 900\n    lineHeight: 1.15\n  band:\n    fontFamily: \"Nunito, ui-rounded, Arial Rounded MT Bold, system-ui, sans-serif\"\n    fontSize: \"13px\"\n    fontWeight: 800\n    letterSpacing: \"0.02em\"\n  sign-caps:\n    fontFamily: \"Nunito, ui-rounded, Arial Rounded MT Bold, system-ui, sans-serif\"\n    fontSize: \"12px\"\n    fontWeight: 900\n    letterSpacing: \"0.14em\"\nrounded:\n  pill: \"999px\"\n  frame: \"22px\"\n  quote: \"18px\"\n  panel: \"16px\"\n  marker: \"8px\"\n  disc: \"50%\"\nspacing:\n  container: \"1240px\"\n  gutter: \"18px\"\n  road-width: \"26px\"\n  road-inset: \"12px\"\n  section-top: \"clamp(72px, 12vw, 140px)\"\n  section-bottom: \"clamp(60px, 9vw, 112px)\"\n  signboard: \"64px\"\n  street: \"62px\"\n  cta-min: \"52px\"\n  cta-large: \"58px\"\n  control-small: \"44px\"\n  stop: \"38px\"\n  plaque: \"96px\"\ncomponents:\n  button-band:\n    backgroundColor: \"{colors.band}\"\n    textColor: \"{colors.paper}\"\n    typography: \"{typography.button}\"\n    rounded: \"{rounded.pill}\"\n    padding: \"0 24px\"\n    height: \"{spacing.cta-min}\"\n  button-band-hover:\n    backgroundColor: \"{colors.band-hot}\"\n  button-band-large:\n    backgroundColor: \"{colors.band}\"\n    textColor: \"{colors.paper}\"\n    rounded: \"{rounded.pill}\"\n    padding: \"0 28px\"\n    height: \"{spacing.cta-large}\"\n  button-band-small:\n    backgroundColor: \"{colors.band}\"\n    textColor: \"{colors.paper}\"\n    rounded: \"{rounded.pill}\"\n    padding: \"0 16px\"\n    height: \"{spacing.control-small}\"\n  button-blue:\n    backgroundColor: \"{colors.sign}\"\n    textColor: \"{colors.paper}\"\n    typography: \"{typography.button}\"\n    rounded: \"{rounded.pill}\"\n    padding: \"0 24px\"\n    height: \"{spacing.cta-min}\"\n  button-blue-hover:\n    backgroundColor: \"{colors.sign-deep}\"\n  button-line:\n    backgroundColor: \"transparent\"\n    textColor: \"{colors.paper}\"\n    typography: \"{typography.button}\"\n    rounded: \"{rounded.pill}\"\n    padding: \"0 24px\"\n    height: \"{spacing.cta-min}\"\n  signboard:\n    backgroundColor: \"{colors.sign}\"\n    textColor: \"{colors.paper}\"\n    height: \"{spacing.signboard}\"\n  sign-band:\n    backgroundColor: \"{colors.band}\"\n    textColor: \"{colors.paper}\"\n    typography: \"{typography.band}\"\n    padding: \"7px 18px\"\n  stop-plaque:\n    backgroundColor: \"{colors.sign}\"\n    textColor: \"{colors.paper}\"\n    rounded: \"{rounded.disc}\"\n    padding: \"8px\"\n    size: \"{spacing.stop}\"\n  stop-plaque-reached:\n    backgroundColor: \"{colors.gold}\"\n    textColor: \"{colors.sign-ink}\"\n  stop-label:\n    backgroundColor: \"{colors.paper}\"\n    textColor: \"{colors.sign}\"\n    typography: \"{typography.sign-caps}\"\n    rounded: \"{rounded.pill}\"\n    padding: \"4px 10px\"\n  rating-plaque:\n    backgroundColor: \"{colors.paper}\"\n    textColor: \"{colors.sign}\"\n    typography: \"{typography.rating}\"\n    rounded: \"{rounded.disc}\"\n    size: \"{spacing.plaque}\"\n  photo-frame:\n    backgroundColor: \"{colors.tint-2}\"\n    rounded: \"{rounded.frame}\"\n  quote:\n    backgroundColor: \"{colors.paper}\"\n    textColor: \"{colors.sign-ink}\"\n    rounded: \"{rounded.quote}\"\n    padding: \"20px 22px 18px\"\n  hours-board:\n    backgroundColor: \"{colors.sign}\"\n    textColor: \"{colors.paper}\"\n    rounded: \"{rounded.frame}\"\n    padding: \"26px 22px\"\n  today-tag:\n    backgroundColor: \"{colors.gold}\"\n    textColor: \"{colors.sign-ink}\"\n    rounded: \"{rounded.pill}\"\n    padding: \"1px 8px\"\n  faq-item:\n    backgroundColor: \"{colors.tint}\"\n    textColor: \"{colors.sign-ink}\"\n    rounded: \"{rounded.panel}\"\n    padding: \"12px 18px\"\n  faq-item-open:\n    backgroundColor: \"{colors.tint-2}\"\n  finale-plaque:\n    backgroundColor: \"{colors.sign}\"\n    textColor: \"{colors.paper}\"\n    padding: \"clamp(30px, 6vw, 64px)\"\n  wa-float:\n    backgroundColor: \"{colors.band}\"\n    textColor: \"{colors.paper}\"\n    rounded: \"{rounded.pill}\"\n    padding: \"0 20px 0 16px\"\n    height: \"{spacing.cta-min}\"\n  wa-float-hover:\n    backgroundColor: \"{colors.band-hot}\"\n  footer:\n    backgroundColor: \"{colors.sign-ink}\"\n    textColor: \"{colors.on-deep}\"\n    padding: \"40px 0 96px\""
+      },
+      "extensions": {
+        "colorMeta": {
+          "sign": {
+            "role": "primary",
+            "displayName": "Sign Blue",
+            "canonical": "#1d3a9c",
+            "oklch": "oklch(39.5% 0.163 266.1)",
+            "note": "Signboard, hero/reviews/finale fields, stop plaques, blue buttons, hours board, headings on white, links. CSS var --sign.",
+            "tonalRamp": [
+              "#010037",
+              "#050a71",
+              "#173294",
+              "#3254b8",
+              "#5279e1",
+              "#729cff",
+              "#a7c6ff",
+              "#dbeeff"
+            ]
+          },
+          "sign-deep": {
+            "role": "primary",
+            "displayName": "Deep Sign",
+            "canonical": "#11286e",
+            "oklch": "oklch(31.0% 0.125 265.5)",
+            "note": "Blue button hover, dark squares of the checker behind the pet photo, shelf lip underside. CSS var --sign-deep.",
+            "tonalRamp": [
+              "#010039",
+              "#07195f",
+              "#1f3981",
+              "#3b59a3",
+              "#5c7dcb",
+              "#7c9ff0",
+              "#a4c6ff",
+              "#d9efff"
+            ]
+          },
+          "sign-ink": {
+            "role": "primary",
+            "displayName": "Sign Ink",
+            "canonical": "#0e1c4d",
+            "oklch": "oklch(25.0% 0.092 267.2)",
+            "note": "Body text and headings on white, demo strip, footer, van outlines, reached-plaque and finale rings, focus outline. CSS var --sign-ink.",
+            "tonalRamp": [
+              "#020231",
+              "#101f50",
+              "#2a3c70",
+              "#465b92",
+              "#677eb8",
+              "#88a0dc",
+              "#acc6ff",
+              "#dceeff"
+            ]
+          },
+          "band": {
+            "role": "secondary",
+            "displayName": "Band Orange",
+            "canonical": "#c9431a",
+            "oklch": "oklch(56.8% 0.177 36.3)",
+            "note": "Sign band, banho-e-tosa booking buttons, WhatsApp float, rating ring and stars, caption pill, van stripe. CSS var --band.",
+            "tonalRamp": [
+              "#210000",
+              "#4e0000",
+              "#7f0000",
+              "#aa2300",
+              "#d44e27",
+              "#fb714b",
+              "#ffaf98",
+              "#ffe5da"
+            ]
+          },
+          "band-hot": {
+            "role": "secondary",
+            "displayName": "Band Hot",
+            "canonical": "#b93c15",
+            "oklch": "oklch(53.3% 0.168 36.4)",
+            "note": "Hover for orange buttons and the float. CSS var --band-hot.",
+            "tonalRamp": [
+              "#210000",
+              "#4c0000",
+              "#810000",
+              "#a72a00",
+              "#d0522e",
+              "#f77551",
+              "#ffae95",
+              "#ffe5db"
+            ]
+          },
+          "gold": {
+            "role": "tertiary",
+            "displayName": "Van Light Gold",
+            "canonical": "#ffc23d",
+            "oklch": "oklch(84.8% 0.156 82.4)",
+            "note": "Route progress and the present: road fill, reached stops, van lights, today row and tag, score, focus halo. Never text on white. CSS var --gold.",
+            "tonalRamp": [
+              "#220000",
+              "#460f00",
+              "#663000",
+              "#885000",
+              "#ad7400",
+              "#d19600",
+              "#f9bc35",
+              "#ffeaaf"
+            ]
+          },
+          "paper": {
+            "role": "neutral",
+            "displayName": "White Lettering",
+            "canonical": "#ffffff",
+            "oklch": "oklch(100.0% 0.000 89.9)",
+            "note": "White fields, text on blue and orange, plaque and frame rings, van bodies, checker light squares, quote cards. CSS var --paper.",
+            "tonalRamp": [
+              "#0b0b0b",
+              "#242424",
+              "#404040",
+              "#5d5d5d",
+              "#808080",
+              "#a1a1a1",
+              "#c7c7c7",
+              "#eeeeee"
+            ]
+          },
+          "tint": {
+            "role": "neutral",
+            "displayName": "Pale Tint",
+            "canonical": "#eef3ff",
+            "oklch": "oklch(96.4% 0.017 267.8)",
+            "note": "Services field, FAQ items, scrollbar track. CSS var --tint.",
+            "tonalRamp": [
+              "#080b12",
+              "#20242c",
+              "#3c4049",
+              "#595d68",
+              "#7c808b",
+              "#9da1ac",
+              "#c2c7d3",
+              "#e9eefa"
+            ]
+          },
+          "tint-2": {
+            "role": "neutral",
+            "displayName": "Tint 2",
+            "canonical": "#dfe8ff",
+            "oklch": "oklch(93.1% 0.033 268.7)",
+            "note": "Open FAQ items, photo-frame placeholder. CSS var --tint-2.",
+            "tonalRamp": [
+              "#060a19",
+              "#1d2334",
+              "#383f51",
+              "#565d71",
+              "#788094",
+              "#99a1b7",
+              "#bec7dd",
+              "#e5eeff"
+            ]
+          },
+          "muted": {
+            "role": "neutral",
+            "displayName": "Muted Navy",
+            "canonical": "#46557f",
+            "oklch": "oklch(45.6% 0.072 268.5)",
+            "note": "Secondary text on white and tint. CSS var --muted.",
+            "tonalRamp": [
+              "#030629",
+              "#162146",
+              "#303d66",
+              "#4d5c86",
+              "#6e7fac",
+              "#8fa0cf",
+              "#b4c6f7",
+              "#dceeff"
+            ]
+          },
+          "on-blue": {
+            "role": "neutral",
+            "displayName": "On Blue",
+            "canonical": "#dbe4ff",
+            "oklch": "oklch(92.0% 0.038 271.0)",
+            "note": "Secondary text on sign blue: ledes, proof lines, nav links, hours labels. CSS var --on-blue.",
+            "tonalRamp": [
+              "#060a1b",
+              "#1d2337",
+              "#383f54",
+              "#555d74",
+              "#787f98",
+              "#98a1ba",
+              "#bec7e1",
+              "#e5eeff"
+            ]
+          },
+          "on-deep": {
+            "role": "neutral",
+            "displayName": "On Deep",
+            "canonical": "#b8c6f2",
+            "oklch": "oklch(83.1% 0.064 271.1)",
+            "note": "Text on sign ink: demo strip, footer. CSS var --on-deep.",
+            "tonalRamp": [
+              "#040725",
+              "#192143",
+              "#333d62",
+              "#505c82",
+              "#727ea7",
+              "#93a0ca",
+              "#b8c6f2",
+              "#deedff"
+            ]
+          },
+          "asphalt": {
+            "role": "neutral",
+            "displayName": "Asphalt",
+            "canonical": "#262a36",
+            "oklch": "oklch(28.6% 0.023 270.5)",
+            "note": "The road and the hero street. CSS var --asphalt.",
+            "tonalRamp": [
+              "#080b15",
+              "#20242f",
+              "#3b3f4c",
+              "#595d6b",
+              "#7b808e",
+              "#9ca1b0",
+              "#c1c7d7",
+              "#e8eefe"
+            ]
+          },
+          "dash": {
+            "role": "neutral",
+            "displayName": "Road Dash",
+            "canonical": "#f4f6fb",
+            "oklch": "oklch(97.3% 0.007 268.5)",
+            "note": "Centre dashes on road and street. CSS var --dash.",
+            "tonalRamp": [
+              "#0a0b0e",
+              "#232428",
+              "#3e4044",
+              "#5c5d62",
+              "#7e8084",
+              "#9fa1a6",
+              "#c5c7cc",
+              "#eceef3"
+            ]
+          }
+        },
+        "typographyMeta": {
+          "display": {
+            "displayName": "Display",
+            "purpose": "Finale headline on the blue plaque, max 14ch."
+          },
+          "hero": {
+            "displayName": "Hero",
+            "purpose": "The h1 on the blue hero; from 1024px clamp(3.1rem, 4.3vw, 4.15rem) at max 15ch."
+          },
+          "headline": {
+            "displayName": "Headline",
+            "purpose": "Section h2s; sign ink on white, white on blue."
+          },
+          "stop-title": {
+            "displayName": "Stop Title",
+            "purpose": "Táxi legs in sign blue; shelf names at clamp(1.6rem, 6.4vw, 2.3rem)."
+          },
+          "title": {
+            "displayName": "Title",
+            "purpose": "Small h3s (hours board, FAQ heading)."
+          },
+          "wordmark": {
+            "displayName": "Wordmark",
+            "purpose": "\"Planet Patas\" in the signboard; 28px from 768px; footer 20px."
+          },
+          "rating": {
+            "displayName": "Rating",
+            "purpose": "The 4,8 inside the 96px rating plaque."
+          },
+          "body": {
+            "displayName": "Body",
+            "purpose": "Paragraphs, max 46ch to 52ch, muted on white."
+          },
+          "lede": {
+            "displayName": "Lede",
+            "purpose": "Hero lede, max 34ch, on-blue."
+          },
+          "button": {
+            "displayName": "Button",
+            "purpose": "Every button; 15px small, 18px large."
+          },
+          "band": {
+            "displayName": "Band",
+            "purpose": "The orange sign band line; 14px and 0.03em from 768px."
+          },
+          "sign-caps": {
+            "displayName": "Sign Caps",
+            "purpose": "Uppercase stop labels; \"pet shop\" under the wordmark is 800, 11px, 0.18em in gold."
+          }
+        },
+        "fonts": [
+          {
+            "family": "Nunito",
+            "source": "self-hosted landings-motion/fonts/nunito-latin.woff2",
+            "axes": "wght 200..1000, latin subset, font-display swap"
+          }
+        ],
+        "shapes": [
+          {
+            "name": "pill",
+            "value": "999px",
+            "purpose": "Buttons, labels, tags, caption pill, the road."
+          },
+          {
+            "name": "disc",
+            "value": "50%",
+            "purpose": "Stop plaques (38px) and the rating plaque (96px)."
+          },
+          {
+            "name": "frame",
+            "value": "22px (26px from 768px)",
+            "purpose": "Photo frames and hours board; checker backdrop +8px, finale plaque +6px."
+          },
+          {
+            "name": "street",
+            "value": "0 999px 999px 0",
+            "purpose": "Hero street: square at the road corner, round at its far end."
+          },
+          {
+            "name": "shelf-lip",
+            "value": "15px tall, radius 3px 3px 5px 5px, linear-gradient(#4a68d0 0 2px, #2847b4 2px 9px, sign 9px 11px, sign-deep 11px)",
+            "purpose": "Blue metal profile under each service."
+          },
+          {
+            "name": "leg-connector",
+            "value": "repeating-linear-gradient(to right, sign 0 8px, transparent 8px 14px), 4px tall",
+            "purpose": "Dashed line from each táxi leg back to its plaque on the road."
+          }
+        ],
+        "shadows": [
+          {
+            "name": "signboard",
+            "value": "0 6px 18px -12px rgba(14,28,77,.6)",
+            "purpose": "Sticky header."
+          },
+          {
+            "name": "button-lift",
+            "value": "0 12px 24px -12px rgba(14,28,77,.55)",
+            "purpose": "Hover on every pill with a 2px rise."
+          },
+          {
+            "name": "stop-plaque",
+            "value": "0 0 0 3px var(--paper), 0 6px 12px -6px rgba(14,28,77,.6)",
+            "purpose": "Stop plaque; ring turns sign-ink when reached."
+          },
+          {
+            "name": "rating-plaque",
+            "value": "0 0 0 4px var(--band), 0 14px 24px -14px rgba(0,0,0,.7)",
+            "purpose": "Rating disc."
+          },
+          {
+            "name": "facade-frame",
+            "value": "0 0 0 6px var(--paper), 0 24px 40px -22px rgba(0,0,0,.6)",
+            "purpose": "Hero facade photo."
+          },
+          {
+            "name": "pet-photo",
+            "value": "0 0 0 8px var(--paper), 0 18px 30px -16px rgba(14,28,77,.65)",
+            "purpose": "Pet photo mat on the checker."
+          },
+          {
+            "name": "backdrop",
+            "value": "0 30px 50px -30px rgba(0,0,0,.6)",
+            "purpose": "Checker backdrop."
+          },
+          {
+            "name": "quote",
+            "value": "0 16px 28px -18px rgba(0,0,0,.55)",
+            "purpose": "Quote cards."
+          },
+          {
+            "name": "finale-plaque",
+            "value": "0 0 0 6px var(--sign-ink), 0 30px 50px -24px rgba(14,28,77,.7)",
+            "purpose": "Finale plaque."
+          },
+          {
+            "name": "shelf-lip",
+            "value": "0 12px 14px -10px rgba(14,28,77,.55)",
+            "purpose": "Under each shelf lip."
+          },
+          {
+            "name": "float",
+            "value": "0 14px 28px -12px rgba(14,28,77,.7)",
+            "purpose": "WhatsApp float."
+          },
+          {
+            "name": "van",
+            "value": "drop-shadow(0 6px 6px rgba(0,0,0,.35)); side van drop-shadow(0 10px 8px rgba(0,0,0,.35))",
+            "purpose": "Both vans (filter)."
+          },
+          {
+            "name": "focus",
+            "value": "outline 3px solid var(--sign-ink), offset 3px, box-shadow 0 0 0 6px var(--gold); white outline on blue fields",
+            "purpose": "Global focus ring."
+          }
+        ],
+        "textures": [
+          {
+            "name": "road",
+            "value": "asphalt pill, 3px centre line repeating-linear-gradient(to bottom, dash 0 14px, transparent 14px 30px) at .85",
+            "purpose": "The vertical road."
+          },
+          {
+            "name": "street",
+            "value": "asphalt, 3px line repeating-linear-gradient(to right, dash 0 18px, transparent 18px 38px) at .85; 62px tall (70px from 1024px)",
+            "purpose": "Hero street."
+          },
+          {
+            "name": "checker-backdrop",
+            "value": "conic-gradient(paper 0 25%, sign-deep 0 50%, paper 0 75%, sign-deep 0) 0 0/76px 76px",
+            "purpose": "In-store backdrop behind the pet photo."
+          },
+          {
+            "name": "checker-finale",
+            "value": "conic-gradient(sign 0 25%, paper 0 50%, sign 0 75%, paper 0) 0 0/120px 120px",
+            "purpose": "Finale ground; copy on a solid blue plaque."
+          },
+          {
+            "name": "shutter",
+            "value": "repeating-linear-gradient(to bottom, #d4d9e4 0 11px, #a9b0c0 11px 13px, #e3e7ef 13px 15px) with a bottom shade",
+            "purpose": "Roller shutter over the facade photo, rolls up on load."
+          }
+        ],
+        "motion": [
+          {
+            "name": "ease",
+            "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+            "purpose": "Default ease (CSS var --ease, JS EASE)."
+          },
+          {
+            "name": "chase-van",
+            "value": "sticky at 62svh in its own lane (z 8); rotate 180deg on scroll up (.45s); bob .32s while driving; lights blink 4x at the last stop; fades out while the hero street van is on screen",
+            "purpose": "The van as chase light."
+          },
+          {
+            "name": "road-fill",
+            "value": "scaleY(progress) of a 5px gold line to the chase van",
+            "purpose": "Travelled route."
+          },
+          {
+            "name": "stop-stamp",
+            "value": "class is-reached when the plaque centre passes the van; scale [1, 1.28, 1] .5s; stays lit",
+            "purpose": "Stops that stay lit."
+          },
+          {
+            "name": "street-drive",
+            "value": "x from the corner to rest, 2s, ease [0.4, 0, 0.15, 1], wheels spin .5s linear; on load (delay .6s) from 1024px, on inView (margin -25% bottom, delay .15s) on phones",
+            "purpose": "Side van drives casa to the shop."
+          },
+          {
+            "name": "shutter",
+            "value": "y 0 to -101%, 1.1s, delay .35s, ease [0.65, 0, 0.35, 1]",
+            "purpose": "Facade reveal."
+          },
+          {
+            "name": "hero-in",
+            "value": "opacity 0 to 1, y 22 to 0, .8s, stagger .09",
+            "purpose": "Hero copy."
+          },
+          {
+            "name": "shelf-lip",
+            "value": "--lip 0 to 1 over .9s; copy x -22 to 0 stagger .08",
+            "purpose": "Shelves build left to right."
+          },
+          {
+            "name": "score-count",
+            "value": "0 to 4,8 over 1.4s; stars scale 0 to 1 stagger .1",
+            "purpose": "Reviews."
+          },
+          {
+            "name": "reduced-motion",
+            "value": "boot script sets js/rm before paint; rm, missing Motion or 2.5s timeout (reveal-all) show everything at rest, no shutter, street van parked; road fill, chase van and plaques still follow scroll without transitions",
+            "purpose": "Fallback."
+          }
+        ],
+        "breakpoints": [
+          {
+            "name": "sm",
+            "value": "560px",
+            "purpose": "Hero CTAs size to content; quotes two-up."
+          },
+          {
+            "name": "md",
+            "value": "768px",
+            "purpose": "Nav on; road 30px, centred inset; gutters 32px; frame radius 26px; content left padding 112px; dock 79px."
+          },
+          {
+            "name": "lg",
+            "value": "1024px",
+            "purpose": "Hero 1.3fr/1fr with facade right, road starts at the street corner; two-column táxi, services, reviews, store and finale."
+          },
+          {
+            "name": "xl",
+            "value": "1520px",
+            "purpose": "Stop labels appear left of the road."
+          }
+        ]
+      },
+      "components": [
+        {
+          "name": "Band Booking Button",
+          "kind": "button",
+          "refersTo": "button-band",
+          "description": "Orange pill for the banho-e-tosa booking only (header, hero, finale).",
+          "html": "<a class=\"ds-btn-band\" href=\"#\"><svg viewBox=\"0 0 24 24\" width=\"22\" height=\"22\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M20.5 11.6a8.6 8.6 0 0 1-12.7 7.6L3.2 20.5l1.3-4.4a8.6 8.6 0 1 1 16-4.5Z\"/><path d=\"M9.2 8.6c.3 2.9 2.3 5 5.2 5.6l1.1-1.3-1.9-.9-.8.8a4 4 0 0 1-2-2l.8-.8-.9-1.9Z\"/></svg><span>Agendar banho e tosa</span></a>",
+          "css": ".ds-btn-band{--sign:#1d3a9c;--sign-deep:#11286e;--sign-ink:#0e1c4d;--band:#c9431a;--band-hot:#b93c15;--gold:#ffc23d;--paper:#fff;--tint:#eef3ff;--tint-2:#dfe8ff;--muted:#46557f;--on-blue:#dbe4ff;--on-deep:#b8c6f2;--asphalt:#262a36;--dash:#f4f6fb;--font:\"Nunito\",ui-rounded,\"Arial Rounded MT Bold\",system-ui,sans-serif;--ease:cubic-bezier(.16,1,.3,1);display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:52px;padding:0 24px;border:0;border-radius:999px;font-family:var(--font);font-weight:900;font-size:17px;line-height:1.15;text-decoration:none;cursor:pointer;transition:transform .18s var(--ease),box-shadow .25s var(--ease),background-color .2s;background:var(--band);color:var(--paper);}.ds-btn-band:hover{transform:translateY(-2px);box-shadow:0 12px 24px -12px rgba(14,28,77,.55);background:var(--band-hot);}.ds-btn-band:active{transform:scale(.97);box-shadow:none;transition-duration:.08s;}.ds-btn-band:focus-visible{outline:3px solid var(--sign-ink);outline-offset:3px;box-shadow:0 0 0 6px var(--gold);}"
+        },
+        {
+          "name": "Blue Section Button",
+          "kind": "button",
+          "refersTo": "button-blue",
+          "description": "Sign-blue pill for section actions on white (Pedir o táxi dog, Google Maps).",
+          "html": "<a class=\"ds-btn-blue\" href=\"#\"><svg viewBox=\"0 0 24 24\" width=\"22\" height=\"22\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M20.5 11.6a8.6 8.6 0 0 1-12.7 7.6L3.2 20.5l1.3-4.4a8.6 8.6 0 1 1 16-4.5Z\"/><path d=\"M9.2 8.6c.3 2.9 2.3 5 5.2 5.6l1.1-1.3-1.9-.9-.8.8a4 4 0 0 1-2-2l.8-.8-.9-1.9Z\"/></svg><span>Pedir o táxi dog</span></a>",
+          "css": ".ds-btn-blue{--sign:#1d3a9c;--sign-deep:#11286e;--sign-ink:#0e1c4d;--band:#c9431a;--band-hot:#b93c15;--gold:#ffc23d;--paper:#fff;--tint:#eef3ff;--tint-2:#dfe8ff;--muted:#46557f;--on-blue:#dbe4ff;--on-deep:#b8c6f2;--asphalt:#262a36;--dash:#f4f6fb;--font:\"Nunito\",ui-rounded,\"Arial Rounded MT Bold\",system-ui,sans-serif;--ease:cubic-bezier(.16,1,.3,1);display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:52px;padding:0 24px;border:0;border-radius:999px;font-family:var(--font);font-weight:900;font-size:17px;line-height:1.15;text-decoration:none;cursor:pointer;transition:transform .18s var(--ease),box-shadow .25s var(--ease),background-color .2s;background:var(--sign);color:var(--paper);}.ds-btn-blue:hover{transform:translateY(-2px);box-shadow:0 12px 24px -12px rgba(14,28,77,.55);background:var(--sign-deep);}.ds-btn-blue:active{transform:scale(.97);box-shadow:none;transition-duration:.08s;}.ds-btn-blue:focus-visible{outline:3px solid var(--sign-ink);outline-offset:3px;box-shadow:0 0 0 6px var(--gold);}"
+        },
+        {
+          "name": "Line Button on Blue",
+          "kind": "button",
+          "refersTo": "button-line",
+          "description": "White-line pill beside the hero booking button, with a trailing arrow.",
+          "html": "<div class=\"ds-on-blue\"><a class=\"ds-btn-line\" href=\"#\"><span>Como funciona o táxi dog</span><svg viewBox=\"0 0 24 24\" width=\"22\" height=\"22\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 12h14M13 6l6 6-6 6\"/></svg></a></div>",
+          "css": ".ds-on-blue{--sign:#1d3a9c;--sign-deep:#11286e;--sign-ink:#0e1c4d;--band:#c9431a;--band-hot:#b93c15;--gold:#ffc23d;--paper:#fff;--tint:#eef3ff;--tint-2:#dfe8ff;--muted:#46557f;--on-blue:#dbe4ff;--on-deep:#b8c6f2;--asphalt:#262a36;--dash:#f4f6fb;--font:\"Nunito\",ui-rounded,\"Arial Rounded MT Bold\",system-ui,sans-serif;--ease:cubic-bezier(.16,1,.3,1);background:var(--sign);padding:24px;border-radius:16px;}.ds-btn-line{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:52px;padding:0 24px;border:0;border-radius:999px;font-family:var(--font);font-weight:900;font-size:17px;line-height:1.15;text-decoration:none;cursor:pointer;transition:transform .18s var(--ease),box-shadow .25s var(--ease),background-color .2s;background:transparent;color:var(--paper);box-shadow:inset 0 0 0 2px rgba(219,228,255,.55);}.ds-btn-line svg{transition:transform .25s var(--ease);}.ds-btn-line:hover{transform:translateY(-2px);box-shadow:inset 0 0 0 2px var(--paper),0 12px 24px -12px rgba(0,0,0,.4);}.ds-btn-line:hover svg{transform:translateX(4px);}.ds-btn-line:focus-visible{outline:3px solid var(--paper);outline-offset:3px;box-shadow:0 0 0 6px var(--gold);}"
+        },
+        {
+          "name": "Signboard and Sign Band",
+          "kind": "nav",
+          "refersTo": "signboard",
+          "description": "The shop sign as sticky header: blue board, white Nunito 1000 wordmark, gold \"pet shop\", nav, small booking pill, orange band below.",
+          "html": "<div class=\"ds-sign\"><div class=\"ds-sign-in\"><a class=\"ds-wm\" href=\"#\"><span class=\"ds-wm-name\">Planet Patas</span><span class=\"ds-wm-sub\">pet shop</span></a><nav class=\"ds-nav\"><a href=\"#\">Táxi dog</a><a href=\"#\">Serviços</a><a href=\"#\">Avaliações</a></nav><a class=\"ds-sm\" href=\"#\"><svg viewBox=\"0 0 24 24\" width=\"22\" height=\"22\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M20.5 11.6a8.6 8.6 0 0 1-12.7 7.6L3.2 20.5l1.3-4.4a8.6 8.6 0 1 1 16-4.5Z\"/><path d=\"M9.2 8.6c.3 2.9 2.3 5 5.2 5.6l1.1-1.3-1.9-.9-.8.8a4 4 0 0 1-2-2l.8-.8-.9-1.9Z\"/></svg><span>Agendar</span></a></div><div class=\"ds-band\">Rações · Medicamentos · Acessórios · Banho e Tosa</div></div>",
+          "css": ".ds-sign{--sign:#1d3a9c;--sign-deep:#11286e;--sign-ink:#0e1c4d;--band:#c9431a;--band-hot:#b93c15;--gold:#ffc23d;--paper:#fff;--tint:#eef3ff;--tint-2:#dfe8ff;--muted:#46557f;--on-blue:#dbe4ff;--on-deep:#b8c6f2;--asphalt:#262a36;--dash:#f4f6fb;--font:\"Nunito\",ui-rounded,\"Arial Rounded MT Bold\",system-ui,sans-serif;--ease:cubic-bezier(.16,1,.3,1);font-family:var(--font);color:var(--paper);}.ds-sign-in{display:flex;align-items:center;justify-content:space-between;gap:16px;background:var(--sign);min-height:64px;padding:10px 24px;box-shadow:0 6px 18px -12px rgba(14,28,77,.6);}.ds-wm{display:inline-flex;flex-direction:column;line-height:1;text-decoration:none;color:inherit;}.ds-wm-name{font-weight:1000;font-size:28px;letter-spacing:-.01em;}.ds-wm-sub{margin-top:3px;font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);}.ds-nav{display:flex;gap:22px;}.ds-nav a{position:relative;padding:10px 4px;font-weight:800;font-size:15px;color:var(--on-blue);text-decoration:none;}.ds-nav a::after{content:\"\";position:absolute;left:4px;right:4px;bottom:4px;height:3px;border-radius:3px;background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform .25s var(--ease);}.ds-nav a:hover{color:var(--paper);}.ds-nav a:hover::after{transform:scaleX(1);}.ds-nav a:focus-visible,.ds-sm:focus-visible{outline:3px solid var(--paper);outline-offset:3px;border-radius:8px;}.ds-sm{display:inline-flex;align-items:center;gap:10px;min-height:44px;padding:0 16px;border-radius:999px;background:var(--band);color:var(--paper);font-weight:900;font-size:15px;text-decoration:none;}.ds-sm svg{width:19px;height:19px;}.ds-sm:hover{background:var(--band-hot);}.ds-band{background:var(--band);font-size:14px;font-weight:800;letter-spacing:.03em;text-align:center;padding:7px 18px;}"
+        },
+        {
+          "name": "Road with Stop Plaques",
+          "kind": "custom",
+          "refersTo": "stop-plaque",
+          "description": "Signature: asphalt road with white dashes, gold travelled fill, a blue stop plaque and a reached gold one. Hover the demo to light the first plaque.",
+          "html": "<div class=\"ds-route\"><div class=\"ds-road\"><div class=\"ds-fill\"></div></div><span class=\"ds-stop ds-stop-a\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3.5 11 12 4l8.5 7\"/><path d=\"M5.5 9.5V20h13V9.5\"/><path d=\"M10 20v-5.5h4V20\"/></svg></span><span class=\"ds-stop ds-stop-b is-reached\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3.5 11 12 4l8.5 7\"/><path d=\"M5.5 9.5V20h13V9.5\"/><path d=\"M10 20v-5.5h4V20\"/></svg></span></div>",
+          "css": ".ds-route{--sign:#1d3a9c;--sign-deep:#11286e;--sign-ink:#0e1c4d;--band:#c9431a;--band-hot:#b93c15;--gold:#ffc23d;--paper:#fff;--tint:#eef3ff;--tint-2:#dfe8ff;--muted:#46557f;--on-blue:#dbe4ff;--on-deep:#b8c6f2;--asphalt:#262a36;--dash:#f4f6fb;--font:\"Nunito\",ui-rounded,\"Arial Rounded MT Bold\",system-ui,sans-serif;--ease:cubic-bezier(.16,1,.3,1);position:relative;height:220px;width:120px;}.ds-road{position:absolute;left:40px;top:0;bottom:0;width:30px;background:var(--asphalt);border-radius:999px;}.ds-road::before{content:\"\";position:absolute;top:0;bottom:0;left:50%;width:3px;margin-left:-1.5px;background:repeating-linear-gradient(to bottom,var(--dash) 0 14px,transparent 14px 30px);opacity:.85;}.ds-fill{position:absolute;top:0;left:50%;width:5px;margin-left:-2.5px;height:55%;background:var(--gold);border-radius:5px;}.ds-stop{position:absolute;left:36px;display:grid;place-items:center;width:38px;height:38px;padding:8px;border-radius:50%;background:var(--sign);color:var(--paper);box-shadow:0 0 0 3px var(--paper),0 6px 12px -6px rgba(14,28,77,.6);transition:background-color .35s var(--ease),color .35s var(--ease),box-shadow .35s var(--ease);}.ds-stop svg{width:22px;height:22px;}.ds-stop-a{top:160px;}.ds-stop-b{top:60px;}.ds-stop.is-reached,.ds-route:hover .ds-stop-a{background:var(--gold);color:var(--sign-ink);box-shadow:0 0 0 3px var(--sign-ink),0 6px 12px -6px rgba(14,28,77,.6);}"
+        },
+        {
+          "name": "Rating Plaque",
+          "kind": "custom",
+          "refersTo": "rating-plaque",
+          "description": "96px white disc ringed in band orange with the Google score, beside the review count.",
+          "html": "<div class=\"ds-on-blue2\"><p class=\"ds-plaque\"><span class=\"ds-disc\"><strong>4,8</strong><span class=\"ds-stars\"><svg viewBox=\"0 0 24 24\" width=\"12\" height=\"12\" fill=\"currentColor\"><path d=\"m12 2.6 2.9 6 6.6.8-4.9 4.5 1.3 6.5L12 17.1l-5.9 3.3 1.3-6.5-4.9-4.5 6.6-.8Z\"/></svg><svg viewBox=\"0 0 24 24\" width=\"12\" height=\"12\" fill=\"currentColor\"><path d=\"m12 2.6 2.9 6 6.6.8-4.9 4.5 1.3 6.5L12 17.1l-5.9 3.3 1.3-6.5-4.9-4.5 6.6-.8Z\"/></svg><svg viewBox=\"0 0 24 24\" width=\"12\" height=\"12\" fill=\"currentColor\"><path d=\"m12 2.6 2.9 6 6.6.8-4.9 4.5 1.3 6.5L12 17.1l-5.9 3.3 1.3-6.5-4.9-4.5 6.6-.8Z\"/></svg><svg viewBox=\"0 0 24 24\" width=\"12\" height=\"12\" fill=\"currentColor\"><path d=\"m12 2.6 2.9 6 6.6.8-4.9 4.5 1.3 6.5L12 17.1l-5.9 3.3 1.3-6.5-4.9-4.5 6.6-.8Z\"/></svg><svg viewBox=\"0 0 24 24\" width=\"12\" height=\"12\" fill=\"currentColor\"><path d=\"m12 2.6 2.9 6 6.6.8-4.9 4.5 1.3 6.5L12 17.1l-5.9 3.3 1.3-6.5-4.9-4.5 6.6-.8Z\"/></svg></span></span><span class=\"ds-ptext\"><strong>120 avaliações</strong><span>no Google</span></span></p></div>",
+          "css": ".ds-on-blue2{--sign:#1d3a9c;--sign-deep:#11286e;--sign-ink:#0e1c4d;--band:#c9431a;--band-hot:#b93c15;--gold:#ffc23d;--paper:#fff;--tint:#eef3ff;--tint-2:#dfe8ff;--muted:#46557f;--on-blue:#dbe4ff;--on-deep:#b8c6f2;--asphalt:#262a36;--dash:#f4f6fb;--font:\"Nunito\",ui-rounded,\"Arial Rounded MT Bold\",system-ui,sans-serif;--ease:cubic-bezier(.16,1,.3,1);background:var(--sign);padding:28px;border-radius:16px;font-family:var(--font);color:var(--on-blue);}.ds-plaque{display:flex;align-items:center;gap:14px;margin:0;}.ds-disc{display:grid;place-items:center;align-content:center;gap:2px;width:96px;height:96px;border-radius:50%;background:var(--paper);color:var(--sign);box-shadow:0 0 0 4px var(--band),0 14px 24px -14px rgba(0,0,0,.7);}.ds-disc strong{font-size:34px;font-weight:1000;line-height:1;letter-spacing:-.02em;}.ds-stars{display:inline-flex;gap:1px;color:var(--band);}.ds-ptext{display:grid;line-height:1.2;}.ds-ptext strong{color:var(--paper);font-size:1.25rem;font-weight:1000;}.ds-ptext span{font-weight:700;}"
+        },
+        {
+          "name": "Shelf",
+          "kind": "custom",
+          "refersTo": "stop-title",
+          "description": "A service as a shelf: Stop Title in sign blue over a blue metal lip, instead of a card.",
+          "html": "<ul class=\"ds-shelves\"><li class=\"ds-shelf\"><h3>Banho e tosa</h3><p>Para cães de todos os portes.</p></li><li class=\"ds-shelf\"><h3>Rações</h3><p>Linhas completas para cães e gatos.</p></li></ul>",
+          "css": ".ds-shelves{--sign:#1d3a9c;--sign-deep:#11286e;--sign-ink:#0e1c4d;--band:#c9431a;--band-hot:#b93c15;--gold:#ffc23d;--paper:#fff;--tint:#eef3ff;--tint-2:#dfe8ff;--muted:#46557f;--on-blue:#dbe4ff;--on-deep:#b8c6f2;--asphalt:#262a36;--dash:#f4f6fb;--font:\"Nunito\",ui-rounded,\"Arial Rounded MT Bold\",system-ui,sans-serif;--ease:cubic-bezier(.16,1,.3,1);list-style:none;margin:0;padding:16px;background:var(--tint);font-family:var(--font);color:var(--sign-ink);}.ds-shelf{position:relative;padding:22px 0 26px;}.ds-shelf::after{content:\"\";position:absolute;left:0;right:0;bottom:0;height:15px;border-radius:3px 3px 5px 5px;background:linear-gradient(to bottom,#4a68d0 0 2px,#2847b4 2px 9px,var(--sign) 9px 11px,var(--sign-deep) 11px);box-shadow:0 12px 14px -10px rgba(14,28,77,.55);transform-origin:left;transition:transform .9s var(--ease);}.ds-shelf:hover::after{transform:scaleX(.96);}.ds-shelf h3{margin:0;font-size:2rem;font-weight:900;line-height:1.05;color:var(--sign);}.ds-shelf p{margin:6px 0 0;color:var(--muted);font-weight:500;}"
+        },
+        {
+          "name": "Checker Backdrop with Pet Photo",
+          "kind": "card",
+          "refersTo": "photo-frame",
+          "description": "The in-store sign-deep and white checker as ground, with a tilted photo in a white mat and an orange caption pill.",
+          "html": "<div class=\"ds-backdrop\"><figure class=\"ds-pet\"><div class=\"ds-frame\"></div><figcaption>Pronto para voltar para casa</figcaption></figure></div>",
+          "css": ".ds-backdrop{--sign:#1d3a9c;--sign-deep:#11286e;--sign-ink:#0e1c4d;--band:#c9431a;--band-hot:#b93c15;--gold:#ffc23d;--paper:#fff;--tint:#eef3ff;--tint-2:#dfe8ff;--muted:#46557f;--on-blue:#dbe4ff;--on-deep:#b8c6f2;--asphalt:#262a36;--dash:#f4f6fb;--font:\"Nunito\",ui-rounded,\"Arial Rounded MT Bold\",system-ui,sans-serif;--ease:cubic-bezier(.16,1,.3,1);padding:40px;border-radius:30px;background:conic-gradient(var(--paper) 0 25%,var(--sign-deep) 0 50%,var(--paper) 0 75%,var(--sign-deep) 0) 0 0/76px 76px;box-shadow:0 30px 50px -30px rgba(0,0,0,.6);font-family:var(--font);}.ds-pet{position:relative;margin:0 auto;width:200px;rotate:-2deg;}.ds-frame{aspect-ratio:810/1080;border-radius:22px;background:var(--tint-2);box-shadow:0 0 0 8px var(--paper),0 18px 30px -16px rgba(14,28,77,.65);}.ds-pet figcaption{position:absolute;left:50%;bottom:-14px;translate:-50% 0;padding:6px 14px;border-radius:999px;white-space:nowrap;background:var(--band);color:var(--paper);font-size:14px;font-weight:900;}"
+        },
+        {
+          "name": "Hours Board",
+          "kind": "card",
+          "refersTo": "hours-board",
+          "description": "Blue panel with tabular hours; today prints gold with a \"hoje\" pill.",
+          "html": "<div class=\"ds-hours\"><h3>Horário de funcionamento</h3><table><tbody><tr class=\"is-today\"><th>Segunda a sexta</th><td>8h30 às 19h</td></tr><tr><th>Sábado</th><td>8h30 às 17h</td></tr><tr><th>Domingo</th><td>Fechado</td></tr></tbody></table></div>",
+          "css": ".ds-hours{--sign:#1d3a9c;--sign-deep:#11286e;--sign-ink:#0e1c4d;--band:#c9431a;--band-hot:#b93c15;--gold:#ffc23d;--paper:#fff;--tint:#eef3ff;--tint-2:#dfe8ff;--muted:#46557f;--on-blue:#dbe4ff;--on-deep:#b8c6f2;--asphalt:#262a36;--dash:#f4f6fb;--font:\"Nunito\",ui-rounded,\"Arial Rounded MT Bold\",system-ui,sans-serif;--ease:cubic-bezier(.16,1,.3,1);padding:26px 22px;border-radius:22px;background:var(--sign);color:var(--paper);font-family:var(--font);max-width:420px;}.ds-hours h3{margin:0;font-size:1.25rem;font-weight:900;}.ds-hours table{width:100%;margin-top:16px;border-collapse:collapse;font-variant-numeric:tabular-nums;}.ds-hours th,.ds-hours td{padding:13px 0;border-bottom:1.5px solid rgba(219,228,255,.22);text-align:left;}.ds-hours th{font-weight:700;color:var(--on-blue);}.ds-hours td{font-weight:900;text-align:right;}.ds-hours tr:last-child th,.ds-hours tr:last-child td{border-bottom:0;}.ds-hours tr.is-today th,.ds-hours tr.is-today td{color:var(--gold);}.ds-hours tr.is-today th::after{content:\"hoje\";margin-left:8px;padding:1px 8px;border-radius:999px;background:var(--gold);color:var(--sign-ink);font-size:12px;font-weight:900;vertical-align:2px;}"
+        },
+        {
+          "name": "WhatsApp Float",
+          "kind": "button",
+          "refersTo": "wa-float",
+          "description": "Fixed band pill; hides while any in-page WhatsApp button is on screen.",
+          "html": "<a class=\"ds-float\" href=\"#\"><svg viewBox=\"0 0 24 24\" width=\"22\" height=\"22\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M20.5 11.6a8.6 8.6 0 0 1-12.7 7.6L3.2 20.5l1.3-4.4a8.6 8.6 0 1 1 16-4.5Z\"/><path d=\"M9.2 8.6c.3 2.9 2.3 5 5.2 5.6l1.1-1.3-1.9-.9-.8.8a4 4 0 0 1-2-2l.8-.8-.9-1.9Z\"/></svg><span>WhatsApp</span></a>",
+          "css": ".ds-float{--sign:#1d3a9c;--sign-deep:#11286e;--sign-ink:#0e1c4d;--band:#c9431a;--band-hot:#b93c15;--gold:#ffc23d;--paper:#fff;--tint:#eef3ff;--tint-2:#dfe8ff;--muted:#46557f;--on-blue:#dbe4ff;--on-deep:#b8c6f2;--asphalt:#262a36;--dash:#f4f6fb;--font:\"Nunito\",ui-rounded,\"Arial Rounded MT Bold\",system-ui,sans-serif;--ease:cubic-bezier(.16,1,.3,1);display:inline-flex;align-items:center;gap:8px;min-height:52px;padding:0 20px 0 16px;border-radius:999px;background:var(--band);color:var(--paper);font-family:var(--font);font-weight:900;text-decoration:none;box-shadow:0 14px 28px -12px rgba(14,28,77,.7);transition:transform .35s var(--ease),background-color .2s;}.ds-float:hover{background:var(--band-hot);}.ds-float:focus-visible{outline:3px solid var(--sign-ink);outline-offset:3px;box-shadow:0 0 0 6px var(--gold);}"
+        }
+      ],
+      "narrative": {
+        "northStar": "Táxi dog: a placa vira a pintura da van",
+        "overview": "Planet Patas is the shop's real sign turned into a van's livery, and the page is the táxi dog's round trip: casa, Planet Patas, casa, cheiroso. The sticky header is the sign itself, a royal blue board with the name in white rounded Nunito at its heaviest weight and \"pet shop\" in gold caps, with the orange-red band under it carrying \"Rações · Medicamentos · Acessórios · Banho e Tosa\" exactly as the facade does.\n\nOne asphalt road with white dashes runs the full length of the page down the left edge and never breaks or wraps. The hero ends in a horizontal street: a side-profile white \"TÁXI DOG\" van in the livery (orange stripe, blue lettering and paw, gold light, a dog at the window) drives from the \"Sua casa\" corner to under the facade photo. From that corner the vertical road takes over, and a small top-down van rides it as the chase light, always marking where the visitor is; the road behind it fills gold. Every section is a stop with a round blue plaque on the road, and each plaque turns gold once the van passes and stays lit. The trip ends at \"Em casa\" on a blue and white checker ground.\n\nBlue and orange shout as a pair across full-colour fields; white and pale tint fields alternate with blue ones so the page reads as the sign, not as a white page with a blue accent. Real photos (the facade, the shampoo shelf, the toys, the pomeranian in front of the in-store checker backdrop) carry the proof. The world refuses the pastel paw-print-wallpaper pet template and the row of four service cards.",
+        "keyCharacteristics": [
+          "The sign as livery: royal sign blue fields, white rounded Nunito 900 to 1000, an orange-red band.",
+          "One unbroken asphalt road with white dashes on the left edge, filled gold behind the van.",
+          "Two vans, one on screen at a time: the side-profile \"TÁXI DOG\" van on the hero street, the top-down chase van on the road.",
+          "Round blue stop plaques with a white ring that turn gold when reached and stay lit.",
+          "The in-store blue and white checker backdrop as the arrival material.",
+          "Pill buttons; orange for booking banho e tosa, blue for section actions.",
+          "Round, plaque-like forms everywhere; soft navy-tinted drops, no hard offsets."
+        ],
+        "rules": [
+          {
+            "name": "The Shout in Pairs Rule",
+            "body": "Blue and orange commit together at full strength: sections are whole fields (blue, white, tint, blue, white, blue on checker), the sign band and the booking buttons are orange. A viewport is never a neutral page with a blue accent.",
+            "section": "colors"
+          },
+          {
+            "name": "The Band Is Booking Rule",
+            "body": "An orange-filled pill at button size is the banho-e-tosa booking (header Agendar, hero, finale, the floating WhatsApp). Section-level actions on white (Pedir o táxi dog, Abrir no Google Maps) are blue pills; the hero's secondary is a white-line pill.",
+            "section": "colors"
+          },
+          {
+            "name": "The Gold Is Now Rule",
+            "body": "Gold marks progress and the present: the travelled road, reached stops, the van's lights, today's hours row, focus. It sits on blue or as a fill behind sign-ink text, never as text on white or tint.",
+            "section": "colors"
+          },
+          {
+            "name": "The One Rounded Voice Rule",
+            "body": "Nunito is the only face, at weight 500 or heavier: 900 to 1000 for names, headings, figures and buttons, 700 to 800 for emphasis and small sign text, 500 for body.",
+            "section": "typography"
+          },
+          {
+            "name": "The Sign Caps Rule",
+            "body": "Uppercase tracking (0.14em to 0.18em) belongs only to text the sign or the road carries: \"pet shop\" under the wordmark and the stop labels. Headings stay sentence case.",
+            "section": "typography"
+          },
+          {
+            "name": "The Enamel Ring Rule",
+            "body": "A plaque or framed photo is edged with a solid zero-offset ring (white on blue, band around the rating, sign ink around the finale and reached stops), then a soft drop. Never a hard offset.",
+            "section": "elevation"
+          },
+          {
+            "name": "The Readable Checker Rule",
+            "body": "The checker is ground, never under text: copy on a checker always sits on a solid blue plaque, and photos on it carry a white mat.",
+            "section": "shapes"
+          }
+        ],
+        "dos": [
+          "Do treat this part as the Planet Patas world only; start any other business page from its own world.",
+          "Do keep the road one unbroken line from the hero to the finale, with exactly one van on screen at a time.",
+          "Do light each stop plaque gold when the van reaches it and keep it lit.",
+          "Do commit blue and orange as whole fields and fills; orange pills for the banho-e-tosa booking, blue pills for section actions.",
+          "Do set everything in Nunito, 900 to 1000 for names, headings and buttons, 500 for body.",
+          "Do edge plaques and framed photos with a solid zero-offset ring and a soft navy drop.",
+          "Do put copy on a solid blue plaque whenever it sits over the checker.",
+          "Do keep every section and the stop plaques fully visible under reduced motion or when scripts fail."
+        ],
+        "donts": [
+          "Don't mix this world with Firmo or Da Vinti: no neon, chamfers, card stock, two inks or pen marks here, and no road, livery or checker there.",
+          "Don't drift toward the pastel paw-print-wallpaper pet template or a row of four service cards; the paw lives on the van and the favicon only.",
+          "Don't let the road wrap, break or switch sides between sections.",
+          "Don't set gold as text on white or tint.",
+          "Don't use hard offset shadows or glows.",
+          "Don't set copy directly on the checker."
         ]
       }
     }

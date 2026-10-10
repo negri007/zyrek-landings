@@ -117,7 +117,7 @@ section{position:relative}
 .count{background:var(--ink);padding:20px 16px 18px;display:grid;gap:4px}
 .count b{font-family:var(--display);font-style:italic;font-weight:900;font-size:clamp(54px,12vw,96px);line-height:.85;color:#fff}
 .count b i{font-style:inherit;color:var(--red)}
-.count span{color:var(--soft);font-size:14.5px;font-weight:600;line-height:1.35}
+.count > span{color:var(--soft);font-size:14.5px;font-weight:600;line-height:1.35}
 
 /* seletor de unidade */
 .units{background:linear-gradient(180deg,transparent,rgba(23,24,28,.92) 12%,rgba(23,24,28,.92) 88%,transparent)}
@@ -475,10 +475,7 @@ footer.foot .logo{width:56px;height:56px;border-radius:8px;margin-bottom:10px}
       <div class="plan hi rv"><h3>Quadrimestral</h3><p class="val">Valor <span class="pend">[confirmar]</span></p></div>
       <div class="plan rv"><h3>Anual</h3><p class="val">Valor <span class="pend">[confirmar]</span></p></div>
     </div>
-    <div class="camp rv">
-      <b>Última campanha: Black da Red 2025</b>
-      <p>Anual em 12x de R$ 100, podendo trazer um amigo diferente por mês. Quadrimestral: compre 4 meses e leve 5, por R$ 400 em até 4x. Campanha encerrada; mostrada só como referência.</p>
-    </div>
+    <div id="camp" hidden></div>
     <div class="passes rv">
       <span>Aceita <b>Wellhub (Gympass)</b> e <b>TotalPass</b> nas duas unidades.</span>
       <span>Indique e ganhe: <span class="pend">[confirmar se continua]</span></span>
@@ -574,7 +571,7 @@ footer.foot .logo{width:56px;height:56px;border-radius:8px;margin-bottom:10px}
       <p>Academia de família, de Dragonildos e Dragonildas.</p>
     </div>
     <div class="casa">
-      <article class="card rv"><figure><img src="fotos/reddragon/u2-tatame.jpg" width="800" height="800" alt="Sala de luta com tatame vermelho" loading="lazy"></figure><div><h3>Muay Thai voltou</h3><p>Desde 05/10/2026, só na Unidade 2, com o professor Gabriel Fortunato. Horários <span class="pend">[confirmar]</span></p></div></article>
+      <article class="card rv"><figure><img src="fotos/reddragon/u2-tatame.jpg" width="800" height="800" alt="Sala de luta com tatame vermelho" loading="lazy"></figure><div><h3>Muay Thai voltou</h3><p>Desde 05/10/2026, só na Unidade 2, com o professor Gabriel. Horários <span class="pend">[confirmar]</span></p></div></article>
       <article class="card rv"><figure><img src="fotos/reddragon/arraia.jpg" width="640" height="800" alt="Arte do Arraiá de aniversário da Red com o dragão" loading="lazy" style="object-position:50% 20%"></figure><div><h3>Arraiá da Red</h3><p>Aniversário em julho, nas duas unidades: treino, pipoca, quentão e paçoquinha.</p></div></article>
       <article class="card rv"><figure><img src="fotos/reddragon/primeiros-socorros.jpg" width="594" height="730" alt="Mãos fazendo massagem cardíaca em um boneco de treino" loading="lazy"></figure><div><h3>Equipe treinada</h3><p>Treinamento de primeiros socorros com a equipe.</p></div></article>
     </div>
@@ -646,7 +643,7 @@ footer.foot .logo{width:56px;height:56px;border-radius:8px;margin-bottom:10px}
         maps: "Av. Quatorze de Setembro, 1950-A, Vila Malaman, Presidente Prudente - SP, 19014-000",
         // minutos desde 00:00; fecha 1440 = meia-noite
         horario: { 1: [330, 1440], 2: [330, 1440], 3: [330, 1440], 4: [330, 1440], 5: [330, 1440], 6: [600, 840], 0: [540, 720] },
-        google: { nota: 4.8, avaliacoes: 172 }, wellhub: null, // nota do Wellhub: [confirmar]
+        google: { nota: 4.8, avaliacoes: 172 }, wellhub: { nota: 4.8, avaliacoes: 171 },
         comodidades: ["ar", "lock", "shower", "wheel", "wifi"],
         foto: { src: "fotos/reddragon/fachada-dia.jpg", w: 753, h: 515, alt: "Fachada da Unidade 1 da Red Dragon Gym, com o logo em vermelho", cap: "Unidade 1 · Foto: Instagram @reddragongym" },
         kids: false
@@ -656,7 +653,7 @@ footer.foot .logo{width:56px;height:56px;border-radius:8px;margin-bottom:10px}
         endereco: "Av. Odinir Maragoni, 76", detalhe: "Conj. Hab. Eme Antonio Pioch Fontolan · CEP 19062-260",
         maps: "Av. Odinir Maragoni, 76, Conj. Hab. Eme Antonio Pioch Fontolan, Presidente Prudente - SP, 19062-260",
         horario: { 1: [300, 1440], 2: [300, 1440], 3: [300, 1440], 4: [300, 1440], 5: [300, 1440], 6: [600, 840], 0: [540, 720] },
-        google: { nota: 4.5, avaliacoes: 122 }, wellhub: null, // nota do Wellhub: [confirmar]
+        google: { nota: 4.5, avaliacoes: 122 }, wellhub: { nota: 4.9, avaliacoes: 228 }, // 4,86 no Wellhub, arredondado
         comodidades: ["ar", "lock", "shower", "wheel", "wifi", "park", "wc", "dance", "fight", "kids"],
         foto: { src: "fotos/reddragon/u2-logo.jpg", w: 800, h: 800, alt: "Unidade 2 da Red Dragon Gym: logo iluminado na parede e bicicletas", cap: "Unidade 2 · Foto: Instagram @reddragongym" },
         kids: true
@@ -683,7 +680,12 @@ footer.foot .logo{width:56px;height:56px;border-radius:8px;margin-bottom:10px}
       [2, 5, "08:00", "Funcional"], [2, 5, "20:00", "FitDance"],
       [2, 6, "10:15", "Pilates"], [2, 0, "09:15", "Yoga"]
     ],
-    semHorario: { 2: ["Muay Thai", "Treino Híbrido"] }
+    semHorario: { 2: ["Muay Thai", "Treino Híbrido"] },
+    campanha: { // campanha encerrada, só reativar com valores novos do dono
+      ativo: false,
+      titulo: "Última campanha: Black da Red 2025",
+      texto: "Anual em 12x de R$ 100, podendo trazer um amigo diferente por mês. Quadrimestral: compre 4 meses e leve 5, por R$ 400 em até 4x."
+    }
   };
   var DIAS = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
   var ORDEM = [1, 2, 3, 4, 5, 6, 0];
@@ -723,7 +725,7 @@ footer.foot .logo{width:56px;height:56px;border-radius:8px;margin-bottom:10px}
       '<tr class="' + (t.d === 6 ? "today" : "") + '"><td>Sábado e feriados</td><td>10h – 14h</td></tr>' +
       '<tr class="' + (t.d === 0 ? "today" : "") + '"><td>Domingo</td><td>9h – 12h</td></tr>';
     $("#uEdge").innerHTML = "<b>Das " + hm(U.horario[1][0]) + " à meia-noite</b> · " + (U.kids ? "<b>Espaço Kids</b> pra você treinar tranquilo" : "Espaço Kids na Unidade 2") + " · <b>2 unidades</b>";
-    $("#uRates").innerHTML = "<span><b>" + String(U.google.nota).replace(".", ",") + "</b> no Google (" + U.google.avaliacoes + ")</span><span>" + (U.wellhub ? "<b>" + String(U.wellhub).replace(".", ",") + "</b> no Wellhub" : 'Wellhub: <span class="pend">[confirmar nota]</span>') + "</span><span>notas de out/2026</span>";
+    $("#uRates").innerHTML = "<span><b>" + String(U.google.nota).replace(".", ",") + "</b> no Google (" + U.google.avaliacoes + ")</span><span>" + (U.wellhub ? "<b>" + String(U.wellhub.nota).replace(".", ",") + "</b> no Wellhub (" + U.wellhub.avaliacoes + ")" : "") + "</span><span>notas de out/2026</span>";
     $("#uWa").href = wa(U.whatsapp, "Olá, Red Dragon " + U.curto + "! Vim pelo site e queria mais informações.");
     $("#uMaps").href = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent("Red Dragon Gym, " + U.maps);
     var chips = $("#uChips");
@@ -803,6 +805,13 @@ footer.foot .logo{width:56px;height:56px;border-radius:8px;margin-bottom:10px}
   })();
 
   aplicarUnidade(unidade, false);
+
+  /* ===== campanha (só aparece com ativo:true) ===== */
+  (function () {
+    var c = CONFIG.campanha, el = $("#camp");
+    if (!c || !c.ativo) return;
+    el.className = "camp"; el.innerHTML = "<b>" + c.titulo + "</b><p>" + c.texto + "</p>"; el.hidden = false;
+  })();
 
   /* ===== malha de escamas ===== */
   var cv = $("#scales"), ctx = cv.getContext("2d"), cells = {}, dpr = 1, W = 0, H = 0, R = 30, raf = 0;

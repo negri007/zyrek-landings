@@ -6,14 +6,23 @@
 <meta name="robots" content="noindex, nofollow">
 <title>Pizzaria Da Vinti · demonstração</title>
 <meta name="description" content="Pizzaria do Ana Jacinta desde 2017. Massa no ponto, muito recheio e sabores da casa como a Moda da Vinti com borda de chocolate. No salão ou na sua casa, todas as noites a partir das 18h30.">
-<meta name="theme-color" content="#0e6b37">
+<meta name="theme-color" content="#016334">
 <meta property="og:title" content="Pizzaria Da Vinti">
 <meta property="og:description" content="Toda noite tem pizza no Ana Jacinta, desde 2017. Nota 4,6 em 221 avaliações.">
-<meta property="og:image" content="fotos/da-vinti-4.jpg">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Archivo:wdth,wght@62..125,400..900&display=swap" rel="stylesheet">
-<link rel="preload" as="image" href="fotos/da-vinti-4.jpg">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Restaurant", "name": "Pizzaria Da Vinti", "servesCuisine": "Pizza", "address": "Av. Osvaldo da Silva, 515 - Ana Jacinta, Presidente Prudente - SP", "telephone": "+55 (18) 99820-7790", "menu": "https://whatsmenu.com.br/cardapiopizzariadavinti", "aggregateRating": {"@type": "AggregateRating", "ratingValue": "4.6", "reviewCount": "221"}, "openingHours": ["Su-Fr 18:30-23:00", "Sa 18:30-23:30"]}</script>
+<meta property="og:image" content="fotos/davinti/pizza-hero.jpg">
+<style>
+/* fontes locais (latin, OFL): Abril Fatface e Archivo em arquivos estáticos por peso e largura */
+@font-face{font-family:"Abril Fatface";font-style:normal;font-weight:400;font-display:swap;src:url(fontes/abril-fatface-400.woff2) format("woff2")}
+@font-face{font-family:"Archivo";font-style:normal;font-weight:400;font-stretch:100%;font-display:swap;src:url(fontes/archivo-w100-400.woff2) format("woff2")}
+@font-face{font-family:"Archivo";font-style:normal;font-weight:500;font-stretch:100%;font-display:swap;src:url(fontes/archivo-w100-500.woff2) format("woff2")}
+@font-face{font-family:"Archivo";font-style:normal;font-weight:600;font-stretch:100%;font-display:swap;src:url(fontes/archivo-w100-600.woff2) format("woff2")}
+@font-face{font-family:"Archivo";font-style:normal;font-weight:700;font-stretch:100%;font-display:swap;src:url(fontes/archivo-w100-700.woff2) format("woff2")}
+@font-face{font-family:"Archivo";font-style:normal;font-weight:600;font-stretch:80%;font-display:swap;src:url(fontes/archivo-w80-600.woff2) format("woff2")}
+@font-face{font-family:"Archivo";font-style:normal;font-weight:800;font-stretch:80%;font-display:swap;src:url(fontes/archivo-w80-800.woff2) format("woff2")}
+@font-face{font-family:"Archivo";font-style:normal;font-weight:700;font-stretch:72%;font-display:swap;src:url(fontes/archivo-w72-700.woff2) format("woff2")}
+@font-face{font-family:"Archivo";font-style:normal;font-weight:800;font-stretch:72%;font-display:swap;src:url(fontes/archivo-w72-800.woff2) format("woff2")}
+</style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Restaurant","name":"Pizzaria Da Vinti","servesCuisine":"Pizza","telephone":"+55 18 99820-7790","menu":"https://whatsmenu.com.br/cardapiopizzariadavinti","address":{"@type":"PostalAddress","streetAddress":"Av. Osvaldo da Silva, 515","addressLocality":"Presidente Prudente","addressRegion":"SP","addressCountry":"BR"},"openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday"],"opens":"18:30","closes":"23:00"},{"@type":"OpeningHoursSpecification","dayOfWeek":"Saturday","opens":"18:30","closes":"23:30"}],"aggregateRating":{"@type":"AggregateRating","ratingValue":"4.6","reviewCount":"221","bestRating":"5"},"sameAs":["https://www.instagram.com/pizzaria_da_vinti/"]}</script>
 <script>
   (function () {
     var calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -22,14 +31,14 @@
 </script>
 <style>
 :root{
-  --card:#0e6b37;
-  --card-deep:#0a5229;
+  --card:#016334;
+  --card-deep:#01482a;
   --paper:#f5f2e9;
   --paper-edge:#e6e1d2;
-  --green:#0b4a27;
-  --green-ink:#0e6b37;
-  --red:#d02a1e;
-  --red-deep:#a81f15;
+  --green:#013d21;
+  --green-ink:#016334;
+  --red:#bb141a;
+  --red-deep:#8f0f14;
   --soft:#285c3d;
   --on-card:#f5f2e9;
   --on-card-soft:#cfe3d4;
@@ -37,7 +46,7 @@
   --body:"Archivo", system-ui, sans-serif;
   --ease-out:cubic-bezier(.16,1,.3,1);
   --bar-h:58px;
-  --module:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='14' viewBox='0 0 28 14'%3E%3Cpath d='M0 14L7 0l7 14z' fill='%23d02a1e'/%3E%3Cpath d='M14 14L21 0l7 14z' fill='%230e6b37'/%3E%3C/svg%3E");
+  --module:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='14' viewBox='0 0 28 14'%3E%3Cpath d='M0 14L7 0l7 14z' fill='%23bb141a'/%3E%3Cpath d='M14 14L21 0l7 14z' fill='%23016334'/%3E%3C/svg%3E");
   --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .3 0 0 0 0 .25 0 0 0 0 .15 0 0 0 .5 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 *{box-sizing:border-box}
@@ -71,8 +80,8 @@ svg.ico{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-wi
 .demo{background:var(--paper);color:var(--green);font-size:12.5px;font-weight:600;text-align:center;padding:6px 16px;line-height:1.35;border-bottom:1.5px dashed var(--green-ink)}
 .bar{position:sticky;top:0;z-index:60;height:var(--bar-h);display:flex;align-items:center;background:var(--card-deep);color:var(--on-card);box-shadow:0 6px 16px -10px rgba(0,0,0,.6)}
 .bar .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px}
-.brand{display:flex;align-items:baseline;gap:8px;color:var(--on-card);text-decoration:none}
-.brand b{font-family:var(--didone);font-weight:400;font-size:24px;letter-spacing:.01em;line-height:1}
+.brand{display:flex;align-items:center;gap:8px;color:var(--on-card);text-decoration:none}
+.brand img{height:38px;width:auto;align-self:center}
 .brand span{font-stretch:72%;font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--on-card-soft)}
 .bar nav{display:none;gap:26px}
 .bar nav a{color:var(--on-card-soft);text-decoration:none;font-stretch:80%;font-weight:600;font-size:14px;letter-spacing:.08em;text-transform:uppercase;background:linear-gradient(var(--paper),var(--paper)) 0 100%/0 1.5px no-repeat;transition:background-size .35s var(--ease-out),color .2s}
@@ -104,6 +113,11 @@ svg.ico{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-wi
 .photo img{width:100%;height:118%;object-fit:cover;object-position:50% 38%}
 .ident{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:2px 12px}
 .ident h1{font-family:var(--didone);font-size:clamp(36px,10.4vw,48px);line-height:.95;color:var(--paper);letter-spacing:-.005em}
+.ident h1 .logo{width:clamp(170px,52vw,230px);height:auto;filter:drop-shadow(0 2px 3px rgba(0,0,0,.35))}
+.ident{align-items:flex-end}
+.foot-logo{width:150px;height:auto;margin-bottom:14px}
+.credit{display:block;margin-top:6px;font-size:12.5px;color:var(--soft)}
+.photo .credit{position:absolute;left:6px;bottom:6px;margin:0;padding:2px 7px;font-size:12px;font-weight:600;background:rgba(0,0,0,.6);color:#fff;border-radius:2px}
 .ident h1 em{font-style:normal}
 .ident .since{color:var(--on-card-soft)}
 .addr-line{font-size:13.5px;line-height:1.4;color:var(--on-card-soft);border-top:1.5px solid rgba(245,242,233,.55);padding-top:8px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:2px 12px}
@@ -170,7 +184,7 @@ svg.ico{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-wi
 .month-grid table{width:100%;border-collapse:collapse;table-layout:fixed;font-variant-numeric:lining-nums tabular-nums}
 .month-grid th{padding:0 0 10px;font-stretch:72%;font-weight:800;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--green-ink);text-align:center}
 .month-grid th:first-child,.month-grid td:first-child .n{color:var(--red)}
-.month-grid td{position:relative;height:clamp(46px,9vw,74px);text-align:center;vertical-align:middle;border-top:1px solid rgba(14,107,55,.25)}
+.month-grid td{position:relative;height:clamp(46px,9vw,74px);text-align:center;vertical-align:middle;border-top:1px solid rgba(1,99,52,.25)}
 .month-grid .n{position:relative;z-index:1;font-family:var(--didone);font-size:clamp(20px,4.4vw,34px);line-height:1;color:var(--green)}
 .month-grid .ring{position:absolute;left:50%;top:50%;width:clamp(48px,11.6vw,70px);height:clamp(40px,9.6vw,58px);translate:-50% -50%;overflow:visible;pointer-events:none}
 .month-grid .ring path{fill:none;stroke:var(--red);stroke-linecap:round;stroke-linejoin:round}
@@ -185,7 +199,7 @@ svg.ico{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-wi
 
 /* two ways */
 .ways{display:grid;gap:0;margin-top:40px;border-top:2px solid var(--green-ink)}
-.way{display:grid;grid-template-columns:52px 1fr;gap:4px 16px;padding:22px 0;border-bottom:1px solid rgba(14,107,55,.3)}
+.way{display:grid;grid-template-columns:52px 1fr;gap:4px 16px;padding:22px 0;border-bottom:1px solid rgba(1,99,52,.3)}
 .way svg{grid-row:span 2;width:44px;height:44px;color:var(--red);fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
 .way h3{font-stretch:78%;font-weight:800;font-size:22px;letter-spacing:.02em;text-transform:uppercase;color:var(--green-ink);line-height:1.15}
 .way p{color:var(--soft)}
@@ -198,7 +212,7 @@ svg.ico{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-wi
 /* house pizzas */
 .house{display:grid;gap:36px;margin-top:10px}
 .menu-list{list-style:none;margin:0;padding:0;counter-reset:m}
-.menu-list li{display:grid;grid-template-columns:auto 1fr;gap:2px 14px;align-items:baseline;padding:18px 0;border-bottom:1px dashed rgba(14,107,55,.5);counter-increment:m}
+.menu-list li{display:grid;grid-template-columns:auto 1fr;gap:2px 14px;align-items:baseline;padding:18px 0;border-bottom:1px dashed rgba(1,99,52,.5);counter-increment:m}
 .menu-list li::before{content:counter(m);grid-row:span 2;font-family:var(--didone);font-size:44px;line-height:.9;color:var(--red);min-width:30px}
 .menu-list h3{font-family:var(--didone);font-size:clamp(26px,4.6vw,36px);line-height:1.05;color:var(--green-ink)}
 .menu-list p{color:var(--soft);font-size:16px}
@@ -242,7 +256,7 @@ svg.ico{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-wi
 .where .line a{color:var(--green)}
 .hours{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
 .hours caption{text-align:left;padding-bottom:8px;color:var(--green-ink)}
-.hours th,.hours td{padding:13px 0;border-bottom:1px solid rgba(14,107,55,.3);text-align:left;font-weight:500}
+.hours th,.hours td{padding:13px 0;border-bottom:1px solid rgba(1,99,52,.3);text-align:left;font-weight:500}
 .hours td{text-align:right;font-weight:700;color:var(--green)}
 .hours th{color:var(--soft)}
 .hours tr.today th,.hours tr.today td{color:var(--red)}
@@ -250,10 +264,27 @@ svg.ico{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-wi
 .status svg{width:34px;height:24px;fill:none;stroke:var(--red);stroke-width:2.2;stroke-linecap:round}
 .actions{display:flex;flex-wrap:wrap;gap:12px}
 @media (min-width:900px){.where{grid-template-columns:1fr 1fr;gap:64px;align-items:start}}
+/* fotos reais: sabores, entrega e fachada */
+.sabores{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:36px;padding-top:26px;border-top:2px solid var(--green-ink)}
+.sabores figure{margin:0}
+.sabores figure > span{display:block;aspect-ratio:1;overflow:hidden;border-radius:2px;box-shadow:0 14px 22px -16px rgba(0,0,0,.6);background:var(--paper-edge)}
+.sabores img{width:100%;height:100%;object-fit:cover}
+.sabores figcaption{margin-top:8px;font-weight:700;font-stretch:80%;font-size:16px;color:var(--green-ink);line-height:1.3}
+.sabores figcaption .credit{text-transform:none;letter-spacing:0;font-weight:400;font-stretch:100%}
+.sabores figure:first-child{grid-column:1/-1}
+.sabores figure:first-child > span{aspect-ratio:16/10}
+@media (min-width:900px){.sabores{grid-template-columns:repeat(5,minmax(0,1fr))}.sabores figure:first-child{grid-column:auto}.sabores figure:first-child > span{aspect-ratio:1}}
+.way-photo{margin:26px 0 0}
+.way-photo img{width:100%;aspect-ratio:3/1;object-fit:cover;object-position:50% 40%;border-radius:2px;box-shadow:0 14px 22px -16px rgba(0,0,0,.6)}
+@media (max-width:599px){.way-photo img{aspect-ratio:3/2}}
+.where-right{display:grid;gap:18px}
+.facade-shot{margin:0}
+.facade-shot img{width:100%;aspect-ratio:1296/475;object-fit:cover;border-radius:2px;box-shadow:0 14px 24px -18px rgba(0,0,0,.6)}
+
 
 /* faq */
 .faq{border-top:2px solid var(--green-ink)}
-.faq details{border-bottom:1px solid rgba(14,107,55,.3)}
+.faq details{border-bottom:1px solid rgba(1,99,52,.3)}
 .faq summary{list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px;min-height:64px;padding:12px 0;cursor:pointer;font-stretch:80%;font-weight:800;font-size:clamp(18px,2.6vw,22px);text-transform:uppercase;letter-spacing:.02em;color:var(--green-ink)}
 .faq summary::-webkit-details-marker{display:none}
 .faq summary svg{width:20px;height:20px;color:var(--red);transition:transform .35s var(--ease-out)}
@@ -298,7 +329,7 @@ main{overflow-x:clip}
 
 <header class="bar on-card">
   <div class="wrap">
-    <a class="brand" href="#topo"><b>Da Vinti</b><span>Pizzaria</span></a>
+    <a class="brand" href="#topo" aria-label="Pizzaria Da Vinti, início"><img src="fotos/davinti/logo-nome.png" width="851" height="612" alt=""><span>Pizzaria</span></a>
     <nav aria-label="Principal">
       <a href="#bairro">Todo dia</a><a href="#casa">Pizzas da casa</a><a href="#avaliacoes">Avaliações</a><a href="#onde">Onde fica</a>
     </nav>
@@ -315,9 +346,9 @@ main{overflow-x:clip}
       <div class="calendar">
         <div class="plate">
           <div class="head">
-            <div class="photo"><img src="fotos/da-vinti-4.jpg" width="810" height="1080" alt="Pizza meio calabresa, meio mussarela, com muito recheio e orégano, ainda na caixa." id="heroImg" referrerpolicy="no-referrer"></div>
+            <div class="photo"><img src="fotos/davinti/pizza-hero.jpg" width="1440" height="1440" alt="Pizza meio calabresa com cebola e azeitona, meio com batata palha, na caixa da Da Vinti." id="heroImg" fetchpriority="high"><span class="credit">Foto: Instagram @pizzaria_da_vinti</span></div>
             <div class="ident">
-              <h1 id="h-nome">Pizzaria <em>Da Vinti</em></h1>
+              <h1 id="h-nome"><span class="sr">Pizzaria Da Vinti</span><img class="logo" src="fotos/davinti/logo.png" width="851" height="720" alt="" aria-hidden="true"></h1>
               <span class="caps since">Ana Jacinta · desde 2017</span>
             </div>
             <p class="addr-line"><span><b>Av. Osvaldo da Silva, 515</b> · Ana Jacinta</span><span>(18) 99820-7790</span></p>
@@ -376,13 +407,14 @@ main{overflow-x:clip}
     </div>
     <div class="way">
       <svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="12" cy="34" r="6"/><circle cx="37" cy="34" r="6"/><path d="M18 34h13l4-12h-9M22 16h8l3 6M6 22h12v8H6z"/></svg>
-      <h3>Delivery</h3><p>Motoboys elogiados pela educação nas avaliações.</p>
+      <h3>Delivery</h3><p>Motoboys elogiados pela educação nas avaliações. Área de entrega: <span class="todo">[confirmar]</span></p>
     </div>
     <div class="way">
       <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 6c-8 6-12 12-12 19a12 12 0 0 0 24 0c0-7-4-13-12-19z"/><path d="M24 16v24M24 24l-5-4M24 30l5-4"/></svg>
-      <h3>Opção sem glúten</h3><p>Massa sem glúten preparada com cuidado. <span class="todo">[confirmar disponibilidade]</span></p>
+      <h3>Opção sem glúten</h3><p>Massa sem glúten preparada com cuidado. Dias e sabores: <span class="todo">[confirmar]</span></p>
     </div>
   </div>
+  <figure class="way-photo"><img src="fotos/davinti/entrega.jpg" width="810" height="540" alt="Caixas de pizza da Da Vinti empilhadas, prontas para a entrega" loading="lazy"><figcaption class="credit">Caixas prontas para a entrega · Foto de cliente no Google</figcaption></figure>
 </section>
 
 <section id="casa" class="folha" aria-labelledby="h-casa" data-folha>
@@ -398,9 +430,16 @@ main{overflow-x:clip}
       <p class="house-note">Cardápio completo, preços e bordas no <a href="https://whatsmenu.com.br/cardapiopizzariadavinti" target="_blank" rel="noopener">cardápio online</a>.</p>
     </div>
     <figure class="pizza-shot" data-reveal="shot">
-      <div class="frame"><img id="shotImg" src="fotos/da-vinti-3.jpg" width="682" height="788" alt="Pizza com brócolis e bacon cobrindo a massa até a borda." decoding="async" referrerpolicy="no-referrer"></div>
-      <figcaption>Recheio até a borda.</figcaption>
+      <div class="frame"><img id="shotImg" src="fotos/davinti/brocolis.jpg" width="682" height="788" alt="Pizza com brócolis e bacon cobrindo a massa até a borda." decoding="async"></div>
+      <figcaption>Recheio até a borda. <span class="credit" style="display:inline">Foto de cliente no Google</span></figcaption>
     </figure>
+  </div>
+  <div class="sabores" aria-label="Pizzas saindo do forno">
+    <figure><span><img src="fotos/davinti/sabor-1.jpg" width="1200" height="1600" alt="Pizza com cheddar, catupiry em zigue-zague e frango, ao lado de outra com bacon" loading="lazy"></span><figcaption>Recheio caprichado<span class="credit">Foto: Instagram @pizzaria_da_vinti</span></figcaption></figure>
+    <figure><span><img src="fotos/davinti/sabor-5.jpg" width="1440" height="1440" alt="Pizza com presunto, mussarela, ervilha, cebola e azeitona" loading="lazy"></span><figcaption>Do forno para a caixa<span class="credit">Foto: Instagram @pizzaria_da_vinti</span></figcaption></figure>
+    <figure><span><img src="fotos/davinti/sabor-2.jpg" width="585" height="1040" alt="Pizza de calabresa com cebola em rodelas" loading="lazy"></span><figcaption>Calabresa com cebola<span class="credit">Foto de cliente no Google</span></figcaption></figure>
+    <figure><span><img src="fotos/davinti/sabor-3.jpg" width="810" height="1080" alt="Pizza meio salgada com atum e catupiry, meio doce com chocolate e morango" loading="lazy"></span><figcaption>Meio salgada, meio doce<span class="credit">Foto de cliente no Google</span></figcaption></figure>
+    <figure><span><img src="fotos/davinti/sabor-4.jpg" width="720" height="540" alt="Pizza doce de chocolate preto e branco" loading="lazy"></span><figcaption>Pizza doce de chocolate<span class="credit">Foto de cliente no Google</span></figcaption></figure>
   </div>
 </section>
 
@@ -429,6 +468,8 @@ main{overflow-x:clip}
         <a class="btn ink" href="https://www.google.com/maps/search/?api=1&query=Pizzaria%20Da%20Vinti%20Presidente%20Prudente&query_place_id=ChIJqzj8MePzk5QR2TLdFsAz_rM" target="_blank" rel="noopener" data-press>Abrir no Google Maps<svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
       </div>
     </div>
+    <div class="where-right">
+    <figure class="facade-shot"><img src="fotos/davinti/fachada.jpg" width="1296" height="475" alt="Fachada vermelha da Pizzaria Da Vinti na Av. Osvaldo da Silva, com o letreiro e os telefones" loading="lazy"><figcaption class="credit">Foto de cliente no Google</figcaption></figure>
     <table class="hours" id="hours">
       <caption class="caps">Horário de funcionamento</caption>
       <tbody>
@@ -436,6 +477,7 @@ main{overflow-x:clip}
         <tr data-days="6"><th scope="row">Sábado</th><td>18h30 às 23h30</td></tr>
       </tbody>
     </table>
+    </div>
   </div>
 </section>
 
@@ -444,7 +486,7 @@ main{overflow-x:clip}
   <div class="faq">
     <details><summary>Tem massa sem glúten?<svg aria-hidden="true"><use href="#i-plus"/></svg></summary><p><span class="todo">[confirmar dias e sabores]</span></p></details>
     <details><summary>Faz entrega em quais bairros?<svg aria-hidden="true"><use href="#i-plus"/></svg></summary><p><span class="todo">[confirmar área de entrega]</span></p></details>
-    <details><summary>Abre todos os dias?<svg aria-hidden="true"><use href="#i-plus"/></svg></summary><p>Sim, a partir das 18h30.</p></details>
+    <details><summary>Abre todos os dias?<svg aria-hidden="true"><use href="#i-plus"/></svg></summary><p>Sim, a partir das 18h30, segundo o Google. <span class="todo">[confirmar segunda-feira: um post do Instagram avisou que não abririam às segundas]</span></p></details>
   </div>
 </section>
 
@@ -461,7 +503,9 @@ main{overflow-x:clip}
 
 <footer class="foot on-card">
   <div class="wrap">
+    <img class="foot-logo" src="fotos/davinti/logo.png" width="851" height="720" alt="Pizzaria Da Vinti: a pizzaria do bairro Ana Jacinta" loading="lazy">
     <p>Pizzaria Da Vinti · Av. Osvaldo da Silva, 515 - Ana Jacinta, Presidente Prudente - SP</p>
+    <p>Fotos do Instagram @pizzaria_da_vinti e de clientes no Google.</p>
     <p>© <span id="ano">2026</span> · Página de demonstração feita por Gabriel Negri</p>
   </div>
 </footer>
@@ -470,8 +514,8 @@ main{overflow-x:clip}
   <a class="btn" href="https://whatsmenu.com.br/cardapiopizzariadavinti" target="_blank" rel="noopener" data-press><svg aria-hidden="true"><use href="#i-menu"/></svg>Pedir pelo cardápio</a>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/motion@12.43.0/dist/motion.js"></script>
+<script src="lenis-1.3.26.min.js"></script>
+<script src="motion-12.43.0.js"></script>
 <script>
 (function () {
   "use strict";

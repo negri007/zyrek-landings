@@ -643,6 +643,11 @@
       "world": "Pizzaria Da Vinti (Folhinha de arrancar)",
       "governs": "landings-motion/da-vinti.html",
       "location": "scopedWorlds[\"landings-motion/da-vinti.html\"]"
+    },
+    {
+      "world": "Planet Patas (Painel xadrez)",
+      "governs": "landings-motion/planet-patas.html",
+      "location": "scopedWorlds[\"landings-motion/planet-patas.html\"]"
     }
   ],
   "worldsRule": "One world per business page. Worlds must not be mixed: no token, rule, texture, component or motion from one world applies to another page.",
@@ -1266,6 +1271,22 @@
           "Don't use green or red dots, pills or fills to say open or closed.",
           "Don't drift toward the rustic checkered-tablecloth pizzeria with a hero photo under a serif headline."
         ]
+      }
+    },
+    "landings-motion/planet-patas.html": {
+      "title": "Design System: Planet Patas (Painel xadrez)",
+      "scope": {
+        "governs": [
+          "landings-motion/planet-patas.html",
+          "celular/planet-patas.html"
+        ],
+        "projectWide": false,
+        "statement": "This world governs the Planet Patas page only; its tokens, checker backdrop, post-format heads and motion are not defaults for any other page.",
+        "markdownSection": "DESIGN.md, part '# Design System: Planet Patas (Painel xadrez)'; its fenced yaml block holds the normative tokens."
+      },
+      "tokens": {
+        "format": "yaml (DESIGN.md token block)",
+        "source": "name: Planet Patas (Painel xadrez)\ndescription: \"Scoped visual world for landings-motion/planet-patas.html only: the store's blue-and-white checkered photo backdrop and its logo globe, royal blue fields with paw wallpaper, white bands with red subtitles. Not a project-wide system.\"\ngoverns: landings-motion/planet-patas.html\ncolors:\n  blue: \"#0A4C9E\"\n  post: \"#14508C\"\n  deep: \"#073A7A\"\n  red: \"#D2232E\"\n  red-deep: \"#B01A24\"\n  orange: \"#F07A3C\"\n  sky: \"#E8F2FD\"\n  sky-2: \"#CFE3FA\"\n  ink: \"#0B2A55\"\n  ink-soft: \"#3A5680\"\n  white: \"#FFFFFF\"\n  lilac: \"#B9A3EE\"\n  yellow: \"#FFD23F\"\n  confirm-bg: \"#FFF3B8\"\ntypography:\n  hero:\n    fontFamily: \"Baloo 2, Arial Rounded MT Bold, system-ui, sans-serif\"\n    fontSize: \"clamp(42px, 11.5vw, 92px); clamp(56px, 5vw, 76px) from 1000px\"\n    fontWeight: 800\n    lineHeight: 0.92\n    letterSpacing: \"-0.02em\"\n  headline:\n    fontFamily: \"Baloo 2, system-ui, sans-serif\"\n    fontSize: \"clamp(34px, 8.6vw, 62px)\"\n    fontWeight: 800\n    lineHeight: 0.98\n  band:\n    fontFamily: \"Baloo 2, system-ui, sans-serif\"\n    fontSize: \"clamp(18px, 4.2vw, 24px)\"\n    fontWeight: 800\n    lineHeight: 1.15\n  title:\n    fontFamily: \"Baloo 2, system-ui, sans-serif\"\n    fontSize: \"24px to 32px\"\n    fontWeight: 800\n    lineHeight: 1.02\n  score:\n    fontFamily: \"Baloo 2, system-ui, sans-serif\"\n    fontSize: \"clamp(110px, 30vw, 190px)\"\n    fontWeight: 800\n    lineHeight: 0.8\n  body:\n    fontFamily: \"Nunito, system-ui, sans-serif\"\n    fontSize: \"17px\"\n    fontWeight: 400\n    lineHeight: 1.6\n  button:\n    fontFamily: \"Baloo 2, system-ui, sans-serif\"\n    fontSize: \"18px (16px small)\"\n    fontWeight: 800\nrounded:\n  pill: \"999px\"\n  card: \"18px to 22px\"\n  band: \"8px to 12px\"\n  polaroid: \"4px\"\nspacing:\n  container: \"1180px\"\n  gutter: \"16px\"\n  section-top: \"clamp(72px, 10vw, 120px)\"\n  section-bottom: \"clamp(64px, 9vw, 104px)\"\n  cta-min: \"52px\"\n  control-min: \"44px\"\ncomponents:\n  button-primary: { backgroundColor: \"{colors.red}\", textColor: \"{colors.white}\", shape: pill }\n  button-secondary: { backgroundColor: \"{colors.orange}\", textColor: \"{colors.ink}\", shape: pill }\n  button-on-blue: { backgroundColor: \"{colors.white}\", textColor: \"{colors.blue}\", shape: pill }\n  band: { backgroundColor: \"{colors.white}\", textColor: \"{colors.red}\", rotate: \"-1deg to -1.2deg\" }\n  band-on-light: { backgroundColor: \"{colors.red}\", textColor: \"{colors.white}\" }\n  polaroid: { backgroundColor: \"{colors.white}\", padding: \"9px 9px 0\", caption: \"Baloo 2 800 in blue with a red paw\" }\n  confirm-mark: { backgroundColor: \"{colors.confirm-bg}\", textColor: \"#5A4300\" }"
       }
     }
   }

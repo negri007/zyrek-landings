@@ -2,7 +2,7 @@
 
 Uso: python ferramentas/gerar_celular.py lobo    (sem argumento: todas as páginas de landings-motion/)
 
-Embute scripts (locais ou de CDN), fontes do Google Fonts e fotos de fotos/ em base64.
+Embute scripts (locais ou de CDN), fontes (do Google Fonts ou de fontes/) e fotos de fotos/ (com subpastas) em base64.
 Fotos: no máximo 1200px de largura, qualidade 75, sem loading="lazy" (já estão no arquivo).
 Fontes: woff2 latin, um arquivo estático por peso (o WebKit ignora o peso de fonte variável);
 famílias com eixos além do peso (largura, tamanho óptico, faixas) vão variáveis, como o Google serve.
@@ -84,7 +84,7 @@ def embutir_fotos(html, pasta):
             return m.group(0)
         return foto(caminho)
 
-    return re.sub(r"(?<![\w/.-])fotos/[\w.-]+\.(?:jpe?g|png|webp)", troca, html, flags=re.I)
+    return re.sub(r"(?<![\w/.-])fotos/[\w./-]+\.(?:jpe?g|png|webp)", troca, html, flags=re.I)
 
 
 # ---------- fontes ----------
@@ -158,6 +158,20 @@ def embutir_fontes(html):
     return re.sub(r"<noscript>\s*</noscript>", "", html)
 
 
+def embutir_fontes_locais(html, pasta):
+    """@font-face com url(fontes/x.woff2) ao lado da página: vira data URI."""
+    html = re.sub(r'<link[^>]+rel="preload"[^>]+href="fontes/[^"]+"[^>]*>\n?', "", html)
+
+    def troca(m):
+        caminho = pasta / m.group(2)
+        if not caminho.exists():
+            print(f"  aviso: {m.group(2)} não existe, ficou como está")
+            return m.group(0)
+        return "url(" + data_uri("font/woff2", caminho.read_bytes()) + ")"
+
+    return re.sub(r"url\((['\"]?)(fontes/[\w./-]+\.woff2)\1\)", troca, html)
+
+
 # ---------- scripts e css locais ----------
 
 def conteudo(src, pasta):
@@ -192,11 +206,12 @@ def gerar(nome):
         sys.exit(f"Não achei {origem.relative_to(RAIZ)}")
     html = origem.read_text(encoding="utf-8")
     html = embutir_fontes(html)
+    html = embutir_fontes_locais(html, ORIGEM)
     html = embutir_css(html, ORIGEM)
     html = embutir_scripts(html, ORIGEM)
     html = embutir_fotos(html, ORIGEM)
 
-    sobra = re.findall(r'(?:src|srcset|poster)="((?!data:)[^"#][^"]*)"|<link[^>]+rel="stylesheet"[^>]+href="([^"]+)"|url\((?!["\']?data:)["\']?((?:https?:|fotos/)[^)"\']+)', html)
+    sobra = re.findall(r'(?:src|srcset|poster)="((?!data:)[^"#][^"]*)"|<link[^>]+rel="stylesheet"[^>]+href="([^"]+)"|url\((?!["\']?data:)["\']?((?:https?:|fotos/|fontes/)[^)"\']+)', html)
     for item in sobra:
         print(f"  aviso: ainda depende de fora: {next(x for x in item if x)}")
 

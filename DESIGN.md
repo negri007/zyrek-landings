@@ -154,8 +154,9 @@ components:
 > |---|---|---|
 > | Firmo Barbearia, "Capa synth: grade e sol" | `landings-motion/firmo.html` | the YAML frontmatter at the top of this file |
 > | Pizzaria Da Vinti, "Folhinha de arrancar" | `landings-motion/da-vinti.html` | the fenced `yaml` token block inside the Da Vinti part |
+> | Planet Patas, "Painel xadrez" | `landings-motion/planet-patas.html` | the fenced `yaml` token block inside the Planet Patas part |
 >
-> Worlds must not be mixed. A rule, token, texture or motion from one world never applies to another page, and a new business page starts its own world. Where a world's text says "this file", read "this world". The sidecar `.impeccable/design.json` mirrors this: Firmo at its root, Da Vinti under `scopedWorlds["landings-motion/da-vinti.html"]`, both listed in `worldsIndex`.
+> Worlds must not be mixed. A rule, token, texture or motion from one world never applies to another page, and a new business page starts its own world. Where a world's text says "this file", read "this world". The sidecar `.impeccable/design.json` mirrors this: Firmo at its root, Da Vinti under `scopedWorlds["landings-motion/da-vinti.html"]`, Planet Patas under `scopedWorlds["landings-motion/planet-patas.html"]`, all listed in `worldsIndex`.
 
 
 # Design System: Firmo Barbearia (Capa synth)
@@ -677,3 +678,124 @@ Motion 12.43.0 drives every animation; Lenis 1.3.26 smooths scroll (lerp 0.11, a
 - **Don't** set Abril Fatface under 24px or use it for body text.
 - **Don't** use green or red dots, pills or fills to say open or closed.
 - **Don't** drift toward the rustic checkered-tablecloth pizzeria with a hero photo under a serif headline.
+
+---
+
+# Design System: Planet Patas (Painel xadrez)
+
+> **Scope.** This part governs `landings-motion/planet-patas.html` (and its single-file copy `celular/planet-patas.html`) only. Nothing here applies to Firmo, Da Vinti or any other business page.
+
+```yaml
+name: Planet Patas (Painel xadrez)
+description: "Scoped visual world for landings-motion/planet-patas.html only: the store's blue-and-white checkered photo backdrop and its logo globe, royal blue fields with paw wallpaper, white bands with red subtitles. Not a project-wide system."
+governs: landings-motion/planet-patas.html
+colors:
+  blue: "#0A4C9E"
+  post: "#14508C"
+  deep: "#073A7A"
+  red: "#D2232E"
+  red-deep: "#B01A24"
+  orange: "#F07A3C"
+  sky: "#E8F2FD"
+  sky-2: "#CFE3FA"
+  ink: "#0B2A55"
+  ink-soft: "#3A5680"
+  white: "#FFFFFF"
+  lilac: "#B9A3EE"
+  yellow: "#FFD23F"
+  confirm-bg: "#FFF3B8"
+typography:
+  hero:
+    fontFamily: "Baloo 2, Arial Rounded MT Bold, system-ui, sans-serif"
+    fontSize: "clamp(42px, 11.5vw, 92px); clamp(56px, 5vw, 76px) from 1000px"
+    fontWeight: 800
+    lineHeight: 0.92
+    letterSpacing: "-0.02em"
+  headline:
+    fontFamily: "Baloo 2, system-ui, sans-serif"
+    fontSize: "clamp(34px, 8.6vw, 62px)"
+    fontWeight: 800
+    lineHeight: 0.98
+  band:
+    fontFamily: "Baloo 2, system-ui, sans-serif"
+    fontSize: "clamp(18px, 4.2vw, 24px)"
+    fontWeight: 800
+    lineHeight: 1.15
+  title:
+    fontFamily: "Baloo 2, system-ui, sans-serif"
+    fontSize: "24px to 32px"
+    fontWeight: 800
+    lineHeight: 1.02
+  score:
+    fontFamily: "Baloo 2, system-ui, sans-serif"
+    fontSize: "clamp(110px, 30vw, 190px)"
+    fontWeight: 800
+    lineHeight: 0.8
+  body:
+    fontFamily: "Nunito, system-ui, sans-serif"
+    fontSize: "17px"
+    fontWeight: 400
+    lineHeight: 1.6
+  button:
+    fontFamily: "Baloo 2, system-ui, sans-serif"
+    fontSize: "18px (16px small)"
+    fontWeight: 800
+rounded:
+  pill: "999px"
+  card: "18px to 22px"
+  band: "8px to 12px"
+  polaroid: "4px"
+spacing:
+  container: "1180px"
+  gutter: "16px"
+  section-top: "clamp(72px, 10vw, 120px)"
+  section-bottom: "clamp(64px, 9vw, 104px)"
+  cta-min: "52px"
+  control-min: "44px"
+components:
+  button-primary: { backgroundColor: "{colors.red}", textColor: "{colors.white}", shape: pill }
+  button-secondary: { backgroundColor: "{colors.orange}", textColor: "{colors.ink}", shape: pill }
+  button-on-blue: { backgroundColor: "{colors.white}", textColor: "{colors.blue}", shape: pill }
+  band: { backgroundColor: "{colors.white}", textColor: "{colors.red}", rotate: "-1deg to -1.2deg" }
+  band-on-light: { backgroundColor: "{colors.red}", textColor: "{colors.white}" }
+  polaroid: { backgroundColor: "{colors.white}", padding: "9px 9px 0", caption: "Baloo 2 800 in blue with a red paw" }
+  confirm-mark: { backgroundColor: "{colors.confirm-bg}", textColor: "#5A4300" }
+```
+
+## Overview
+
+**Creative North Star: "Painel xadrez"**
+
+Planet Patas photographs every pet after the bath on a blue grooming table in front of a step-and-repeat backdrop: blue squares with the logo, white squares with "Planet Patas" in blue. The page is built from that backdrop and from the logo itself. Royal blue fields carry the logo's own paw wallpaper; headlines copy the store's Instagram posts (huge white rounded title, a white band with a red subtitle); photos are polaroids with a red paw; the gallery sits on the checkered backdrop drawn at full strength. The mascots exist only inside the logo file: never redrawn, never animated as characters.
+
+## Colors
+
+- **Royal Blue** (`blue`): hero, section fields, the blue squares of the checker. **Post Blue** (`post`) is the backdrop square and the gallery ground. **Deep** (`deep`) is the taxi route card and the title shadow.
+- **Red** (`red`): primary buttons, the subtitle band text, paw stamps. Never as text on blue (contrast).
+- **Orange** (`orange`): the secondary CTA only (from the facade stripe), always with ink text.
+- **Sky** (`sky`, `sky-2`): light section grounds, inputs, placeholders.
+- **Lilac and Yellow**: small decorative paws only (orbit, trail). Yellow is also the focus ring.
+- **Confirm** (`confirm-bg`): every `[confirmar]` / `[consultar]` marker.
+
+## Typography
+
+Baloo 2 ExtraBold (rounded and heavy, like the logo lettering and the post titles) for every heading, band, button and number; Nunito for body. Fonts ship as local woff2 in `landings-motion/fontes/` and are embedded as data URIs in the celular copy.
+
+## Components and motifs
+
+- **Post head:** white headline plus a rotated white band with red text on blue; blue headline plus a red band with white text on light grounds.
+- **Checker grid:** services alternate blue and white tiles like the backdrop (1, 2 and 3 columns keep the checker).
+- **Polaroids:** hero fan, before/after cards and the gallery; rotation uses the CSS `rotate` property so Motion transforms never overwrite it.
+- **Painel:** inline SVG pattern (logo.png in the blue squares, "Planet / Patas" in the white squares) behind the gallery.
+
+## Motion
+
+The logo spins in once while six paws orbit on a tilted ellipse, passing in front of and behind it; a paw trail is stamped along the page edge as you scroll; foam bubbles rise in the banho section; scissors cut the divider before the packages; a car follows the taxi route with scroll; 4,8 and 120 count up. Signature: "Dar banho" springs bubbles over the before card, flips it, then pops them one by one. Reduced motion: no motion, and "Dar banho" becomes an opacity fade. Without Motion the page is complete and static.
+
+## Named Rules
+
+**The Logo Is The Only Mascot Rule.** Dogs and cats appear only as the logo file or in real photos.
+
+**The Post Format Rule.** Every section head is a big Baloo title plus one band; no eyebrow labels above titles.
+
+**The Real Photo Rule.** Only real Google photos of the store; missing material is a labelled block, never stock, and never an edited fake "before".

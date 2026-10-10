@@ -155,8 +155,9 @@ components:
 > | Firmo Barbearia, "Capa synth: grade e sol" | `landings-motion/firmo.html` | the YAML frontmatter at the top of this file |
 > | Pizzaria Da Vinti, "Folhinha de arrancar" | `landings-motion/da-vinti.html` | the fenced `yaml` token block inside the Da Vinti part |
 > | Planet Patas, "Painel xadrez" | `landings-motion/planet-patas.html` | the fenced `yaml` token block inside the Planet Patas part |
+> | Garage Auto Detalhamento, "Do fosco ao brilho" | `landings-motion/garage.html` | the fenced `yaml` token block inside the Garage part |
 >
-> Worlds must not be mixed. A rule, token, texture or motion from one world never applies to another page, and a new business page starts its own world. Where a world's text says "this file", read "this world". The sidecar `.impeccable/design.json` mirrors this: Firmo at its root, Da Vinti under `scopedWorlds["landings-motion/da-vinti.html"]`, Planet Patas under `scopedWorlds["landings-motion/planet-patas.html"]`, all listed in `worldsIndex`.
+> Worlds must not be mixed. A rule, token, texture or motion from one world never applies to another page, and a new business page starts its own world. Where a world's text says "this file", read "this world". The sidecar `.impeccable/design.json` mirrors this: Firmo at its root, Da Vinti under `scopedWorlds["landings-motion/da-vinti.html"]`, Planet Patas under `scopedWorlds["landings-motion/planet-patas.html"]`, Garage under `scopedWorlds["landings-motion/garage.html"]`, all listed in `worldsIndex`.
 
 
 # Design System: Firmo Barbearia (Capa synth)
@@ -799,3 +800,85 @@ The logo spins in once while six paws orbit on a tilted ellipse, passing in fron
 **The Post Format Rule.** Every section head is a big Baloo title plus one band; no eyebrow labels above titles.
 
 **The Real Photo Rule.** Only real Google photos of the store; missing material is a labelled block, never stock, and never an edited fake "before".
+
+---
+
+# Design System: Garage Auto Detalhamento (Do fosco ao brilho)
+
+> **Scope.** This part governs `landings-motion/garage.html` (and `celular/garage.html`) only.
+
+```yaml
+name: Garage Auto Detalhamento (Do fosco ao brilho)
+description: "Scoped visual world for landings-motion/garage.html only: graphite paint and chrome; the page starts matte and desaturated and gets polished to a mirror as you scroll. Not a project-wide system."
+governs: landings-motion/garage.html
+colors:
+  graphite: "#0F1113"
+  paint: "#07080A"
+  panel: "#17191C"
+  panel-2: "#1E2125"
+  matte: "#2B2D30"
+  chrome: "#D7DCE1"
+  chrome-2: "#AEB5BD"
+  chrome-dim: "#8A929B"
+  mirror: "#ECEFF2"
+  mirror-2: "#DCE1E6"
+  mirror-ink: "#111417"
+  ink: "#F1F3F5"
+  soft: "#B9C0C8"
+  mute: "#8D959E"
+  blue: "#8EB0D3"
+  blue-hi: "#B8D1EA"
+  blue-deep: "#3E6286"
+typography:
+  display:
+    fontFamily: "Archivo Expanded (Archivo instanced at wdth 125), Arial Black, sans-serif"
+    fontSize: "clamp(58px, 15vw, 150px)"
+    fontWeight: 900
+    lineHeight: 0.86
+    textTransform: uppercase
+  headline:
+    fontFamily: "Archivo Expanded"
+    fontSize: "clamp(28px, 7vw, 70px)"
+    fontWeight: 800
+    lineHeight: 0.95
+    textTransform: uppercase
+  body:
+    fontFamily: "Barlow, system-ui, sans-serif"
+    fontSize: "17.5px"
+    fontWeight: 400
+    lineHeight: 1.6
+  button:
+    fontFamily: "Archivo Expanded"
+    fontSize: "15px (13px under 600px)"
+    fontWeight: 800
+    letterSpacing: "0.04em"
+rounded:
+  control: "6px"
+  panel: "10px"
+components:
+  button-primary: { background: "chrome plate gradient #FFF → #DCE1E6 → #B4BCC5 → #E9ECEF", textColor: "{colors.paint}", sheen: "white highlight sweeps on hover" }
+  button-dark: { background: "#2A2E33 → #121417", textColor: "#FFFFFF" }
+  title: { fill: "chrome gradient clipped to text", motion: "a light reflection sweeps across once when it enters" }
+  confirm-mark: { backgroundColor: "#3A3420", textColor: "#F4DE8A" }
+```
+
+## Overview
+
+**Creative North Star: "Do fosco ao brilho"**
+
+The page is a polishing job. It opens matte: the hero photo (a black Mustang with the sky in its paint) is desaturated and soft, and a polisher's swirl spirals out from the panel as you scroll until the whole photo is a mirror. Every photo starts matte and gains colour and contrast as it reaches the middle of the screen. Titles are chrome, and a reflection sweeps across each one once. The dark graphite sections give way, from the gallery onward, to light mirror-silver sections: the paint is finished.
+
+## Signature interactions
+
+- **Diagonal before/after:** the cut runs at the angle of a polisher pass, with a chrome knob and a glint travelling along the cut line; tabs Pintura · Rodas · Ponteira · Motor · Bancos. Touch: the knob drags; a horizontal swipe on the frame drags; a vertical swipe scrolls the page (`touch-action: pan-y`).
+- **Headlight lens:** a chrome-rimmed circular lens reveals the clear headlight over the yellowed one. It follows the finger only when the touch starts on the lens or moves horizontally; vertical swipes scroll.
+- **Vitrificação:** water drops slide down the glossy panel and run away from the cursor or finger ("Água repelindo, pintura protegida").
+- Count-ups for 253 reviews and 10,6 mil followers; brand names light up one by one.
+
+Reduced motion: no motion, photos at full gloss, the hero fully polished. Without Motion the page is complete.
+
+## Named Rules
+
+**The Real Pair Rule.** Before/after shows only real pairs of the same vehicle; until the owner sends them, the mechanism runs on neutral labelled blocks.
+
+**The Chrome Is Earned Rule.** Chrome gradient text is reserved for titles, the score and the brand name; body copy is never chrome.

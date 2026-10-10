@@ -648,6 +648,11 @@
       "world": "Planet Patas (Painel xadrez)",
       "governs": "landings-motion/planet-patas.html",
       "location": "scopedWorlds[\"landings-motion/planet-patas.html\"]"
+    },
+    {
+      "world": "Garage Auto Detalhamento (Do fosco ao brilho)",
+      "governs": "landings-motion/garage.html",
+      "location": "scopedWorlds[\"landings-motion/garage.html\"]"
     }
   ],
   "worldsRule": "One world per business page. Worlds must not be mixed: no token, rule, texture, component or motion from one world applies to another page.",
@@ -1287,6 +1292,22 @@
       "tokens": {
         "format": "yaml (DESIGN.md token block)",
         "source": "name: Planet Patas (Painel xadrez)\ndescription: \"Scoped visual world for landings-motion/planet-patas.html only: the store's blue-and-white checkered photo backdrop and its logo globe, royal blue fields with paw wallpaper, white bands with red subtitles. Not a project-wide system.\"\ngoverns: landings-motion/planet-patas.html\ncolors:\n  blue: \"#0A4C9E\"\n  post: \"#14508C\"\n  deep: \"#073A7A\"\n  red: \"#D2232E\"\n  red-deep: \"#B01A24\"\n  orange: \"#F07A3C\"\n  sky: \"#E8F2FD\"\n  sky-2: \"#CFE3FA\"\n  ink: \"#0B2A55\"\n  ink-soft: \"#3A5680\"\n  white: \"#FFFFFF\"\n  lilac: \"#B9A3EE\"\n  yellow: \"#FFD23F\"\n  confirm-bg: \"#FFF3B8\"\ntypography:\n  hero:\n    fontFamily: \"Baloo 2, Arial Rounded MT Bold, system-ui, sans-serif\"\n    fontSize: \"clamp(42px, 11.5vw, 92px); clamp(56px, 5vw, 76px) from 1000px\"\n    fontWeight: 800\n    lineHeight: 0.92\n    letterSpacing: \"-0.02em\"\n  headline:\n    fontFamily: \"Baloo 2, system-ui, sans-serif\"\n    fontSize: \"clamp(34px, 8.6vw, 62px)\"\n    fontWeight: 800\n    lineHeight: 0.98\n  band:\n    fontFamily: \"Baloo 2, system-ui, sans-serif\"\n    fontSize: \"clamp(18px, 4.2vw, 24px)\"\n    fontWeight: 800\n    lineHeight: 1.15\n  title:\n    fontFamily: \"Baloo 2, system-ui, sans-serif\"\n    fontSize: \"24px to 32px\"\n    fontWeight: 800\n    lineHeight: 1.02\n  score:\n    fontFamily: \"Baloo 2, system-ui, sans-serif\"\n    fontSize: \"clamp(110px, 30vw, 190px)\"\n    fontWeight: 800\n    lineHeight: 0.8\n  body:\n    fontFamily: \"Nunito, system-ui, sans-serif\"\n    fontSize: \"17px\"\n    fontWeight: 400\n    lineHeight: 1.6\n  button:\n    fontFamily: \"Baloo 2, system-ui, sans-serif\"\n    fontSize: \"18px (16px small)\"\n    fontWeight: 800\nrounded:\n  pill: \"999px\"\n  card: \"18px to 22px\"\n  band: \"8px to 12px\"\n  polaroid: \"4px\"\nspacing:\n  container: \"1180px\"\n  gutter: \"16px\"\n  section-top: \"clamp(72px, 10vw, 120px)\"\n  section-bottom: \"clamp(64px, 9vw, 104px)\"\n  cta-min: \"52px\"\n  control-min: \"44px\"\ncomponents:\n  button-primary: { backgroundColor: \"{colors.red}\", textColor: \"{colors.white}\", shape: pill }\n  button-secondary: { backgroundColor: \"{colors.orange}\", textColor: \"{colors.ink}\", shape: pill }\n  button-on-blue: { backgroundColor: \"{colors.white}\", textColor: \"{colors.blue}\", shape: pill }\n  band: { backgroundColor: \"{colors.white}\", textColor: \"{colors.red}\", rotate: \"-1deg to -1.2deg\" }\n  band-on-light: { backgroundColor: \"{colors.red}\", textColor: \"{colors.white}\" }\n  polaroid: { backgroundColor: \"{colors.white}\", padding: \"9px 9px 0\", caption: \"Baloo 2 800 in blue with a red paw\" }\n  confirm-mark: { backgroundColor: \"{colors.confirm-bg}\", textColor: \"#5A4300\" }"
+      }
+    },
+    "landings-motion/garage.html": {
+      "title": "Design System: Garage Auto Detalhamento (Do fosco ao brilho)",
+      "scope": {
+        "governs": [
+          "landings-motion/garage.html",
+          "celular/garage.html"
+        ],
+        "projectWide": false,
+        "statement": "This world governs the Garage page only; chrome titles, matte-to-gloss photos and the polisher motion are not defaults for any other page.",
+        "markdownSection": "DESIGN.md, part '# Design System: Garage Auto Detalhamento (Do fosco ao brilho)'."
+      },
+      "tokens": {
+        "format": "yaml (DESIGN.md token block)",
+        "source": "name: Garage Auto Detalhamento (Do fosco ao brilho)\ndescription: \"Scoped visual world for landings-motion/garage.html only: graphite paint and chrome; the page starts matte and desaturated and gets polished to a mirror as you scroll. Not a project-wide system.\"\ngoverns: landings-motion/garage.html\ncolors:\n  graphite: \"#0F1113\"\n  paint: \"#07080A\"\n  panel: \"#17191C\"\n  panel-2: \"#1E2125\"\n  matte: \"#2B2D30\"\n  chrome: \"#D7DCE1\"\n  chrome-2: \"#AEB5BD\"\n  chrome-dim: \"#8A929B\"\n  mirror: \"#ECEFF2\"\n  mirror-2: \"#DCE1E6\"\n  mirror-ink: \"#111417\"\n  ink: \"#F1F3F5\"\n  soft: \"#B9C0C8\"\n  mute: \"#8D959E\"\n  blue: \"#8EB0D3\"\n  blue-hi: \"#B8D1EA\"\n  blue-deep: \"#3E6286\"\ntypography:\n  display:\n    fontFamily: \"Archivo Expanded (Archivo instanced at wdth 125), Arial Black, sans-serif\"\n    fontSize: \"clamp(58px, 15vw, 150px)\"\n    fontWeight: 900\n    lineHeight: 0.86\n    textTransform: uppercase\n  headline:\n    fontFamily: \"Archivo Expanded\"\n    fontSize: \"clamp(28px, 7vw, 70px)\"\n    fontWeight: 800\n    lineHeight: 0.95\n    textTransform: uppercase\n  body:\n    fontFamily: \"Barlow, system-ui, sans-serif\"\n    fontSize: \"17.5px\"\n    fontWeight: 400\n    lineHeight: 1.6\n  button:\n    fontFamily: \"Archivo Expanded\"\n    fontSize: \"15px (13px under 600px)\"\n    fontWeight: 800\n    letterSpacing: \"0.04em\"\nrounded:\n  control: \"6px\"\n  panel: \"10px\"\ncomponents:\n  button-primary: { background: \"chrome plate gradient #FFF → #DCE1E6 → #B4BCC5 → #E9ECEF\", textColor: \"{colors.paint}\", sheen: \"white highlight sweeps on hover\" }\n  button-dark: { background: \"#2A2E33 → #121417\", textColor: \"#FFFFFF\" }\n  title: { fill: \"chrome gradient clipped to text\", motion: \"a light reflection sweeps across once when it enters\" }\n  confirm-mark: { backgroundColor: \"#3A3420\", textColor: \"#F4DE8A\" }"
       }
     }
   }

@@ -221,8 +221,7 @@ section{position:relative}
 @media (min-width:900px){.tour{grid-template-columns:repeat(4,1fr)}}
 .tour figure{position:relative;margin:0;aspect-ratio:1;overflow:hidden;background:var(--graphite-2)}
 .tour figure:first-child{grid-column:span 2;grid-row:span 2;aspect-ratio:auto}
-.tour img{width:100%;height:100%;object-fit:cover;transition:transform .8s cubic-bezier(.2,.8,.2,1)}
-.tour figure:hover img{transform:scale(1.04)}
+.tour img{width:100%;height:100%;object-fit:cover}
 .tour figcaption{position:absolute;left:8px;bottom:8px;font-size:12.5px;font-weight:700;background:rgba(0,0,0,.66);padding:3px 8px}
 .tour[hidden]{display:none}
 .tourhead{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-top:clamp(30px,5vw,48px)}
@@ -238,7 +237,8 @@ section{position:relative}
 .kids-list li{display:grid;grid-template-columns:30px 1fr;gap:10px;padding:12px 14px;background:var(--graphite-2);font-size:16px}
 .kids-list svg{width:24px;height:24px;color:var(--red-hi)}
 .kids-photo{display:grid;grid-template-columns:120px 1fr;gap:12px;align-items:center;margin-top:12px;padding:10px;background:var(--graphite-2)}
-.kids-photo img{width:120px;aspect-ratio:5/3;object-fit:cover}
+.kids-shot{display:block;width:120px;aspect-ratio:5/3}
+.kids-shot img{width:100%;height:100%;object-fit:cover}
 .kids-photo p{font-size:14px;color:var(--soft)}
 
 /* depoimentos */
@@ -262,6 +262,7 @@ section{position:relative}
 .faq{display:grid;gap:22px;align-items:start}
 @media (min-width:960px){.faq{grid-template-columns:.7fr 1.3fr;gap:44px}}
 .faq-mascot{margin:0;max-width:300px;justify-self:center}
+.faq-mascot .shot{display:block}
 .faq-mascot img{width:100%;height:auto}
 .faq-mascot figcaption{font-size:13px;color:var(--mute);margin-top:6px}
 .acc details{border-bottom:1px solid var(--line)}
@@ -290,6 +291,16 @@ footer.foot b{display:block;color:#fff;font-size:15.5px;margin-bottom:4px}
 footer.foot a{color:#fff}
 footer.foot .logo{width:56px;height:56px;border-radius:8px;margin-bottom:10px}
 .legal{grid-column:1/-1;color:var(--mute);font-size:13.5px}
+
+/* cantos cortados nas fotos: corte de cima à esquerda e de baixo à direita, com filete vermelho na diagonal */
+.unit-photo,.gym figure,.tour figure,.card figure,.faq-mascot .shot,.kids-shot{--cut:clamp(14px,2.2vw,26px);background:var(--red);clip-path:polygon(var(--cut) 0,100% 0,100% calc(100% - var(--cut)),calc(100% - var(--cut)) 100%,0 100%,0 var(--cut))}
+.unit-photo img,.gym figure img,.tour figure img,.card figure img,.faq-mascot .shot img,.kids-shot img{--cut-in:calc(var(--cut) + 6px);clip-path:polygon(var(--cut-in) 0,100% 0,100% calc(100% - var(--cut-in)),calc(100% - var(--cut-in)) 100%,0 100%,0 var(--cut-in))}
+@media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
+  .unit-photo,.gym figure,.tour figure,.card figure,.faq-mascot .shot,.kids-shot{transition:clip-path .3s cubic-bezier(.2,.8,.2,1)}
+  .unit-photo img,.gym figure img,.tour figure img,.card figure img,.faq-mascot .shot img,.kids-shot img{transition:transform .3s cubic-bezier(.2,.8,.2,1),clip-path .3s cubic-bezier(.2,.8,.2,1)}
+  .unit-photo:hover,.gym figure:hover,.tour figure:hover,.card figure:hover,.faq-mascot .shot:hover,.kids-shot:hover{--cut:calc(clamp(14px,2.2vw,26px) + 4px)}
+  .unit-photo:hover img,.gym figure:hover img,.tour figure:hover img,.card figure:hover img,.faq-mascot .shot:hover img,.kids-shot:hover img{transform:scale(1.04)}
+}
 
 /* dock no celular */
 .dock{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:50;transition:transform .35s cubic-bezier(.2,.8,.2,1),opacity .25s}
@@ -546,7 +557,7 @@ footer.foot .logo{width:56px;height:56px;border-radius:8px;margin-bottom:10px}
         <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>Para alunos, valor simbólico <span class="pend">[confirmar]</span></span></li>
         <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>Para quem vem pelo Wellhub (Gympass), funciona como day use <span class="pend">[confirmar]</span></span></li>
       </ul>
-      <div class="kids-photo rv"><img src="fotos/reddragon/espaco-kids.jpg" width="640" height="386" alt="Estrutura de brinquedo vermelha do Espaço Kids, sem crianças" loading="lazy"><p>A estrutura do Espaço Kids, no story da inauguração. Foto: Instagram @reddragongym</p></div>
+      <div class="kids-photo rv"><span class="kids-shot"><img src="fotos/reddragon/espaco-kids.jpg" width="640" height="386" alt="Estrutura de brinquedo vermelha do Espaço Kids, sem crianças" loading="lazy"></span><p>A estrutura do Espaço Kids, no story da inauguração. Foto: Instagram @reddragongym</p></div>
     </div>
   </div>
 </section>
@@ -580,7 +591,7 @@ footer.foot .logo{width:56px;height:56px;border-radius:8px;margin-bottom:10px}
 
 <section class="sec" id="duvidas" aria-labelledby="h-faq">
   <div class="wrap faq">
-    <figure class="faq-mascot rv"><img src="fotos/reddragon/mascote.jpg" width="420" height="800" alt="Mascote da Red: um dragão vermelho de camiseta fazendo joinha" loading="lazy"><figcaption>O dragão da casa. Ilustração: Instagram @reddragongym</figcaption></figure>
+    <figure class="faq-mascot rv"><span class="shot"><img src="fotos/reddragon/mascote.jpg" width="420" height="800" alt="Mascote da Red: um dragão vermelho de camiseta fazendo joinha" loading="lazy"></span><figcaption>O dragão da casa. Ilustração: Instagram @reddragongym</figcaption></figure>
     <div>
       <div class="head rv"><h2 id="h-faq">Dúvidas <em>rápidas</em></h2></div>
       <div class="acc">

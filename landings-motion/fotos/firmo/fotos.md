@@ -1,6 +1,6 @@
 # Firmo Barbearia: fotos
 
-Origem: 10 posts do Instagram @firmo_barbearia (`ig/`), 23 fotos do Google Maps (`google/`) e a foto de perfil do Instagram (`logo.jpg`), baixados em 10/10/2026 com os links de `fotos-links.json`. Tudo redimensionado para no máximo 1600px. Cada foto foi aberta e conferida.
+Origem: 10 posts do Instagram @firmo_barbearia (`originais/ig/`), 23 fotos do Google Maps (`originais/google/`, fora do git) e a foto de perfil do Instagram (`logo.jpg`), baixados em 10/10/2026 com os links de `fotos-links.json`. Tudo redimensionado para no máximo 1600px. Cada foto foi aberta e conferida.
 
 ## Logo
 

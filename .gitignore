@@ -26,3 +26,7 @@ _test*.html
 _t[0-9]*.html
 test/
 tests/
+
+# fotos brutas e descartadas das landings (podem ter rosto de cliente): ficam só na máquina
+landings-motion/fotos/**/originais/
+landings-motion/fotos/**/nao-usadas/

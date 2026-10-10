@@ -1,6 +1,6 @@
 # Pizzaria Da Vinti: fotos
 
-Origem: 18 posts do Instagram @pizzaria_da_vinti (`ig/`), 30 fotos do Google Maps (`google/`) e a foto de perfil do Instagram (`logo.jpg`), baixados em 10/10/2026 com os links de `fotos-links.json`. Tudo redimensionado para no máximo 1600px. Cada foto foi aberta e conferida.
+Origem: 18 posts do Instagram @pizzaria_da_vinti (`originais/ig/`), 30 fotos do Google Maps (`originais/google/`, fora do git) e a foto de perfil do Instagram (`logo.jpg`), baixados em 10/10/2026 com os links de `fotos-links.json`. Tudo redimensionado para no máximo 1600px. Cada foto foi aberta e conferida.
 
 ## Logo
 

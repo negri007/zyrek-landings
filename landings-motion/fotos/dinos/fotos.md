@@ -37,6 +37,7 @@ Origem: `dinos-hookah-fotos-v2.zip` (27 imagens do Instagram @dinoshookah), extr
 ## Observações
 
 - **Ballena não é gin**: o rótulo diz "Original Cream Tequila, licor fino de leite". A página dizia "Gin Ballena"; agora diz "Ballena · licor cremoso".
-- **Endereço**: a página usa Av. Raymundo Nonato Lima, 570; o post de mudança (17) mostra R. Maria Trindade de Jesus, 645. Ficou marcado `[confirmar endereço atual]`.
+- **Endereço**: a página usa o do post de mudança (17), R. Maria Trindade de Jesus, 645 [confirmar]; o antigo era Av. Raymundo Nonato Lima, 570. A fachada (14) pode ser do endereço antigo e continua de fora.
+- **Mansão Maromba** é whisky combo: no cardápio está em "Combos", não no passo do energético.
 - Nenhuma foto de narguilé ou de tabaco foi usada.
 - Reels de 640px só entram em cards e galeria; o topo usa a foto de 1416px.

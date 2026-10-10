@@ -901,14 +901,15 @@ footer.foot .logo{width:56px;height:56px;border-radius:8px;margin-bottom:10px}
 })();
 </script>
 <script>
-/* ===== dragão 3D em volta do hexágono (só nesta versão de teste) ===== */
+/* ===== dragão 3D enrolado na moldura do hexágono, como guardião (só nesta versão de teste) ===== */
 (function () {
   "use strict";
   var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
   var T = window.THREE;
   if (reduce || !T) return;
-  if (T.ColorManagement) T.ColorManagement.legacyMode = false; // cores hex lidas como sRGB: vermelho de verdade, não rosa
   try { var teste = document.createElement("canvas"); if (!(teste.getContext("webgl2") || teste.getContext("webgl"))) return; } catch (e) { return; }
+  if (T.ColorManagement) T.ColorManagement.legacyMode = false; // cores hex lidas como sRGB
+  var MAX = /[?&]qualidade=max\b/.test(location.search); // modo de teste: sem sistema adaptativo
 
   var host = document.getElementById("hexart"), hero = document.getElementById("topo"), svg = host.querySelector("svg.frame");
   var canvas = document.createElement("canvas"); canvas.id = "dragon3d"; canvas.setAttribute("aria-hidden", "true");
@@ -919,196 +920,310 @@ footer.foot .logo{width:56px;height:56px;border-radius:8px;margin-bottom:10px}
   renderer.setClearColor(0x000000, 0);
   renderer.toneMapping = T.ACESFilmicToneMapping;
   renderer.outputEncoding = T.sRGBEncoding;
-  renderer.toneMappingExposure = 0.95;
+  renderer.toneMappingExposure = 1.0;
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
 
   var mobile = matchMedia("(max-width: 959px)").matches;
-  var MAXN = mobile ? 32 : 48, N = MAXN, LEN = 46, SP = LEN / N, STEP = SP / 3;
-  var RH = 9.5; // raio do hexágono em unidades do dragão (1 unidade = raio do corpo)
+  var SIDES = 12, RINGS = mobile ? 120 : 170;
   var scene = new T.Scene(), D = 30, camera = new T.PerspectiveCamera(30, 1, 0.1, 400);
   camera.position.set(0, 0, D);
+  scene.add(new T.HemisphereLight(0xfff2ea, 0x1a0508, 0.45));
+  var sun = new T.DirectionalLight(0xffd9bd, 1.8); sun.position.set(-5, 6, 7); scene.add(sun);
+  var fill = new T.DirectionalLight(0xff8a8a, 0.35); fill.position.set(6, -3, 4); scene.add(fill);
+  var rim = new T.PointLight(0xff1a2c, 2.0); scene.add(rim);
 
-  /* luz: hemisfério fraco, sol quente de cima à esquerda, contorno vermelho atrás */
-  scene.add(new T.HemisphereLight(0xffffff, 0x1a0508, 0.35));
-  var sun = new T.DirectionalLight(0xffd6b8, 1.7); sun.position.set(-4, 5, 6); scene.add(sun);
-  var rim = new T.PointLight(0xff1a2c, 2.2); scene.add(rim);
-
-  /* oclusor invisível: só escreve profundidade, do tamanho do hexágono na tela */
+  /* oclusor invisível (só profundidade) do tamanho da moldura: esconde o que passa por trás */
   var occ = new T.Mesh(new T.BufferGeometry(), new T.MeshBasicMaterial({ colorWrite: false }));
   occ.renderOrder = -1; scene.add(occ);
 
-  var root = new T.Group(); scene.add(root);
+  /* escamas hexagonais desenhadas em canvas, usadas como relevo (bumpMap) */
+  function texEscamas() {
+    var c = document.createElement("canvas"); c.width = c.height = 128; var x = c.getContext("2d");
+    x.fillStyle = "#fff"; x.fillRect(0, 0, 128, 128);
+    var w = 32, r = w / Math.sqrt(3); x.save(); x.scale(1, 128 / (6 * r)); // 2 linhas por período vertical, para repetir sem emenda
+    x.strokeStyle = "#000"; x.lineWidth = 3.2;
+    for (var row = -1; row < 6; row++) for (var col = -1; col < 6; col++) {
+      var cx = col * w + (row & 1 ? w / 2 : 0), cy = row * r * 1.5;
+      x.beginPath(); for (var i = 0; i < 6; i++) { var a = Math.PI / 3 * i + Math.PI / 6; x.lineTo(cx + r * Math.cos(a), cy + r * Math.sin(a)); } x.closePath(); x.stroke();
+    }
+    x.restore();
+    var t = new T.CanvasTexture(c); t.wrapS = t.wrapT = T.RepeatWrapping; return t;
+  }
+  var bump = texEscamas();
 
-  /* corpo: prismas hexagonais instanciados, alternando dois vermelhos */
-  var segGeo = new T.CylinderGeometry(1, 1, 1, 6, 1); segGeo.rotateX(Math.PI / 2);
-  var body = new T.InstancedMesh(segGeo, new T.MeshStandardMaterial({ color: 0xffffff, roughness: 0.45, metalness: 0.25, flatShading: true }), MAXN);
-  body.instanceMatrix.setUsage(T.DynamicDrawUsage);
-  var cA = new T.Color(0xEC0622), cB = new T.Color(0xC4051C);
-  for (var i = 0; i < MAXN; i++) body.setColorAt(i, i % 2 ? cB : cA);
-  root.add(body);
-  var spineGeo = new T.ConeGeometry(0.3, 1, 4); spineGeo.translate(0, 0.5, 0); spineGeo.rotateX(-0.55);
-  var spines = new T.InstancedMesh(spineGeo, new T.MeshStandardMaterial({ color: 0x2B2C33, roughness: 0.5, metalness: 0.3, flatShading: true }), Math.ceil(MAXN / 2));
-  spines.instanceMatrix.setUsage(T.DynamicDrawUsage); root.add(spines);
-  var tailGeo = new T.ConeGeometry(0.9, 2.4, 4); tailGeo.rotateX(-Math.PI / 2); tailGeo.translate(0, 0, -1.2); tailGeo.scale(1, 0.22, 1);
-  var tail = new T.Mesh(tailGeo, new T.MeshStandardMaterial({ color: 0xFF3046, roughness: 0.4, metalness: 0.3, flatShading: true }));
-  tail.matrixAutoUpdate = false; root.add(tail);
+  /* tubo afinando, com quadros calculados a partir de uma referência; serve para chifres, espinhos e bigodes */
+  function taper(n, nr) {
+    var g = new T.BufferGeometry(), P = new Float32Array((n * nr + 1) * 3), Nn = new Float32Array((n * nr + 1) * 3), idx = [];
+    for (var i = 0; i < n - 1; i++) for (var j = 0; j < nr; j++) { var a = i * nr + j, b = i * nr + (j + 1) % nr, c2 = a + nr, d = b + nr; idx.push(a, c2, b, b, c2, d); }
+    var tip = n * nr; for (var j2 = 0; j2 < nr; j2++) idx.push((n - 1) * nr + j2, tip, (n - 1) * nr + (j2 + 1) % nr);
+    g.setIndex(idx); g.setAttribute("position", new T.BufferAttribute(P, 3)); g.setAttribute("normal", new T.BufferAttribute(Nn, 3));
+    var t = new T.Vector3(), nx = new T.Vector3(), bx = new T.Vector3(), ref = new T.Vector3();
+    g.userData.set = function (pts, r0, r1) {
+      for (var i = 0; i < n; i++) {
+        var a = pts[Math.max(0, i - 1)], b = pts[Math.min(n - 1, i + 1)];
+        t.subVectors(b, a).normalize(); ref.set(0, 1, 0); if (Math.abs(t.y) > 0.9) ref.set(1, 0, 0);
+        nx.crossVectors(ref, t).normalize(); bx.crossVectors(t, nx);
+        var r = r0 + (r1 - r0) * (i / (n - 1));
+        for (var j = 0; j < nr; j++) {
+          var th = j / nr * Math.PI * 2, cs = Math.cos(th), sn = Math.sin(th), k = (i * nr + j) * 3;
+          var ox = cs * nx.x + sn * bx.x, oy = cs * nx.y + sn * bx.y, oz = cs * nx.z + sn * bx.z;
+          P[k] = pts[i].x + ox * r; P[k + 1] = pts[i].y + oy * r; P[k + 2] = pts[i].z + oz * r; Nn[k] = ox; Nn[k + 1] = oy; Nn[k + 2] = oz;
+        }
+      }
+      var e = pts[n - 1], q = tip * 3; t.subVectors(pts[n - 1], pts[n - 2]).normalize();
+      P[q] = e.x + t.x * r1 * 2; P[q + 1] = e.y + t.y * r1 * 2; P[q + 2] = e.z + t.z * r1 * 2; Nn[q] = t.x; Nn[q + 1] = t.y; Nn[q + 2] = t.z;
+      g.attributes.position.needsUpdate = true; g.attributes.normal.needsUpdate = true; g.computeBoundingSphere();
+    };
+    return g;
+  }
+  function pts(arr) { return arr.map(function (p) { return new T.Vector3(p[0], p[1], p[2]); }); }
+  function curvePts(arr, n) { return new T.CatmullRomCurve3(pts(arr)).getSpacedPoints(n - 1); }
 
-  /* cabeça angulosa, branca como a do logo, com detalhes vermelhos */
-  var white = new T.MeshStandardMaterial({ color: 0xF5F5F6, roughness: 0.45, metalness: 0.15, flatShading: true });
-  var redM = new T.MeshStandardMaterial({ color: 0xEC0622, roughness: 0.45, metalness: 0.25, flatShading: true });
-  var dark = new T.MeshStandardMaterial({ color: 0x4a050d, roughness: 0.8, flatShading: true });
-  function frustum(rt, rb, h) { var g = new T.CylinderGeometry(rt, rb, h, 4, 1); g.rotateY(Math.PI / 4); g.rotateX(Math.PI / 2); return g; }
-  var head = new T.Group(), headInner = new T.Group(); head.add(headInner); root.add(head);
-  headInner.scale.setScalar(1.15);
-  var skullG = frustum(0.5, 1.05, 2.5); skullG.scale(1, 0.62, 1); skullG.translate(0, 0.12, 1.05);
-  headInner.add(new T.Mesh(skullG, white));
-  var brow = new T.Mesh(new T.BoxGeometry(1.35, 0.16, 0.55), redM); brow.position.set(0, 0.62, 0.2); brow.rotation.x = -0.25; headInner.add(brow);
-  var stripe = new T.Mesh(new T.BoxGeometry(0.16, 0.1, 1.5), redM); stripe.position.set(0, 0.47, 1.35); stripe.rotation.x = 0.18; headInner.add(stripe);
-  var jaw = new T.Group(); jaw.position.set(0, -0.22, -0.05); headInner.add(jaw);
-  var jawG = frustum(0.32, 0.78, 2.25); jawG.scale(0.95, 0.38, 1); jawG.translate(0, -0.18, 1.15); jaw.add(new T.Mesh(jawG, white));
-  var jawStripe = new T.Mesh(new T.BoxGeometry(0.95, 0.06, 0.3), redM); jawStripe.position.set(0, -0.36, 0.2); jaw.add(jawStripe);
-  var mouth = new T.Mesh(new T.BoxGeometry(0.9, 0.06, 1.7), dark); mouth.position.set(0, -0.12, 1.05); headInner.add(mouth);
-  [-1, 1].forEach(function (sx) { // chifres: três cones encadeados, para trás
-    var g = new T.Group(); g.position.set(0.42 * sx, 0.42, -0.15); g.rotation.set(-1.2, 0, -0.35 * sx); headInner.add(g);
-    var parent = g;
-    [[0.26, 0.95], [0.18, 0.85], [0.1, 0.75]].forEach(function (d, k) {
-      var cg = new T.ConeGeometry(d[0], d[1], 4); cg.translate(0, d[1] / 2, 0);
-      var m = new T.Mesh(cg, k === 2 ? redM : white); parent.add(m);
-      var nx = new T.Group(); nx.position.y = d[1] * 0.85; nx.rotation.x = -0.22; m.add(nx); parent = nx;
-    });
-  });
-  var eyeMat = new T.MeshStandardMaterial({ color: 0x330006, emissive: 0xFF3046, emissiveIntensity: 1.2, roughness: 0.3 });
-  var glowMat = new T.MeshBasicMaterial({ color: 0xFF3046, transparent: true, opacity: 0.35, blending: T.AdditiveBlending, depthWrite: false });
+  var cRed = new T.Color(0xEC0622), cBelly = new T.Color(0x2B2C33);
+  var bodyMat = new T.MeshStandardMaterial({ vertexColors: true, roughness: 0.4, metalness: 0.2, bumpMap: bump, bumpScale: 0.6 });
+  var graf = new T.MeshStandardMaterial({ color: 0x2B2C33, roughness: 0.45, metalness: 0.25 });
+  var redHead = new T.MeshStandardMaterial({ color: 0xEC0622, roughness: 0.42, metalness: 0.18 });
+  var redDeep = new T.MeshStandardMaterial({ color: 0xA3061A, roughness: 0.45, metalness: 0.2 });
+  var finMat = new T.MeshStandardMaterial({ color: 0xA3061A, roughness: 0.5, metalness: 0.15, side: T.DoubleSide });
+  var toothMat = new T.MeshStandardMaterial({ color: 0xF2ECE2, roughness: 0.5 });
+  var nostril = new T.MeshStandardMaterial({ color: 0x2a0408, roughness: 0.9 });
+
+  /* ---------- corpo: tubo contínuo de 12 lados, dorso vermelho e barriga grafite ---------- */
+  var tube = new T.Mesh(new T.BufferGeometry(), bodyMat), P, NRM, NVR;
+  function buildTube(rings) {
+    RINGS = rings; NVR = SIDES + 1;
+    var nv = RINGS * NVR, g = new T.BufferGeometry(), col = new Float32Array(nv * 3), uv = new Float32Array(nv * 2), idx = [];
+    P = new Float32Array(nv * 3); NRM = new Float32Array(nv * 3);
+    for (var i = 0; i < RINGS; i++) for (var j = 0; j <= SIDES; j++) {
+      var k = i * NVR + j, cs = Math.cos(j / SIDES * Math.PI * 2), m = Math.min(1, Math.max(0, (cs + 0.25) / 0.6));
+      m = m * m * (3 - 2 * m);
+      col[k * 3] = cBelly.r + (cRed.r - cBelly.r) * m; col[k * 3 + 1] = cBelly.g + (cRed.g - cBelly.g) * m; col[k * 3 + 2] = cBelly.b + (cRed.b - cBelly.b) * m;
+      uv[k * 2] = i / (RINGS - 1) * 26; uv[k * 2 + 1] = j / SIDES * 3;
+    }
+    for (var i2 = 0; i2 < RINGS - 1; i2++) for (var j2 = 0; j2 < SIDES; j2++) { var a = i2 * NVR + j2, b = a + NVR; idx.push(a, b, a + 1, b, b + 1, a + 1); }
+    g.setIndex(idx);
+    g.setAttribute("position", new T.BufferAttribute(P, 3)); g.setAttribute("normal", new T.BufferAttribute(NRM, 3));
+    g.setAttribute("color", new T.BufferAttribute(col, 3)); g.setAttribute("uv", new T.BufferAttribute(uv, 2));
+    if (tube.geometry) tube.geometry.dispose(); tube.geometry = g; tube.frustumCulled = false;
+  }
+  buildTube(RINGS); scene.add(tube);
+
+  /* espinhos dorsais curvos e afinados (instanciados) */
+  var spineGeo = taper(8, 6); spineGeo.userData.set(curvePts([[0, 0, 0], [0, 0.5, -0.12], [0, 0.95, -0.5]], 8), 0.22, 0.015);
+  var NSP = 18, spines = new T.InstancedMesh(spineGeo, graf, NSP); spines.instanceMatrix.setUsage(T.DynamicDrawUsage); spines.frustumCulled = false; scene.add(spines);
+
+  /* ponta da cauda: lâmina em forma de chama */
+  var sh = new T.Shape(); sh.moveTo(0, 0.1); sh.bezierCurveTo(0.7, -0.4, 0.55, -1.4, 0.05, -2.6); sh.bezierCurveTo(0.12, -1.7, -0.2, -1.1, -0.35, -0.75); sh.bezierCurveTo(-0.15, -0.6, -0.45, -0.2, 0, 0.1);
+  var bladeGeo = new T.ExtrudeGeometry(sh, { depth: 0.12, bevelEnabled: false }); bladeGeo.translate(0, 0, -0.06); bladeGeo.rotateX(Math.PI / 2); bladeGeo.rotateZ(Math.PI / 2);
+  var blade = new T.Mesh(bladeGeo, new T.MeshStandardMaterial({ color: 0xFF3046, roughness: 0.35, metalness: 0.2, emissive: 0x5a0010, side: T.DoubleSide }));
+  blade.matrixAutoUpdate = false; scene.add(blade);
+
+  /* ---------- cabeça: formas suaves, vermelha, olhar bravo ---------- */
+  var head = new T.Group(), headInner = new T.Group(); head.add(headInner); scene.add(head);
+  var skull = new T.Mesh(new T.SphereGeometry(1, 28, 18), redHead); skull.scale.set(0.86, 0.62, 1.15); skull.position.set(0, 0.1, -0.05); headInner.add(skull);
+  var snoutG = new T.LatheGeometry([[0.001, 0], [0.56, 0.02], [0.5, 0.5], [0.4, 1.05], [0.3, 1.5], [0.2, 1.85], [0.001, 2.0]].map(function (p) { return new T.Vector2(p[0], p[1]); }), 24);
+  snoutG.rotateX(Math.PI / 2); snoutG.scale(1, 0.52, 1);
+  var snout = new T.Mesh(snoutG, redHead); snout.position.set(0, 0.02, 0.45); headInner.add(snout);
+  var top = new T.Mesh(new T.SphereGeometry(1, 20, 12), redDeep); top.scale.set(0.28, 0.08, 1.05); top.position.set(0, 0.27, 1.35); top.rotation.x = 0.13; headInner.add(top);
   [-1, 1].forEach(function (sx) {
-    var e = new T.Mesh(new T.IcosahedronGeometry(0.16, 0), eyeMat); e.position.set(0.44 * sx, 0.36, 0.85); headInner.add(e);
-    var g = new T.Mesh(new T.IcosahedronGeometry(0.36, 1), glowMat); g.position.copy(e.position); headInner.add(g);
+    var brow = new T.Mesh(new T.CapsuleGeometry(0.1, 0.75, 4, 8), graf); brow.position.set(0.42 * sx, 0.58, 0.72); brow.rotation.set(0, -0.3 * sx, (Math.PI / 2) - 0.5 * sx); headInner.add(brow);
+    var n = new T.Mesh(new T.SphereGeometry(0.08, 10, 8), nostril); n.scale.set(1.5, 0.8, 1.2); n.position.set(0.13 * sx, 0.16, 2.3); headInner.add(n);
   });
+  var eyeMat = new T.MeshStandardMaterial({ color: 0x331a00, emissive: 0xFFB020, emissiveIntensity: 2.2, roughness: 0.3 });
+  var haloMat = new T.MeshBasicMaterial({ color: 0xFFB020, transparent: true, opacity: 0.22, blending: T.AdditiveBlending, depthWrite: false });
+  var eyes = [];
+  [-1, 1].forEach(function (sx) {
+    var g = new T.Group(); g.position.set(0.5 * sx, 0.4, 0.82); g.rotation.set(0, 0.55 * sx, -0.32 * sx); headInner.add(g);
+    var e = new T.Mesh(new T.SphereGeometry(1, 16, 10), eyeMat); e.scale.set(0.23, 0.065, 0.12); g.add(e);
+    var h = new T.Mesh(new T.SphereGeometry(1, 12, 8), haloMat); h.scale.set(0.42, 0.2, 0.24); g.add(h);
+    eyes.push(g);
+  });
+  [-1, 1].forEach(function (sx) { // barbatanas da bochecha
+    for (var f = 0; f < 3; f++) {
+      var s2 = new T.Shape(); s2.moveTo(0, 0); s2.quadraticCurveTo(0.35, 0.15, 0.9 - f * 0.12, -0.05); s2.quadraticCurveTo(0.4, -0.12, 0, -0.18);
+      var fin = new T.Mesh(new T.ShapeGeometry(s2, 6), finMat);
+      fin.position.set(0.72 * sx, 0.05 - f * 0.17, 0.05 - f * 0.28); fin.rotation.set(0.2, sx > 0 ? -0.55 - f * 0.12 : Math.PI + 0.55 + f * 0.12, sx * (-0.25 + f * 0.18));
+      headInner.add(fin);
+    }
+  });
+  [-1, 1].forEach(function (sx) { // chifres longos, varrendo para trás e curvando para cima
+    var g = taper(14, 8); g.userData.set(curvePts([[0.42 * sx, 0.55, -0.3], [0.62 * sx, 0.8, -1.1], [0.75 * sx, 1.3, -1.9], [0.62 * sx, 2.05, -2.3]], 14), 0.24, 0.03);
+    headInner.add(new T.Mesh(g, graf));
+  });
+  var jaw = new T.Group(); jaw.position.set(0, -0.16, 0.15); headInner.add(jaw);
+  var boca = new T.Mesh(new T.SphereGeometry(1, 16, 10), nostril); boca.scale.set(0.42, 0.12, 0.95); boca.position.set(0, -0.17, 1.15); headInner.add(boca); // interior escuro da boca
+  var jawG = new T.LatheGeometry([[0.001, 0], [0.55, 0.02], [0.52, 0.5], [0.42, 1.0], [0.28, 1.45], [0.001, 1.6]].map(function (p) { return new T.Vector2(p[0], p[1]); }), 20);
+  jawG.rotateX(Math.PI / 2); jawG.scale(0.92, 0.32, 1);
+  var jawMesh = new T.Mesh(jawG, redHead); jawMesh.position.set(0, -0.12, 0.3); jaw.add(jawMesh);
+  for (var tth = 0; tth < 6; tth++) { // dentinhos: ficam dentro do focinho com a boca fechada
+    var side = tth % 2 ? 1 : -1, row = Math.floor(tth / 2);
+    var tooth = new T.Mesh(new T.ConeGeometry(0.05, 0.2, 6), toothMat); tooth.position.set(side * (0.32 - row * 0.08), -0.02, 0.85 + row * 0.38); jaw.add(tooth);
+  }
   var whisk = [];
-  [-1, 1].forEach(function (sx) { // bigodes finos ondulando
-    var c = new T.CatmullRomCurve3([new T.Vector3(0, 0, 0), new T.Vector3(0.6 * sx, -0.25, -0.6), new T.Vector3(1.2 * sx, -0.1, -1.6), new T.Vector3(1.7 * sx, -0.4, -2.6)]);
-    var g = new T.Group(); g.position.set(0.32 * sx, -0.05, 2.0); g.add(new T.Mesh(new T.TubeGeometry(c, 20, 0.045, 4, false), white));
-    headInner.add(g); whisk.push(g);
-  });
-
-  /* trajeto: elipse inclinada em volta do hexágono, com ondulação vertical; tabela por distância */
-  var A = RH * 1.2, Z = RH * 0.85, NS = 1200, tab = new Float32Array(NS + 1), P = 1;
-  function pathAt(th, out) { return out.set(A * Math.cos(th), -RH * 0.18 * Math.sin(th) + RH * 0.1 * Math.sin(3 * th + 0.6), Z * Math.sin(th)); }
-  function buildTable() {
-    var a = new T.Vector3(), b = new T.Vector3(); pathAt(0, a); tab[0] = 0;
-    for (var i = 1; i <= NS; i++) { pathAt(i / NS * Math.PI * 2, b); tab[i] = tab[i - 1] + a.distanceTo(b); a.copy(b); }
-    P = tab[NS];
-  }
-  function thetaAt(s) {
-    s = ((s % P) + P) % P; var lo = 0, hi = NS;
-    while (hi - lo > 1) { var mid = (lo + hi) >> 1; if (tab[mid] < s) lo = mid; else hi = mid; }
-    return (lo + (s - tab[lo]) / ((tab[hi] - tab[lo]) || 1)) / NS * Math.PI * 2;
+  [-1, 1].forEach(function (sx) { var g = taper(22, 5); var m = new T.Mesh(g, graf); headInner.add(m); whisk.push({ g: g, sx: sx }); });
+  function whiskers(t) {
+    whisk.forEach(function (w, i) {
+      var arr = [];
+      for (var q = 0; q < 22; q++) {
+        var f = q / 21, wave = Math.sin(t * 2.2 - f * 5 + i) * 0.18 * f;
+        arr.push(new T.Vector3(w.sx * (0.32 + f * 1.4 + wave * 0.3), -0.02 - f * 0.9 + wave, 1.85 - f * 2.4));
+      }
+      w.g.userData.set(arr, 0.035, 0.008);
+    });
   }
 
-  /* rastro da cabeça amostrado por distância: o corpo segue igual em qualquer fps */
-  var trail = [], TLEN = 0, s = 0, rise = 0, headPos = new T.Vector3();
-  function fillTrail() {
-    TLEN = N * 3 + 12; trail.length = 0;
-    for (var i = 0; i < TLEN; i++) { var v = pathAt(thetaAt(s - i * STEP), new T.Vector3()); v.y += rise; trail.push(v); }
-    headPos.copy(trail[0]);
-  }
-  function advance(ds) {
-    s += ds; pathAt(thetaAt(s), headPos); headPos.y += rise;
-    var last = trail[0], d = headPos.distanceTo(last), guard = 0;
-    while (d >= STEP && guard++ < 400) { var p = trail.pop(); p.copy(last).lerp(headPos, STEP / d); trail.unshift(p); last = p; d = headPos.distanceTo(last); }
-  }
-
-  /* encaixe com o hexágono do DOM */
-  var u = 1;
+  /* ---------- curva: perímetro da moldura com cantos arredondados, da cauda à cabeça ---------- */
+  var NSAMP = 700, CP = [], CT = [], CD = [], CS = [], rMax = 1, headScale = 1, center = new T.Vector2(), yTopo = 10, xMin = -10, hexH = 1;
   function layout() {
-    var cr = canvas.getBoundingClientRect(), cw = cr.width, ch = cr.height; if (!cw || !ch) return;
+    var cr = canvas.getBoundingClientRect(), cw = cr.width, ch = cr.height; if (!cw || !ch) return false;
     renderer.setSize(cw, ch, false); camera.aspect = cw / ch; camera.updateProjectionMatrix();
-    var k = 2 * Math.tan(T.MathUtils.degToRad(camera.fov / 2)) * D / ch; // unidades do mundo por pixel em z = 0
+    var k = 2 * Math.tan(T.MathUtils.degToRad(camera.fov / 2)) * D / ch;
     var sr = svg.getBoundingClientRect();
     function W(sx, sy) { return new T.Vector2((sr.left + sx / 200 * sr.width - cr.left - cw / 2) * k, -(sr.top + sy / 212 * sr.height - cr.top - ch / 2) * k); }
-    var shape = new T.Shape([[44, 4], [156, 4], [204, 106], [156, 208], [44, 208], [-4, 106]].map(function (q) { return W(q[0], q[1]); }));
-    var g = new T.ExtrudeGeometry(shape, { depth: 0.04, bevelEnabled: false }); g.translate(0, 0, -0.02);
-    occ.geometry.dispose(); occ.geometry = g;
-    var c = W(100, 106), hexR = sr.width * 208 / 200 / 2 * k;
-    u = hexR / RH; root.position.set(c.x, c.y, 0);
-    rim.position.set(c.x, c.y, -hexR * 1.4);
-    var folga = Math.min(c.x + cw / 2 * k, cw / 2 * k - c.x) / u; // meia largura útil do canvas, em unidades do dragão
-    A = Math.max(RH * 1.02, Math.min(RH * 1.22, folga - 3.2)); Z = RH * 0.85; buildTable(); fillTrail();
+    var raw = { TL: [44, 4], TR: [156, 4], R: [204, 106], BR: [156, 208], BL: [44, 208], L: [-4, 106] }, V = {};
+    for (var key in raw) V[key] = W(raw[key][0], raw[key][1]);
+    var occShape = new T.Shape([V.TL, V.TR, V.R, V.BR, V.BL, V.L]);
+    var og = new T.ExtrudeGeometry(occShape, { depth: 0.04, bevelEnabled: false }); og.translate(0, 0, -0.02); occ.geometry.dispose(); occ.geometry = og;
+    center.copy(W(100, 106)); hexH = V.BL.y < V.TL.y ? V.TL.y - V.BL.y : V.BL.y - V.TL.y;
+    rMax = 0.08 * hexH; headScale = 1.6 * rMax / 0.86; yTopo = ch / 2 * k; xMin = (Math.max(cr.left, 8) - cr.left - cw / 2) * k; // borda esquerda visível da tela
+    rim.position.set(center.x, center.y, -hexH);
+    var off = rMax * 0.25; // um pouco para fora da borda vermelha
+    function fora(v) { var d = v.clone().sub(center), L = d.length(); return center.clone().add(d.multiplyScalar((L + off) / L)); }
+    var seq = [fora(V.BL), fora(V.BR), fora(V.R), fora(V.TR), fora(V.TL)], rc = rMax * 2.2, path = new T.CurvePath();
+    function v3(v) { return new T.Vector3(v.x, v.y, 0); }
+    var cur = v3(seq[0]);
+    for (var i = 1; i < seq.length; i++) {
+      var p = v3(seq[i]);
+      if (i === seq.length - 1) { path.add(new T.LineCurve3(cur, p)); break; }
+      var nxt = v3(seq[i + 1]), a = p.clone().add(cur.clone().sub(p).setLength(rc)), b = p.clone().add(nxt.clone().sub(p).setLength(rc));
+      path.add(new T.LineCurve3(cur, a)); path.add(new T.QuadraticBezierCurve3(a, p, b)); cur = b;
+    }
+    var A = rMax * 1.5, tmp = new T.Vector3();
+    CP = []; for (var s = 0; s < NSAMP; s++) { var u = s / (NSAMP - 1); path.getPointAt(u, tmp); CP.push(new T.Vector3(tmp.x, tmp.y, A * Math.sin(3 * Math.PI * u - Math.PI / 2))); }
+    CT = []; CD = []; CS = [];
+    var Z = new T.Vector3(0, 0, 1);
+    for (var s2 = 0; s2 < NSAMP; s2++) {
+      var t = CP[Math.min(NSAMP - 1, s2 + 1)].clone().sub(CP[Math.max(0, s2 - 1)]).normalize();
+      var out = new T.Vector3(t.y, -t.x, 0); if (out.x * (CP[s2].x - center.x) + out.y * (CP[s2].y - center.y) < 0) out.negate();
+      var d = out.multiplyScalar(0.55).add(Z.clone().multiplyScalar(0.85)); d.addScaledVector(t, -d.dot(t)).normalize();
+      var sd = new T.Vector3().crossVectors(t, d).normalize();
+      CT.push(t); CD.push(d); CS.push(sd);
+    }
+    return true;
+  }
+  function sample(u, P0, T0, D0, S0) {
+    var f = Math.min(1, Math.max(0, u)) * (NSAMP - 1), i = Math.min(NSAMP - 2, Math.floor(f)), a = f - i;
+    P0.copy(CP[i]).lerp(CP[i + 1], a); if (T0) { T0.copy(CT[i]).lerp(CT[i + 1], a).normalize(); D0.copy(CD[i]).lerp(CD[i + 1], a).normalize(); S0.copy(CS[i]).lerp(CS[i + 1], a).normalize(); }
+  }
+  function perfil(b) { // raio relativo: fino na cauda, cheio no meio, um pouco menor no pescoço
+    var a = Math.min(1, b / 0.7); a = a * a * (3 - 2 * a); var r = 0.12 + 0.88 * a;
+    if (b > 0.88) r *= 1 - 0.18 * (b - 0.88) / 0.12; return r;
   }
 
-  /* interação */
-  var roarStart = -1, lastRoar = -1e9, mx = 0, my = 0, yaw = 0, pitch = 0;
-  function roar() { var t = performance.now(); if (t - lastRoar < 1500) return; lastRoar = t; roarStart = t; }
+  /* ---------- pose a cada quadro ---------- */
+  var vP = new T.Vector3(), vT = new T.Vector3(), vD = new T.Vector3(), vS = new T.Vector3(), vX = new T.Vector3(), m4 = new T.Matrix4(), mR = new T.Matrix4(), vSc = new T.Vector3(), vQ = new T.Vector3();
+  var qA = new T.Quaternion(), qB = new T.Quaternion(), UP = new T.Vector3(0, 1, 0), FINAL = (mobile ? new T.Vector3(-0.55, 0.4, 0.85) : new T.Vector3(-0.85, 0.3, 0.75)).normalize();
+  function poseBody(p, breath, time) {
+    var shift = 1 - p, si = 0, spineEvery = Math.floor(RINGS / NSP);
+    for (var i = 0; i < RINGS; i++) {
+      var b = i / (RINGS - 1), u = b - shift, r = u < 0 ? 0 : rMax * perfil(b) * breath;
+      sample(u, vP, vT, vD, vS);
+      for (var j = 0; j <= SIDES; j++) {
+        var th = j / SIDES * Math.PI * 2, cs = Math.cos(th), sn = Math.sin(th), k = (i * NVR + j) * 3;
+        var nx = cs * vD.x + sn * vS.x, ny = cs * vD.y + sn * vS.y, nz = cs * vD.z + sn * vS.z;
+        P[k] = vP.x + nx * r; P[k + 1] = vP.y + ny * r; P[k + 2] = vP.z + nz * r; NRM[k] = nx; NRM[k + 1] = ny; NRM[k + 2] = nz;
+      }
+      if (i % spineEvery === Math.floor(spineEvery / 2) && si < NSP && b > 0.08 && b < 0.93) {
+        var sz = u < 0 ? 0 : r * 1.25 * (0.45 + 0.55 * b);
+        vX.crossVectors(vD, vT); m4.makeBasis(vX, vD, vT); vSc.set(sz, sz, sz); m4.scale(vSc); vQ.copy(vP).addScaledVector(vD, r * 0.9); m4.setPosition(vQ); spines.setMatrixAt(si++, m4);
+      }
+      if (i === 0) {
+        var bs = u < 0 ? 0.0001 : rMax * 0.55;
+        vX.crossVectors(vD, vT); m4.makeBasis(vX, vD, vT); mR.makeRotationZ(Math.sin(time * 1.3) * 0.35); m4.multiply(mR); vSc.set(bs, bs, bs); m4.scale(vSc); m4.setPosition(vP); blade.matrix.copy(m4); blade.matrixWorldNeedsUpdate = true;
+      }
+    }
+    while (si < NSP) { m4.makeScale(0, 0, 0); spines.setMatrixAt(si++, m4); }
+    spines.instanceMatrix.needsUpdate = true;
+    tube.geometry.attributes.position.needsUpdate = true; tube.geometry.attributes.normal.needsUpdate = true;
+  }
+  var yaw = 0, pitch = 0, mx = 0, my = 0, lastMouse = -1e9;
+  function poseHead(p, lift, time, roarK, jolt, blinkK) {
+    var u = 1 - (1 - p) * 0; // a cabeça vai à frente: u da cabeça = p
+    sample(p, vP, vT, vD, vS);
+    m4.lookAt(vQ.copy(vP).add(vT), vP, UP); qA.setFromRotationMatrix(m4);
+    m4.lookAt(vQ.copy(vP).add(FINAL), vP, UP); qB.setFromRotationMatrix(m4);
+    head.quaternion.copy(qA).slerp(qB, lift);
+    head.position.copy(vP).addScaledVector(vT, headScale * 0.55 * (1 - lift)).addScaledVector(FINAL, headScale * 0.45 * lift);
+    head.position.y += headScale * 0.55 * lift + Math.sin(time * Math.PI * 2 / 4.4) * rMax * 0.05;
+    var limite = yTopo - headScale * 1.9; if (head.position.y > limite) head.position.y = limite; // não sai do canvas
+    if (head.position.x < xMin + headScale * 2.2) head.position.x = xMin + headScale * 2.2; // nem da tela pela esquerda
+    head.scale.setScalar(headScale * Math.min(1, p * 3 + 0.0001));
+    yaw += (mx * 0.26 - yaw) * 0.08; pitch += (-my * 0.26 - pitch) * 0.08; // no máximo 15 graus
+    headInner.rotation.set(pitch - roarK * 0.18, yaw, 0);
+    headInner.position.z = -jolt * 0.35;
+    jaw.rotation.x = 0.13 + 0.7 * roarK; // fresta escura da boca mesmo em repouso
+    eyeMat.emissiveIntensity = 2.2 + 4 * roarK; haloMat.opacity = 0.22 + 0.35 * roarK;
+    for (var i = 0; i < 2; i++) eyes[i].scale.y = 1 - 0.9 * blinkK;
+    rim.intensity = 2.0 + 5 * roarK;
+    whiskers(time);
+  }
+
+  /* ---------- interação ---------- */
+  var roarStart = -1, lastRoar = -1e9, roarQueued = false, entradaFim = -1;
+  function roar() { var t = performance.now(); if (entradaFim < 0 || t < entradaFim) { roarQueued = true; return; } if (t - lastRoar < 1500) return; lastRoar = t; roarStart = t; }
   document.addEventListener("rd:carimbo", roar);
   hero.addEventListener("click", function (e) { var r = host.getBoundingClientRect(); if (e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom) roar(); });
   if (matchMedia("(pointer: fine)").matches) window.addEventListener("pointermove", function (e) {
-    var r = canvas.getBoundingClientRect(); mx = Math.max(-1, Math.min(1, (e.clientX - r.left - r.width / 2) / (r.width / 2))); my = Math.max(-1, Math.min(1, (e.clientY - r.top - r.height / 2) / (r.height / 2)));
+    var r = canvas.getBoundingClientRect(); mx = Math.max(-1, Math.min(1, (e.clientX - r.left - r.width / 2) / (r.width / 2))); my = Math.max(-1, Math.min(1, (e.clientY - r.top - r.height / 2) / (r.height / 2))); lastMouse = performance.now();
   }, { passive: true });
 
-  /* quadro a quadro */
-  var m4 = new T.Matrix4(), vDir = new T.Vector3(), vRight = new T.Vector3(), vUp = new T.Vector3(), UP = new T.Vector3(0, 1, 0), vPos = new T.Vector3(), vScale = new T.Vector3(), vT = new T.Vector3();
-  function frame(a, b) {
-    vDir.subVectors(b, a); if (vDir.lengthSq() < 1e-8) vDir.set(0, 0, 1); vDir.normalize();
-    vRight.crossVectors(UP, vDir); if (vRight.lengthSq() < 1e-6) vRight.set(1, 0, 0); vRight.normalize();
-    vUp.crossVectors(vDir, vRight).normalize();
-  }
-  function rad(f) {
-    if (f < 0.2) { var a = f / 0.2; return 0.9 + 0.1 * a * a * (3 - 2 * a); }
-    var t = (f - 0.2) / 0.8; return 0.15 + 0.85 * (1 - t * t * (3 - 2 * t));
-  }
-  function pose(time) {
-    var k = 0;
-    for (var i = 0; i < N; i++) {
-      var a = trail[Math.min((i + 1) * 3, TLEN - 1)], b = trail[Math.min(i * 3, TLEN - 1)], r = rad(i / (N - 1));
-      frame(a, b);
-      vPos.addVectors(a, b).multiplyScalar(0.5).addScaledVector(vRight, Math.sin(time * 4 - i * 0.45) * 0.18 * r);
-      m4.makeBasis(vRight, vUp, vDir); vScale.set(r, r, SP * 1.45); m4.scale(vScale); m4.setPosition(vPos); body.setMatrixAt(i, m4);
-      if (i % 2 === 0 && i < N - 2) { vT.copy(vPos).addScaledVector(vUp, r * 0.85); m4.makeBasis(vRight, vUp, vDir); vScale.set(r, r * 1.1, r); m4.scale(vScale); m4.setPosition(vT); spines.setMatrixAt(k++, m4); }
-      if (i === N - 1) { m4.makeBasis(vRight, vUp, vDir); vScale.set(0.9, 1, 1); m4.scale(vScale); m4.setPosition(a); tail.matrix.copy(m4); tail.matrixWorldNeedsUpdate = true; }
-    }
-    body.count = N; spines.count = k; body.instanceMatrix.needsUpdate = true; spines.instanceMatrix.needsUpdate = true;
-    frame(trail[3], headPos); vT.copy(headPos).add(vDir);
-    m4.lookAt(vT, headPos, UP); head.quaternion.setFromRotationMatrix(m4); head.position.copy(headPos);
-    yaw += (mx * 0.436 - yaw) * 0.08; pitch += (-my * 0.436 - pitch) * 0.08; // no máximo 25 graus
-    headInner.rotation.set(pitch, yaw, 0);
-    whisk[0].rotation.z = Math.sin(time * 3) * 0.12; whisk[1].rotation.z = -Math.sin(time * 3 + 0.8) * 0.12;
-    var rg = 0; if (roarStart > 0) { var rt = (performance.now() - roarStart) / 600; if (rt < 1) rg = Math.sin(Math.PI * rt); else roarStart = -1; }
-    jaw.rotation.x = 0.06 + 0.55 * rg; eyeMat.emissiveIntensity = 1.2 + 3 * rg; glowMat.opacity = 0.35 + 0.4 * rg; rim.intensity = 2.2 + 4 * rg;
-  }
-
-  var running = false, raf = 0, last = 0, born = 0, first = true, frames = 0, acc = 0, stage = 0;
-  var stats = window.__rd3d = { frames: 0, media1: null, media2: null, etapa: "medindo", segmentos: N };
+  /* ---------- laço ---------- */
+  var ENT = 1600, LIFT = 500, running = false, raf = 0, last = 0, born = 0, first = true, frames = 0, acc = 0, stage = 0, lastRender = 0, nextBlink = 0, blinkStart = -1;
+  var stats = window.__rd3d = { frames: 0, renders: 0, media1: null, media2: null, etapa: MAX ? "max" : "medindo", aneis: RINGS, max: MAX };
   function stopAll() { running = false; if (raf) cancelAnimationFrame(raf); raf = 0; }
   function kill() { stopAll(); stats.etapa = "desligado"; renderer.dispose(); canvas.remove(); }
+  function ease(x) { return 1 - Math.pow(1 - Math.min(1, Math.max(0, x)), 3); }
   function tick(now) {
     raf = 0; if (!running) return;
-    var dt = last ? Math.min(0.05, (now - last) / 1000) : 0; last = now;
-    if (!born) born = now;
-    if (dt && frames >= 5) acc += dt * 1000;
+    raf = requestAnimationFrame(tick);
+    if (!born) { born = now; nextBlink = now + 4000 + Math.random() * 3000; }
+    var dt = last ? now - last : 0; last = now;
     frames++; stats.frames++;
-    if (frames === 95 && stage < 2) {
+    if (frames > 30 && frames <= 120 && dt) acc += dt;
+    if (frames === 120 && stage < 2) {
       var avg = acc / 90;
       if (stage === 0) {
         stats.media1 = +avg.toFixed(1);
-        if (avg > 24) { N = 24; SP = LEN / N; STEP = SP / 3; renderer.setPixelRatio(1); stage = 1; frames = 0; acc = 0; stats.etapa = "reduzido"; stats.segmentos = N; layout(); }
-        else { stage = 2; stats.etapa = "ok"; }
+        if (!MAX && avg > 24) { buildTube(mobile ? 70 : 90); renderer.setPixelRatio(1); stage = 1; frames = 30; acc = 0; stats.etapa = "reduzido"; stats.aneis = RINGS; }
+        else { stage = 2; if (!MAX) stats.etapa = "ok"; }
       } else {
         stats.media2 = +avg.toFixed(1);
-        if (avg > 33) { kill(); return; }
-        stage = 2; stats.etapa = "reduzido-ok";
+        if (!MAX && avg > 33) { kill(); return; }
+        stage = 2; if (!MAX) stats.etapa = "reduzido-ok";
       }
     }
-    var hr = hero.getBoundingClientRect(), prog = Math.min(1, Math.max(0, -hr.top / (hr.height * 0.8)));
-    rise = Math.pow(prog, 1.4) * RH * 2.6;
-    advance(P / 9 * (1 + 2.2 * prog) * dt);
-    var grow = Math.min(1, (now - born) / 1200); grow = 1 - Math.pow(1 - grow, 3);
-    root.scale.setScalar(u * Math.max(grow, 0.0001));
-    pose(now / 1000);
-    renderer.render(scene, camera);
+    var t = now - born, p = ease(t / ENT), lift = ease((t - ENT) / LIFT);
+    if (entradaFim < 0 && t >= ENT + LIFT) { entradaFim = now; if (roarQueued) { roarQueued = false; lastRoar = now; roarStart = now; } }
+    var roarK = 0, jolt = 0;
+    if (roarStart > 0) { var rt = (now - roarStart) / 700; if (rt < 1) { roarK = Math.sin(Math.PI * rt); jolt = rt < 0.3 ? Math.sin(Math.PI * rt / 0.3) : 0; } else roarStart = -1; }
+    var blinkK = 0;
+    if (now > nextBlink && blinkStart < 0) blinkStart = now;
+    if (blinkStart > 0) { var bt = (now - blinkStart) / 160; if (bt < 1) blinkK = Math.sin(Math.PI * bt); else { blinkStart = -1; nextBlink = now + 4000 + Math.random() * 3000; } }
+    // economia: parado e sem mouse, 30 fps
+    var calmo = entradaFim > 0 && roarStart < 0 && blinkStart < 0 && now - lastMouse > 1000 && stage === 2;
+    if (calmo && now - lastRender < 32) return;
+    lastRender = now;
+    var breath = 1 + Math.sin(t / 4000 * Math.PI * 2) * 0.03;
+    poseBody(p, breath, t / 1000);
+    poseHead(p, lift, t / 1000, roarK, jolt, blinkK);
+    renderer.render(scene, camera); stats.renders++;
     if (first) { first = false; canvas.style.opacity = "1"; }
-    raf = requestAnimationFrame(tick);
   }
   function start() { if (!running && canvas.isConnected) { running = true; last = 0; raf = requestAnimationFrame(tick); } }
-  /* leitura de pixels para os testes: quantos pontos não transparentes o canvas tem */
+  stats.cabeca = function () { // posição da cabeça na tela (para os testes)
+    var v = head.position.clone().project(camera), r = canvas.getBoundingClientRect();
+    return { x: r.left + (v.x + 1) / 2 * r.width, y: r.top + (1 - v.y) / 2 * r.height };
+  };
   stats.probe = function () {
     renderer.render(scene, camera);
     var gl = renderer.getContext(), w = gl.drawingBufferWidth, h = gl.drawingBufferHeight, px = new Uint8Array(w * h * 4);
@@ -1116,7 +1231,6 @@ footer.foot .logo{width:56px;height:56px;border-radius:8px;margin-bottom:10px}
     var n = 0; for (var i = 3; i < px.length; i += 4 * 7) if (px[i] > 8) n++; return n;
   };
 
-  buildTable(); s = tab[Math.round(NS * 0.75)]; // nasce atrás do hexágono
   layout();
   var rT; window.addEventListener("resize", function () { clearTimeout(rT); rT = setTimeout(layout, 150); });
   var visivel = true;

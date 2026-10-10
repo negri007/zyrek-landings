@@ -11,3 +11,4 @@ Dados: Google Maps e Instagram, via Apify.
 4. Textos entre [colchetes] precisam ser confirmados com o dono.
 5. Antes de publicar de verdade: tire a faixa "Demonstração" e a linha
    <meta name="robots" content="noindex, nofollow">.
+6. Arquivo único para celular, sem internet: na raiz do projeto, python ferramentas/gerar_celular.py lobo (sem nome, gera todas de landings-motion/ em celular/; precisa do Pillow).

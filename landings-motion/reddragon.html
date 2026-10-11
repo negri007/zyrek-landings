@@ -90,7 +90,7 @@ section{position:relative}
 .head p{color:var(--soft);font-size:clamp(16.5px,2vw,19px);max-width:60ch}
 
 /* hero */
-.hero{padding:clamp(28px,6vw,72px) 0 clamp(40px,6vw,72px);overflow:hidden}
+.hero{padding:calc(clamp(28px,6vw,72px) + var(--dragao-pad,0px)) 0 clamp(40px,6vw,72px);overflow:hidden}
 .hero .wrap{display:grid;gap:28px;align-items:center}
 @media (min-width:960px){.hero .wrap{grid-template-columns:1.1fr .9fr;gap:40px}}
 .wordmark{display:block;font-size:clamp(68px,19vw,176px);line-height:.82;letter-spacing:-.02em}
@@ -105,6 +105,14 @@ section{position:relative}
 .hero .ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
 .hexart{position:relative;width:min(100%,460px);aspect-ratio:1/1.06;justify-self:center}
 .hexart svg.frame{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+/* dragão deitado em cima do hexágono (CONFIG.dragao) */
+.dragao{position:absolute;z-index:2;pointer-events:none;transform-origin:75% 100%}
+.dragao-in{position:relative;transform-origin:50% 100%}
+#dragao{display:block;width:100%;max-width:none;height:auto;pointer-events:none;filter:drop-shadow(0 8px 10px rgba(0,0,0,.6))}
+.d-eye{position:absolute;left:11.6%;top:26.5%;width:7%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;background:radial-gradient(circle,rgba(255,236,150,.95) 0,rgba(255,176,32,.75) 30%,rgba(255,120,0,0) 70%);mix-blend-mode:screen;opacity:.45}
+.d-flash{position:absolute;left:5%;top:40%;width:16%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;background:radial-gradient(circle,rgba(255,236,150,.95) 0,rgba(255,120,20,.7) 30%,rgba(236,6,34,.35) 55%,rgba(236,6,34,0) 72%);mix-blend-mode:screen;opacity:0}
+.d-spark{position:absolute;left:5%;top:40%;width:5px;height:5px;margin:-2.5px 0 0 -2.5px;border-radius:50%;opacity:0}
+@media (max-width:600px){.hexart.com-dragao{width:78%;margin-left:18%;margin-top:36%;justify-self:start}}
 .stamp{position:absolute;right:0;bottom:6%;z-index:3;display:grid;place-items:center;width:clamp(130px,30vw,170px);aspect-ratio:1;border-radius:50%;color:var(--red);transform:rotate(-12deg);filter:url(#rough)}
 .stamp::before{content:"";position:absolute;inset:0;border-radius:50%;border:5px solid currentColor}
 .stamp::after{content:"";position:absolute;inset:9px;border-radius:50%;border:2px solid currentColor}
@@ -647,6 +655,7 @@ footer.foot .logo{width:56px;height:56px;border-radius:8px;margin-bottom:10px}
   "use strict";
   /* ===== CONFIG ===== */
   var CONFIG = {
+    dragao: true, // false: a imagem e o código do dragão não são carregados
     unidades: {
       1: {
         nome: "Unidade 1 · Parque do Povo", curto: "Parque do Povo", whatsapp: "5518997288927",
@@ -852,6 +861,78 @@ footer.foot .logo{width:56px;height:56px;border-radius:8px;margin-bottom:10px}
   function pedir() { if (!raf) raf = requestAnimationFrame(draw); }
   size(); window.addEventListener("resize", size); window.addEventListener("scroll", pedir, { passive: true });
 
+  /* ===== dragão em cima do hexágono ===== */
+  (function dragao() {
+    if (!CONFIG.dragao) return;
+    var hex = $("#hexart"), svgF = $("#hexart svg.frame"), heroEl = $("#topo"), copy = $(".hero-copy");
+    var box = document.createElement("div"); box.className = "dragao"; box.setAttribute("aria-hidden", "true");
+    box.innerHTML = '<div class="dragao-in"><img id="dragao" src="fotos/reddragon/dragao.webp" width="645" height="274" alt="" aria-hidden="true"><span class="d-eye"></span><span class="d-flash"></span></div>';
+    hex.appendChild(box); hex.classList.add("com-dragao");
+    var inner = box.firstChild, eye = $(".d-eye", box), flash = $(".d-flash", box), RATIO = 274 / 645;
+    var anima = moving;
+    function posicionar() {
+      heroEl.style.setProperty("--dragao-pad", "0px"); hex.style.marginTop = "";
+      var hr = hex.getBoundingClientRect(), sr = svgF.getBoundingClientRect();
+      var w = sr.width * 1.15, h = w * RATIO, left = sr.left - hr.left - sr.width * 0.18;
+      var bordaTopo = sr.top - hr.top + sr.height * 4 / 212; // borda de cima do hexágono (primeiro path de #frags)
+      var top = bordaTopo + 2 - h * 0.894; // garras de trás (89,4% da altura da imagem) entram 2px na aresta; as da frente ficam pendentes no canto
+      box.style.width = w + "px"; box.style.left = left + "px"; box.style.top = top + "px";
+      var topoDoc = hr.top + top, cr = copy.getBoundingClientRect(), her = heroEl.getBoundingClientRect();
+      if (hr.top >= cr.bottom - 1) { // empilhado: o dragão não pode cobrir os botões
+        var falta = cr.bottom + 10 - topoDoc;
+        if (falta > 0) hex.style.marginTop = (parseFloat(getComputedStyle(hex).marginTop) + falta) + "px";
+      } else { // lado a lado: o dragão não pode encostar no menu fixo
+        var falta2 = her.top + 10 - topoDoc;
+        if (falta2 > 0) heroEl.style.setProperty("--dragao-pad", Math.ceil(falta2) + "px");
+      }
+    }
+    posicionar();
+    var rT; window.addEventListener("resize", function () { clearTimeout(rT); rT = setTimeout(posicionar, 120); });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(posicionar);
+    window.addEventListener("load", posicionar);
+    if (!anima) return; // movimento reduzido ou sem Motion: parado, sem entrada, sem loops e sem rugido
+
+    var vivo = false, respira = null, timerOlho = 0, ultimoRugido = -1e9, pronto = false, visivel = true;
+    box.style.opacity = "0";
+    function loops(on) {
+      if (on && pronto && visivel) {
+        if (respira) respira.play(); else respira = M.animate(inner, { transform: ["scaleY(1)", "scaleY(1.012)", "scaleY(1)"] }, { duration: 4.5, ease: "easeInOut", repeat: Infinity });
+        if (!timerOlho) agendarOlho();
+      } else {
+        if (respira) respira.pause();
+        clearTimeout(timerOlho); timerOlho = 0;
+      }
+    }
+    function agendarOlho() {
+      timerOlho = setTimeout(function () { timerOlho = 0; M.animate(eye, { opacity: [0.45, 0.9, 0.45] }, { duration: 1.2, ease: "easeInOut" }); if (visivel) agendarOlho(); }, 3000 + Math.random() * 3000);
+    }
+    function rugir() {
+      var t = performance.now(); if (!pronto || t - ultimoRugido < 1500) return; ultimoRugido = t;
+      M.animate(box, { transform: ["translateX(0%) rotate(0deg)", "translateX(-2%) rotate(-1.5deg)", "translateX(0%) rotate(0deg)"] }, { duration: 0.8, times: [0, 0.22, 1], ease: ["easeOut", "easeInOut"] });
+      M.animate(eye, { opacity: [0.45, 1, 1, 0.45], scale: [1, 1.5, 1.5, 1] }, { duration: 0.8, times: [0, 0.15, 0.6, 1] });
+      M.animate(flash, { opacity: [0, 1, 0], scale: [0.4, 1.6, 2] }, { duration: 0.6, times: [0, 0.25, 1], ease: "easeOut" });
+      var n = 8 + Math.floor(Math.random() * 5), w = box.getBoundingClientRect().width;
+      for (var i = 0; i < n; i++) {
+        var sp = document.createElement("span"); sp.className = "d-spark";
+        sp.style.background = i % 2 ? "#FFB020" : "#FF6A1A"; sp.style.boxShadow = "0 0 6px " + (i % 2 ? "#FFD060" : "#FF6A1A");
+        inner.appendChild(sp);
+        var dx = -(w * (0.08 + Math.random() * 0.14)), dy = (Math.random() - 0.4) * w * 0.12;
+        M.animate(sp, { opacity: [1, 1, 0], transform: ["translate(0px,0px) scale(1)", "translate(" + dx.toFixed(0) + "px," + dy.toFixed(0) + "px) scale(" + (0.4 + Math.random() * 0.6).toFixed(2) + ")"] }, { duration: 0.5 + Math.random() * 0.35, delay: 0.05 + Math.random() * 0.12, ease: "easeOut" }).then(function () { this.remove(); }.bind(sp));
+      }
+    }
+    // entrada: quando o hexágono termina de montar, o dragão desce e pousa
+    setTimeout(function () {
+      M.animate(box, { opacity: [0, 1], transform: ["translateY(-40px)", "translateY(0px)"] }, { type: "spring", bounce: 0.2, visualDuration: 0.45 }).then(function () {
+        return M.animate(inner, { transform: ["scaleY(0.96)", "scaleY(1)"] }, { type: "spring", bounce: 0.45, visualDuration: 0.35 });
+      }).then(function () { pronto = true; loops(true); if (pendente) { pendente = false; rugir(); } });
+    }, 1050);
+    var pendente = false;
+    document.addEventListener("rd:carimbo", function () { if (pronto) rugir(); else pendente = true; });
+    hex.addEventListener("click", rugir);
+    if ("IntersectionObserver" in window) new IntersectionObserver(function (es) { visivel = es[0].isIntersecting; loops(visivel); }).observe(heroEl);
+    document.addEventListener("visibilitychange", function () { loops(!document.hidden && visivel); });
+  })();
+
   if (!moving) return;
 
   /* ===== Lenis: roda do mouse; no toque a rolagem continua nativa ===== */
@@ -876,6 +957,7 @@ footer.foot .logo{width:56px;height:56px;border-radius:8px;margin-bottom:10px}
   var stamp = $("#stamp"); stamp.style.opacity = "0";
   setTimeout(function () {
     M.animate(stamp, { opacity: [0, 1], transform: ["rotate(-30deg) scale(2.6)", "rotate(-12deg) scale(1)"] }, { duration: 0.32, ease: [0.55, 0, 1, 0.45] }).then(function () {
+      document.dispatchEvent(new CustomEvent("rd:carimbo"));
       M.animate("#hexart", { transform: ["translate(0px,0px)", "translate(-4px,3px)", "translate(3px,-2px)", "translate(0px,0px)"] }, { duration: 0.25 });
     });
   }, 1250);

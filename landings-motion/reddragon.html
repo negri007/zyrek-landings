@@ -113,7 +113,6 @@ section{position:relative}
 .d-eye{position:absolute;left:11.6%;top:26.5%;width:7%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;background:radial-gradient(circle,rgba(255,236,150,.95) 0,rgba(255,176,32,.75) 30%,rgba(255,120,0,0) 70%);mix-blend-mode:screen;opacity:.45}
 .d-flash{position:absolute;left:5%;top:40%;width:16%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;background:radial-gradient(circle,rgba(255,236,150,.95) 0,rgba(255,120,20,.7) 30%,rgba(236,6,34,.35) 55%,rgba(236,6,34,0) 72%);mix-blend-mode:screen;opacity:0}
 .d-spark{position:absolute;left:5%;top:40%;width:5px;height:5px;margin:-2.5px 0 0 -2.5px;border-radius:50%;opacity:0}
-@media (max-width:600px){.hexart.com-dragao{width:78%;margin-left:18%;margin-top:36%;justify-self:start}}
 .stamp{position:absolute;right:0;bottom:6%;z-index:3;display:grid;place-items:center;width:clamp(130px,30vw,170px);aspect-ratio:1;border-radius:50%;color:var(--red);transform:rotate(-12deg);filter:url(#rough)}
 .stamp::before{content:"";position:absolute;inset:0;border-radius:50%;border:5px solid currentColor}
 .stamp::after{content:"";position:absolute;inset:9px;border-radius:50%;border:2px solid currentColor}
@@ -869,7 +868,7 @@ footer.foot .logo{width:56px;height:56px;border-radius:8px;margin-bottom:10px}
     var box = document.createElement("div"); box.className = "dragao"; box.setAttribute("aria-hidden", "true");
     box.innerHTML = '<div class="dragao-in"><img id="dragao" src="fotos/reddragon/dragao.webp" width="645" height="274" alt="" aria-hidden="true"><span class="d-eye"></span><span class="d-flash"></span></div>';
     hex.appendChild(box); hex.classList.add("com-dragao");
-    var inner = box.firstChild, eye = $(".d-eye", box), flash = $(".d-flash", box), RATIO = 274 / 645;
+    var inner = box.firstChild, eye = $(".d-eye", box), flash = $(".d-flash", box), RATIO = 274 / 645, APOIO = 0.65;
     var anima = moving, brilho = null;
     if (anima) {
       brilho = document.createElement("img"); brilho.id = "dragao-brilho"; brilho.src = "fotos/reddragon/dragao-brilho.webp";
@@ -879,9 +878,11 @@ footer.foot .logo{width:56px;height:56px;border-radius:8px;margin-bottom:10px}
     function posicionar() {
       heroEl.style.setProperty("--dragao-pad", "0px"); hex.style.marginTop = "";
       var hr = hex.getBoundingClientRect(), sr = svgF.getBoundingClientRect();
-      var w = sr.width * 1.15, h = w * RATIO, left = sr.left - hr.left - sr.width * 0.18;
-      var bordaTopo = sr.top - hr.top + sr.height * 4 / 212; // borda de cima do hexágono (primeiro path de #frags)
-      var top = bordaTopo + 2 - h * 0.894; // garras de trás (89,4% da altura da imagem) entram 2px na aresta; as da frente ficam pendentes no canto
+      var w = sr.width * 0.86, h = w * RATIO, left = sr.left - hr.left + sr.width * 0.065;
+      // borda de cima = primeiro path de #frags (y 4 a 14 no viewBox de 212), pelo estado final: a conta usa a geometria do SVG,
+      // não o retângulo do path, que muda enquanto os fragmentos ainda estão montando
+      var bordaTopo = sr.top - hr.top + sr.height * 4 / 212, bordaAlt = sr.height * 10 / 212;
+      var top = bordaTopo + APOIO * bordaAlt - h * 0.85; // linha da barriga a 85% da altura da imagem
       box.style.width = w + "px"; box.style.left = left + "px"; box.style.top = top + "px";
       var topoDoc = hr.top + top, cr = copy.getBoundingClientRect(), her = heroEl.getBoundingClientRect();
       if (hr.top >= cr.bottom - 1) { // empilhado: o dragão não pode cobrir os botões

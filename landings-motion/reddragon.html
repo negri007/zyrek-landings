@@ -109,6 +109,7 @@ section{position:relative}
 .dragao{position:absolute;z-index:2;pointer-events:none;transform-origin:75% 100%}
 .dragao-in{position:relative;transform-origin:50% 100%}
 #dragao{display:block;width:100%;max-width:none;height:auto;pointer-events:none;filter:drop-shadow(0 8px 10px rgba(0,0,0,.6))}
+#dragao-brilho{position:absolute;left:0;top:0;width:100%;max-width:none;height:auto;opacity:0;mix-blend-mode:screen;pointer-events:none}
 .d-eye{position:absolute;left:11.6%;top:26.5%;width:7%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;background:radial-gradient(circle,rgba(255,236,150,.95) 0,rgba(255,176,32,.75) 30%,rgba(255,120,0,0) 70%);mix-blend-mode:screen;opacity:.45}
 .d-flash{position:absolute;left:5%;top:40%;width:16%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;background:radial-gradient(circle,rgba(255,236,150,.95) 0,rgba(255,120,20,.7) 30%,rgba(236,6,34,.35) 55%,rgba(236,6,34,0) 72%);mix-blend-mode:screen;opacity:0}
 .d-spark{position:absolute;left:5%;top:40%;width:5px;height:5px;margin:-2.5px 0 0 -2.5px;border-radius:50%;opacity:0}
@@ -869,7 +870,12 @@ footer.foot .logo{width:56px;height:56px;border-radius:8px;margin-bottom:10px}
     box.innerHTML = '<div class="dragao-in"><img id="dragao" src="fotos/reddragon/dragao.webp" width="645" height="274" alt="" aria-hidden="true"><span class="d-eye"></span><span class="d-flash"></span></div>';
     hex.appendChild(box); hex.classList.add("com-dragao");
     var inner = box.firstChild, eye = $(".d-eye", box), flash = $(".d-flash", box), RATIO = 274 / 645;
-    var anima = moving;
+    var anima = moving, brilho = null;
+    if (anima) {
+      brilho = document.createElement("img"); brilho.id = "dragao-brilho"; brilho.src = "fotos/reddragon/dragao-brilho.webp";
+      brilho.width = 645; brilho.height = 274; brilho.alt = ""; brilho.setAttribute("aria-hidden", "true");
+      inner.insertBefore(brilho, eye);
+    }
     function posicionar() {
       heroEl.style.setProperty("--dragao-pad", "0px"); hex.style.marginTop = "";
       var hr = hex.getBoundingClientRect(), sr = svgF.getBoundingClientRect();
@@ -898,10 +904,16 @@ footer.foot .logo{width:56px;height:56px;border-radius:8px;margin-bottom:10px}
       if (on && pronto && visivel) {
         if (respira) respira.play(); else respira = M.animate(inner, { transform: ["scaleY(1)", "scaleY(1.012)", "scaleY(1)"] }, { duration: 4.5, ease: "easeInOut", repeat: Infinity });
         if (!timerOlho) agendarOlho();
+        if (!timerOnda) agendarOnda();
       } else {
         if (respira) respira.pause();
         clearTimeout(timerOlho); timerOlho = 0;
+        clearTimeout(timerOnda); timerOnda = 0;
       }
+    }
+    var timerOnda = 0, aceso = false;
+    function agendarOnda() {
+      timerOnda = setTimeout(function () { timerOnda = 0; if (!aceso) M.animate(brilho, { opacity: [0, 0.25, 0] }, { duration: 1.2, ease: "easeInOut" }); if (visivel) agendarOnda(); }, 6000 + Math.random() * 3000);
     }
     function agendarOlho() {
       timerOlho = setTimeout(function () { timerOlho = 0; M.animate(eye, { opacity: [0.45, 0.9, 0.45] }, { duration: 1.2, ease: "easeInOut" }); if (visivel) agendarOlho(); }, 3000 + Math.random() * 3000);
@@ -911,6 +923,8 @@ footer.foot .logo{width:56px;height:56px;border-radius:8px;margin-bottom:10px}
       M.animate(box, { transform: ["translateX(0%) rotate(0deg)", "translateX(-2%) rotate(-1.5deg)", "translateX(0%) rotate(0deg)"] }, { duration: 0.8, times: [0, 0.22, 1], ease: ["easeOut", "easeInOut"] });
       M.animate(eye, { opacity: [0.45, 1, 1, 0.45], scale: [1, 1.5, 1.5, 1] }, { duration: 0.8, times: [0, 0.15, 0.6, 1] });
       M.animate(flash, { opacity: [0, 1, 0], scale: [0.4, 1.6, 2] }, { duration: 0.6, times: [0, 0.25, 1], ease: "easeOut" });
+      aceso = true; brilho.style.filter = "drop-shadow(0 0 6px #FF3046)";
+      M.animate(brilho, { opacity: [0, 0.9, 0] }, { duration: 0.75, times: [0, 0.2, 1], ease: ["easeOut", "easeIn"] }).then(function () { aceso = false; brilho.style.filter = ""; });
       var n = 8 + Math.floor(Math.random() * 5), w = box.getBoundingClientRect().width;
       for (var i = 0; i < n; i++) {
         var sp = document.createElement("span"); sp.className = "d-spark";

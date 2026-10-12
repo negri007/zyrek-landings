@@ -61,7 +61,7 @@ p{margin:0}
 .demo{position:relative;z-index:2;background:#fff;color:var(--ink);font-size:12.5px;font-weight:600;text-align:center;padding:6px 16px;line-height:1.35}
 .bar{position:sticky;top:0;z-index:40;background:rgba(14,14,16,.9);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
 .bar .wrap{display:flex;align-items:center;gap:14px;height:62px}
-.brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand{display:flex;align-items:center;gap:10px;min-height:44px;text-decoration:none}
 .brand img{width:38px;height:38px;border-radius:6px}
 .brand b{font-family:var(--display);font-style:italic;font-weight:900;font-size:21px;line-height:.9;text-transform:uppercase}
 .brand b span{color:var(--red)}
@@ -168,7 +168,8 @@ section{position:relative}
 .field>label,.field legend{font-weight:800;font-size:15px;padding:0}
 .field legend{margin-bottom:7px}
 .field input,.field select{width:100%;min-height:50px;border:2px solid #D5D6DB;background:#F4F4F6;padding:0 14px;font:inherit;font-size:16.5px;color:var(--ink);border-radius:0}
-.field input:focus,.field select:focus{outline:none;border-color:var(--red);background:#fff}
+.field input:focus,.field select:focus{outline:3px solid var(--ink);outline-offset:2px;border-color:var(--red);background:#fff}
+.field input[aria-invalid="true"]{border-color:var(--red-deep);background:#FFF1F2}
 .field input::placeholder{color:#6B6D76}
 .seg{display:flex;flex-wrap:wrap;gap:8px}
 .seg label{position:relative}
@@ -188,7 +189,7 @@ section{position:relative}
 /* grade */
 .filters{display:grid;gap:12px;margin-bottom:18px}
 .pillrow{display:flex;flex-wrap:wrap;gap:6px}
-.pillrow button{min-height:42px;padding:0 14px;border:1px solid var(--line);background:var(--graphite-2);color:var(--soft);font-weight:800;font-size:14.5px;cursor:pointer}
+.pillrow button{min-height:44px;padding:0 14px;border:1px solid var(--line);background:var(--graphite-2);color:var(--soft);font-weight:800;font-size:14.5px;cursor:pointer}
 .pillrow button[aria-pressed="true"]{background:#fff;color:var(--ink);border-color:#fff}
 .filters select{min-height:44px;max-width:320px;border:1px solid var(--line);background:var(--graphite-2);color:#fff;padding:0 12px;font:inherit;font-size:15.5px}
 .days{display:grid;gap:12px}
@@ -199,6 +200,9 @@ section{position:relative}
 .day ul{list-style:none;margin:0;padding:0}
 .day li{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-top:1px solid var(--line);font-weight:600}
 .day li time{font-variant-numeric:tabular-nums;color:var(--red-hi);font-weight:800}
+.modpick{display:grid;gap:6px;max-width:320px}
+.modpick label{font-weight:800;font-size:14.5px;color:var(--soft)}
+.modpick[hidden]{display:none}
 .notice{padding:18px;background:var(--graphite-2);border-left:3px solid var(--red)}
 .notice p+p{margin-top:8px}
 .tbd{margin-top:14px;color:var(--soft);font-size:15.5px}
@@ -311,7 +315,7 @@ footer.foot .logo{width:56px;height:56px;border-radius:8px;margin-bottom:10px}
 }
 
 /* dock no celular */
-.dock{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:50;transition:transform .35s cubic-bezier(.2,.8,.2,1),opacity .25s}
+.dock{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:50;transition:transform .3s cubic-bezier(.2,.8,.2,1),opacity .25s}
 .dock .btn{width:100%;min-height:58px;box-shadow:0 14px 30px -10px rgba(0,0,0,.9)}
 .dock.away{transform:translateY(160%);opacity:0;pointer-events:none}
 @media (min-width:1040px){.dock{display:none}}
@@ -353,7 +357,7 @@ footer.foot .logo{width:56px;height:56px;border-radius:8px;margin-bottom:10px}
     <nav aria-label="Seções">
       <a href="#unidades">Unidades</a><a href="#grade">Aulas</a><a href="#planos">Planos</a><a href="#kids">Espaço Kids</a><a href="#duvidas">Dúvidas</a>
     </nav>
-    <a class="btn sm" href="#experimental">Aula grátis</a>
+    <a class="btn sm" href="#experimental">Agendar aula</a>
   </div>
 </header>
 
@@ -421,8 +425,8 @@ footer.foot .logo{width:56px;height:56px;border-radius:8px;margin-bottom:10px}
         <p class="edge-line" id="uEdge"></p>
         <div class="rates" id="uRates"></div>
         <div class="actions">
-          <a class="btn sm" id="uWa" href="https://wa.me/5518997288927" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-wa"/></svg>WhatsApp da unidade</a>
-          <a class="btn sm white" id="uMaps" href="#" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-pin"/></svg>Como chegar</a>
+          <a class="btn sm" id="uWa" href="https://wa.me/5518997288927" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-wa"/></svg>Chamar no WhatsApp</a>
+          <a class="btn sm white" id="uMaps" href="#" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-pin"/></svg>Ver como chegar</a>
         </div>
       </div>
     </div>
@@ -444,7 +448,7 @@ footer.foot .logo{width:56px;height:56px;border-radius:8px;margin-bottom:10px}
     </div>
     <form class="form rv" id="trialForm" novalidate>
       <h3>Aula experimental <em>grátis</em></h3>
-      <div class="field"><label for="fNome">Seu nome</label><input id="fNome" name="nome" autocomplete="given-name" placeholder="Como a equipe te chama" aria-describedby="fErr"></div>
+      <div class="field"><label for="fNome">Seu nome</label><input id="fNome" name="nome" autocomplete="given-name" placeholder="Ex.: Ana" aria-describedby="fErr"></div>
       <fieldset class="field"><legend>Unidade</legend>
         <div class="seg">
           <label><input type="radio" name="unidade" value="1" checked><span>1 · Parque do Povo</span></label>
@@ -477,7 +481,7 @@ footer.foot .logo{width:56px;height:56px;border-radius:8px;margin-bottom:10px}
         <button type="button" data-u="1" aria-pressed="true">Unidade 1</button><button type="button" data-u="2" aria-pressed="false">Unidade 2</button>
       </div>
       <div class="pillrow" role="group" aria-label="Dia" id="gDays"></div>
-      <label class="sr" for="gMod">Modalidade</label><select id="gMod"></select>
+      <div class="modpick" id="gModWrap"><label for="gMod">Modalidade</label><select id="gMod"></select></div>
     </div>
     <div id="gOut" aria-live="polite"></div>
   </div>
@@ -623,7 +627,7 @@ footer.foot .logo{width:56px;height:56px;border-radius:8px;margin-bottom:10px}
       <article class="card rv"><figure><img src="fotos/reddragon/camiseta-19.jpg" width="640" height="800" alt="Camiseta Red número 19, preta com detalhes vermelhos" loading="lazy"></figure><div><h3>Camiseta Red “19”</h3><p class="price">R$ 139,99</p></div></article>
       <article class="card rv"><figure><img src="fotos/reddragon/camisetas-oversized.jpg" width="640" height="800" alt="Camisetas oversized da Red em preto, marrom e creme" loading="lazy"></figure><div><h3>Oversized</h3><p>Valor <span class="pend">[consultar]</span></p></div></article>
     </div>
-    <div style="margin-top:18px" class="rv"><a class="btn sm" data-wa="Olá, Red Dragon! Vim pelo site e quero saber das camisetas da Loja do Dragão." href="#" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-wa"/></svg>Quero uma camiseta</a></div>
+    <div style="margin-top:18px" class="rv"><a class="btn sm" data-wa="Olá, Red Dragon! Vim pelo site e quero saber das camisetas da Loja do Dragão." href="#" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-wa"/></svg>Pedir camiseta</a></div>
   </div>
 </section>
 
@@ -646,7 +650,7 @@ footer.foot .logo{width:56px;height:56px;border-radius:8px;margin-bottom:10px}
 </footer>
 </div>
 
-<div class="dock" id="dock"><a class="btn" href="#experimental">Aula experimental grátis</a></div>
+<div class="dock" id="dock"><a class="btn" href="#experimental">Agendar aula grátis</a></div>
 
 <script src="motion-12.43.0.js"></script>
 <script src="lenis-1.3.26.min.js"></script>
@@ -750,7 +754,7 @@ footer.foot .logo{width:56px;height:56px;border-radius:8px;margin-bottom:10px}
     $("#uMaps").href = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent("Red Dragon Gym, " + U.maps);
     var chips = $("#uChips");
     chips.innerHTML = U.comodidades.map(function (k) { var c = CONFIG.comodidades[k]; return '<li><svg aria-hidden="true"><use href="#' + c[0] + '"/></svg>' + c[1] + "</li>"; }).join("");
-    if (animar && moving) M.animate($$("#uChips li"), { opacity: [0, 1], transform: ["translateY(10px)", "translateY(0px)"] }, { duration: 0.35, delay: M.stagger(0.04), ease: [0.16, 1, 0.3, 1] });
+    if (animar && moving) M.animate($$("#uChips li"), { opacity: [0, 1], transform: ["translateY(10px)", "translateY(0px)"] }, { duration: 0.35, delay: M.stagger(0.03), ease: [0.16, 1, 0.3, 1] });
     $$("[data-wa]").forEach(function (a) { a.href = wa(U.whatsapp, a.getAttribute("data-wa")); });
     $$('#trialForm input[name="unidade"]').forEach(function (r) { r.checked = r.value == u; });
     atualizarForm();
@@ -769,12 +773,16 @@ footer.foot .logo{width:56px;height:56px;border-radius:8px;margin-bottom:10px}
     $("#fHint").textContent = "Vai para o WhatsApp da Unidade " + u + " (" + CONFIG.unidades[u].curto + ").";
   }
   $$('#trialForm input[name="unidade"]').forEach(function (r) { r.addEventListener("change", atualizarForm); });
-  var fNome = $("#fNome"), fErr = $("#fErr");
-  fNome.addEventListener("input", function () { if (fNome.value.trim()) { fErr.textContent = ""; fNome.removeAttribute("aria-invalid"); } });
+  var fNome = $("#fNome"), fErr = $("#fErr"), ERRO_NOME = "Escreva seu nome para a equipe saber quem vem.";
+  function erroNome() { fErr.textContent = ERRO_NOME; fNome.setAttribute("aria-invalid", "true"); }
+  function limparNome() { fErr.textContent = ""; fNome.removeAttribute("aria-invalid"); }
+  fNome.addEventListener("blur", function () { if (!fNome.value.trim()) erroNome(); });
+  fNome.addEventListener("focus", limparNome);
+  fNome.addEventListener("input", limparNome);
   $("#trialForm").addEventListener("submit", function (e) {
     e.preventDefault();
     var nome = fNome.value.trim();
-    if (!nome) { fErr.textContent = "Escreva seu nome para a equipe saber quem vem."; fNome.setAttribute("aria-invalid", "true"); fNome.focus(); return; }
+    if (!nome) { fNome.focus(); erroNome(); return; }
     var u = +$('#trialForm input[name="unidade"]:checked').value, U = CONFIG.unidades[u];
     var per = $('#trialForm input[name="periodo"]:checked').value;
     var msg = "Olá, Red Dragon! Vim pelo site e quero agendar uma aula experimental grátis.\nNome: " + nome + "\nUnidade: " + U.nome + "\nModalidade: " + fMod.value + "\nMelhor período: " + per;
@@ -792,7 +800,7 @@ footer.foot .logo{width:56px;height:56px;border-radius:8px;margin-bottom:10px}
     var mods = []; CONFIG.grade.forEach(function (g) { if (g[0] === filtro.u && mods.indexOf(g[3]) < 0) mods.push(g[3]); });
     gMod.innerHTML = '<option value="todas">Todas as modalidades</option>' + mods.map(function (m) { return "<option>" + m + "</option>"; }).join("");
     if (mods.indexOf(filtro.mod) < 0) filtro.mod = "todas"; gMod.value = filtro.mod;
-    gMod.hidden = !mods.length;
+    $("#gModWrap").hidden = !mods.length;
   }
   gMod.addEventListener("change", function () { filtro.mod = gMod.value; renderGrade(); });
   function renderGrade() {
@@ -804,7 +812,7 @@ footer.foot .logo{width:56px;height:56px;border-radius:8px;margin-bottom:10px}
     if (filtro.u === 1) {
       html = '<div class="notice"><p><b>Grade da Unidade 1:</b> <span class="pend">[confirmar]</span>. Os horários publicados se contradizem; a equipe passa a grade atual pelo WhatsApp.</p><p>Musculação liberada das 5h30 à meia-noite de segunda a sexta.</p><p style="margin-top:12px"><a class="btn sm" href="' + wa(U.whatsapp, "Olá, Red Dragon Parque do Povo! Vim pelo site e queria a grade de aulas atual da Unidade 1.") + '" target="_blank" rel="noopener">Pedir a grade da Unidade 1</a></p></div>';
     } else if (!itens.length) {
-      html = '<div class="notice"><p>Nenhuma aula nesse filtro.</p></div>';
+      html = '<div class="notice"><p>Nenhuma aula coletiva com esses filtros na Unidade ' + filtro.u + '.</p><p style="margin-top:12px"><button type="button" class="btn sm" id="gReset">Ver a grade completa</button></p></div>';
     } else {
       html = '<div class="days">' + ORDEM.filter(function (d) { return itens.some(function (g) { return g[1] === d; }); }).map(function (d) {
         return '<div class="day"><h3>' + DIAS[d] + "</h3><ul>" + itens.filter(function (g) { return g[1] === d; }).map(function (g) { return "<li><span>" + g[3] + "</span><time>" + hm(+g[2].slice(0, 2) * 60 + +g[2].slice(3)) + "</time></li>"; }).join("") + "</ul></div>";
@@ -813,6 +821,12 @@ footer.foot .logo{width:56px;height:56px;border-radius:8px;margin-bottom:10px}
     var sem = CONFIG.semHorario[filtro.u];
     if (sem && filtro.mod === "todas") html += '<p class="tbd">' + sem.join(" e ") + ': horários <span class="pend">[confirmar]</span>. Na Unidade 2, as aulas precisam de agendamento pelo WhatsApp.</p>';
     out.innerHTML = html;
+    var rs = $("#gReset", out);
+    if (rs) rs.addEventListener("click", function () {
+      filtro.d = "todos"; filtro.mod = "todas";
+      $$("#gDays button").forEach(function (x) { x.setAttribute("aria-pressed", x.dataset.d === "todos" ? "true" : "false"); });
+      renderGrade(); $("#gDays button").focus();
+    });
     if (moving) M.animate($$(".day, .notice", out), { opacity: [0, 1], transform: ["translateY(12px)", "translateY(0px)"] }, { duration: 0.3, delay: M.stagger(0.03) });
   }
 
@@ -956,7 +970,7 @@ footer.foot .logo{width:56px;height:56px;border-radius:8px;margin-bottom:10px}
       var lenis = new Lenis({ lerp: 0.12, smoothWheel: true });
       lenis.on("scroll", pedir);
       (function loop(t) { lenis.raf(t); requestAnimationFrame(loop); })(0);
-      $$('a[href^="#"]').forEach(function (a) { a.addEventListener("click", function (e) { var id = a.getAttribute("href"); if (id.length < 2) return; var el = $(id); if (!el) return; e.preventDefault(); lenis.scrollTo(el, { offset: -70 }); }); });
+      $$('a[href^="#"]').forEach(function (a) { a.addEventListener("click", function (e) { var id = a.getAttribute("href"); if (id.length < 2) return; var el = $(id); if (!el) return; e.preventDefault(); lenis.scrollTo(el, { offset: -70 }); if (!el.hasAttribute("tabindex")) el.setAttribute("tabindex", "-1"); el.focus({ preventScroll: true }); }); });
     }
   } catch (e) {}
 

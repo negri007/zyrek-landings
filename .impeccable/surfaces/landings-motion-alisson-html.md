@@ -1,14 +1,14 @@
 Scope: landings-motion/alisson.html (and celular/alisson.html). Visitor mode: Persuade, under OAB Provimento 205/2021 (informative, never an ad).
 Audience: Dr. Alisson Sousa Cruz (owner) opening the link on the phone; then a family member of someone just arrested, at night, scared, on a phone.
 Action: tel:+5518996758191 and wa.me with a prefilled message per area and for the plantão; floating "Plantão 24h" on phones opens both.
-Proof: credentials only (tribuno do júri, pós-graduado em Lei de Drogas, pós-graduando em Habeas Corpus, TJSP/TRF3/TJSC/STJ), his own plenary photos and sustentação videos with neutral captions. No results, clients, testimonials, prices, rankings, "especialista", OAB symbols.
-Constraints: OAB/SP number, office hours, vector logo, high-res portrait, team and address unconfirmed and marked in yellow; legal text carries a review comment; videos load only on click; offline map link; noindex.
+Proof: credentials only (tribuno do júri, pós-graduado em Lei de Drogas, pós-graduando em Habeas Corpus, TJSP/TRF3/TJSC/STJ), his own plenary photo and sustentação videos with neutral captions. No results, clients, testimonials, prices, rankings, "especialista", OAB symbols.
+Constraints: OAB/SP number, office hours, vector logo, high-res portrait, team and address unconfirmed and marked in yellow; legal text carries a review comment and is never reworded; videos load only on click; offline map link; noindex.
 
-## Direction contract
+## Direction contract (v2, user-pinned 14/10/2026; replaces v1 "gold-block chamber")
 
-THESIS: A defence chamber after hours: black and navy fields ruled by thin gold lines, where type carries the authority. It refuses the lawyer template (scales-of-justice stock, blue gradient, "the best", badges) and any ad energy.
-OWN-WORLD: #0B0B0D ground with #14213D navy bands; gold #C9A44C hairlines (#E8CD8A light, #8C6B2A shadow) that draw themselves; Cinzel caps for the monogram and short heads, Cormorant Garamond 600/700 for long heads, Inter body in #F5F3EE / #A8A6A1; square corners, 1px rules, no shadows; photos darkened and cooled.
-STORY: the visitor learns who he is and where he acts, sees the 24h plantão at once, learns what to do if someone was arrested, and calls or writes.
-FIRST VIEWPORT: blurred, darkened 10 s clip behind; left: ASC monogram, large Cormorant title, "A defesa não para." in italic gold, "Falar com o advogado"; right: tall portrait in a gold hairline frame. The gold plantão band starts at the fold.
-FORM: brief-pinned (no roll). Signature: gold lines drawn once (hero rule, section rules, the week timeline drawn by scroll). Motion slow, fade-and-rise, nothing that jumps.
+THESIS: The arch of the ASC monogram is the page's architecture: every important thing is seen through a classical courtroom window, its gold thread drawn once. It refuses v1's category default (black and mustard blocks, split hero, equal card grid, flat rectangles).
+OWN-WORLD: 60 black #0B0B0D and navy #14213D grounds, 30 warm off-white #F5F3EE type plus two light editorial sections (off-white ground, dark ink), 10 champagne brass #B8975A / #D9C08A only as lines, numerals, outlines, icons and short text. Arch frames (semicircular top) with an offset gold thread on the portrait and featured media; 6px radius plus thread on small media. Cinzel roman chapter numerals (I–VIII) hanging beside large Cormorant titles; Inter body. Off-white primary buttons, brass outline secondary.
+STORY: in the first screen the visitor sees his face, the title, the 24h plantão with a live Brasília clock, Ligar/WhatsApp and the phone; then what to do now (5 compact steps), the areas, a short contact strip, the tribunal, the week, about, FAQ, Instagram and full contact.
+FIRST VIEWPORT: desktop: tall arch portrait left with the ASC seal on its apex as keystone; right: large title, slogan, name/OAB line, navy plantão panel (hairline brass border, clock seal, Ligar + WhatsApp), quick-facts line with the phone. Phone: arch across the top (36svh), title over its lower gradient, then the same plantão panel and quick facts.
+FORM: user-pinned (no roll). Signature: the thread drawing around each arch as it enters; titles revealed line by line through a mask; cards in sequence; light parallax inside arches. Nothing jumps, spins or blinks; reduced motion shows everything still and complete.
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance

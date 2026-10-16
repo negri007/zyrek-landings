@@ -8,11 +8,9 @@ Regra da página (Provimento 205/2021 da OAB): nada de resultado, decisão, nome
 
 | Arquivo | Categoria | Onde | Origem e observações |
 |---|---|---|---|
-| retrato.webp | retrato | Topo | alisson-retrato-perfil.jpg (1080 px, baixa resolução, tirado do Instagram). **Pedir o original em alta.** |
-| plenario-colegas.webp | plenário / equipe | No tribunal, galeria | alisson-foto-plenario-equipe-1.jpg. Ele de beca com dois colegas advogados no plenário. Confirmar se os colegas autorizam e se são da equipe. |
-| plenario-crucifixo.webp | ambiente | No tribunal, galeria | Recorte da mesma foto: só o crucifixo e a parede, cortado acima das cabeças. |
-| beca-punhos.webp | detalhe | No tribunal, galeria | Recorte da mesma foto: mãos cruzadas e punhos de renda da beca, sem rosto. |
-| tjsc-497.webp | retrato em sessão | Sobre | Quadro aos 8 min 17 s de alisson-video-sustentacao-tjsc.mp4 (mão no queixo, ouvindo). |
+| retrato.webp | retrato | Topo, em moldura de arco | alisson-retrato-perfil.jpg (1080 px, baixa resolução, tirado do Instagram). **Pedir o original em alta.** |
+| plenario-colegas.webp | plenário / equipe | No tribunal, em moldura de arco com parallax | alisson-foto-plenario-equipe-1.jpg. Ele de beca com dois colegas advogados no plenário. Confirmar se os colegas autorizam e se são da equipe. |
+| tjsc-497.webp | retrato em sessão | Sobre, em moldura de arco | Quadro aos 8 min 17 s de alisson-video-sustentacao-tjsc.mp4 (mão no queixo, ouvindo). |
 | insta-coautoria.webp | post informativo | Instagram | alisson-foto-dia-de-juri-1.jpg (capa do carrossel "Duas pessoas numa moto"), com colegas advogados ao fundo. Só a capa, que é uma pergunta de direito, sem resultado. |
 | insta-custodia.webp | capa de vídeo | Instagram | alisson-video-custodia-capa.jpg. Ele no escritório. Não havia vídeo deste post. |
 | insta-defesa-nao-para.webp | logo | Instagram | alisson-video-defesa-nao-para-capa.jpg (monograma ASC). |
@@ -32,6 +30,7 @@ Na versão de celular (`celular/alisson.html`) nenhum vídeo é embutido: os tr�
 
 | Arquivo | Motivo |
 |---|---|
+| plenario-crucifixo.webp, beca-punhos.webp | Recortes de alisson-foto-plenario-equipe-1.jpg usados na v1; tirados da página a pedido em 15/10/2026. Ficam em `nao-usadas/` (ignorada pelo git). |
 | alisson-arte-hc-1.jpg | Post de resultado ("ordem concedida por unanimidade e liberdade garantida"). |
 | alisson-foto-juri-paraguacu-1 a 6.jpg | Carrossel de resultado de júri ("4ª vitória em 15 dias", "crime desclassificado") com o caso concreto; a 1 tem o rosto do público e de familiares. |
 | alisson-foto-dia-de-juri-2 a 6.jpg | Slides só de texto do mesmo carrossel; a capa já representa o post. |
@@ -40,3 +39,7 @@ Na versão de celular (`celular/alisson.html`) nenhum vídeo é embutido: os tr�
 | alisson-video-audiencia-flagrante.mp4 (vídeo) | Ver acima: legendas com fatos e decisão do caso e nomes dos participantes. Só o poster recortado foi usado. |
 | alisson-video-sustentacao-pf-capa.jpg, alisson-video-sustentacao-tjsc-capa.jpg | Os posters foram tirados de dentro dos trechos usados (a capa do pf é o logo, repetido). |
 | Arquivos com "(1)" no nome | Duplicados; ficaram em Downloads. |
+
+## Fonte manuscrita
+
+`fontes/pinyon-script-assinatura.woff2`: Pinyon Script (SIL OFL, via @fontsource), recortada só com as letras de "Alisson Sousa Cruz" (5,5 KB). Usada na assinatura do topo. Trocar pela assinatura real dele em vetor, se ele quiser.

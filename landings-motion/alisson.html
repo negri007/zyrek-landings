@@ -135,15 +135,15 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .topo-fundo .poster,.topo-fundo video{position:absolute;inset:-4%;width:108%;height:108%;object-fit:cover;opacity:.32}
 .topo-fundo::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(11,11,13,.86),rgba(11,11,13,.96) 45%,rgba(11,11,13,.92)),linear-gradient(180deg,rgba(20,33,61,.3),rgba(11,11,13,0) 40%)}
 .topo-grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(48px,6.5vw,104px);align-items:center}
-.retrato{--ar:4/5.1;max-width:470px;margin-top:56px}
+.retrato{--ar:4/5.1;max-width:470px;margin-top:24px}
 .retrato .arco-janela img{top:0;height:100%;object-position:56% 18%}
-/* selo ASC como pedra de fecho no alto do arco, com o anel de relógio atrás (trocar pelo logo vetorial oficial) */
-.selo-caixa{position:absolute;left:50%;top:0;width:184px;height:184px;transform:translate(-50%,-50%);z-index:3;pointer-events:none}
+/* selo ASC como lacre no canto de baixo do arco, longe do rosto, com o anel de relógio atrás (trocar pelo logo vetorial oficial) */
+.selo-caixa{position:absolute;right:-44px;bottom:40px;width:156px;height:156px;z-index:3;pointer-events:none}
 .anel{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
 .anel circle,.anel line{fill:none;stroke:var(--ouro);vector-effect:non-scaling-stroke}
 /* o ponteiro é um svg à parte: gira o elemento inteiro em torno do próprio centro */
 .ponteiro{transform-origin:50% 50%}
-.selo{position:absolute;left:44px;top:44px;width:96px;height:96px;filter:drop-shadow(0 6px 12px rgba(0,0,0,.5))}
+.selo{position:absolute;left:36px;top:36px;width:84px;height:84px;filter:drop-shadow(0 6px 12px rgba(0,0,0,.5))}
 .topo h1{font-family:var(--f-titulo);font-weight:600;font-size:clamp(42px,4.4vw,68px);line-height:1;letter-spacing:-.018em;text-wrap:balance;max-width:20ch}
 .topo h1 .ouro{color:var(--ouro-claro)}
 .assina{display:flex;align-items:center;gap:18px;margin-top:24px}

@@ -145,6 +145,7 @@ strong{font-weight:500}
 .corpo{position:relative;width:min(70vw,272px);aspect-ratio:320/660;justify-self:center}
 .corpo svg{width:100%;height:100%;overflow:visible}
 .corpo .traco{fill:none;stroke:var(--terracota);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.corpo .pincel{fill:var(--terracota);stroke:none}
 .ponto{position:absolute;width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:50%;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent}
 .ponto i{position:relative;width:14px;height:14px;border-radius:50%;background:var(--ouro);box-shadow:0 0 0 3px var(--creme);transition:transform .3s var(--ease),background-color .3s}
 .ponto i::after{content:"";position:absolute;inset:-7px;border-radius:50%;border:1.5px solid var(--ouro);opacity:.0}
@@ -289,6 +290,66 @@ strong{font-weight:500}
 .rodape .hb{width:44px;height:44px;font-size:18px}
 @media (min-width:900px){.contato-grid{grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);gap:88px}}
 @media (min-width:1100px){.rodape{padding-bottom:40px}}
+
+/* ---------- celular e tablet: foto ao lado do texto, como no computador ---------- */
+@media (max-width:1099px){
+  .heroi{grid-template-columns:minmax(0,1fr) minmax(0,42%);grid-template-areas:"nome nome" "papel arco" "frase arco" "acoes acoes" "cred cred";column-gap:18px;row-gap:0;align-items:start;padding-block:12px 56px}
+  .texto-topo{display:contents}
+  .nome{grid-area:nome;margin-bottom:18px}
+  .papel{grid-area:papel;margin-top:0;font-size:15px;line-height:1.45}
+  .frase{grid-area:frase;margin-top:14px;font-size:clamp(20px,5.4vw,30px);line-height:1.22}
+  .frase .pend{font-size:13px;white-space:normal}
+  .arco-wrap{grid-area:arco;width:100%;justify-self:end;margin-top:4px}
+  .arco{border-radius:999px 999px 12px 12px}
+  .orbita{inset:-7% -12% -5% -12%;width:124%;height:112%}
+  .acoes{grid-area:acoes;margin-top:28px;gap:6px 22px}
+  .cred{grid-area:cred;margin-top:18px;font-size:14px;gap:4px 18px}
+}
+@media (max-width:600px){
+  .sec{padding-block:72px}
+  .titulo{font-size:34px}
+  .lead{margin-top:14px;font-size:17px}
+  .acoes .btn{flex:1 1 100%}
+
+  /* mapa do corpo: silhueta à esquerda, regiões empilhadas à direita, texto embaixo */
+  .mapa{grid-template-columns:minmax(0,190px) minmax(0,1fr);gap:20px 16px;margin-top:28px;align-items:start}
+  .mapa>div:last-child{display:contents}
+  .corpo{width:100%;justify-self:start}
+  .regioes{flex-direction:column;align-items:flex-start;gap:8px;padding-top:24px}
+  .painel,.aviso{grid-column:1/-1}
+  .painel{margin-top:4px;min-height:0}
+
+  /* fases: título e foto da lua lado a lado */
+  #fases .cx{display:grid;grid-template-columns:minmax(0,1fr) 128px;column-gap:16px;align-items:center}
+  .fases-grid{display:contents}
+  .fases-foto{grid-column:2;grid-row:1}
+  .circulo{width:116px;margin-left:6px;box-shadow:0 0 0 1px rgba(237,178,78,.5),0 0 0 6px var(--cacau),0 0 0 7px rgba(237,178,78,.28)}
+  .fase-lista{grid-column:1/-1;margin-top:40px}
+  .fase{grid-template-columns:60px minmax(0,1fr);gap:4px 16px;padding:28px 0}
+  .fase .lua{width:44px;height:44px}
+
+  .quem-lista{font-size:27px;margin-top:28px}
+  .quem-nota{margin-top:28px;font-size:16px}
+  .passos{margin-top:40px}
+  .passos-ol{gap:32px}
+
+  .reels{margin-top:32px;grid-auto-columns:minmax(196px,58%);gap:14px}
+  .reel h3{font-size:22px;margin-top:14px}
+
+  /* sobre: fotos pequenas ao lado do título */
+  .sobre-grid{grid-template-columns:150px minmax(0,1fr);column-gap:18px;row-gap:0;align-items:end}
+  .sobre-grid>div{display:contents}
+  .fotos-sobre{grid-column:1;grid-row:1;width:150px;padding-bottom:22px}
+  .retrato{width:118px}
+  .formatura{width:64px;box-shadow:0 0 0 4px var(--creme),0 0 0 5px rgba(138,90,71,.4)}
+  #sobreT{grid-column:2;grid-row:1;align-self:end;padding-bottom:22px}
+  .sobre .texto,.sobre-cred{grid-column:1/-1}
+  .sobre .texto{margin-top:24px}
+
+  .faq{margin-top:28px}
+  .faq summary{font-size:21px;padding:18px 0}
+  .contato-grid{margin-top:32px;gap:44px}
+}
 
 /* ---------- movimento ---------- */
 html.anima .sobe{opacity:0}
@@ -538,6 +599,7 @@ html.anima .tracar{stroke-dasharray:1;stroke-dashoffset:1}
   "use strict";
   /* ===== CONFIG ===== */
   var CONFIG = {
+    traco: "pincel",             // "pincel" (espessura variável, como desenho à mão) ou "fino" (linha uniforme); ?traco=fino na URL compara
     whatsapp: "5541900000000",   // número de TESTE; trocar pelo dela (só dígitos com DDI) [confirmar com ela]
     instagram: "https://www.instagram.com/fisio.huallany/",
     crefito: "",                 // ex.: "CREFITO-8 000000-F"; vazio mostra [confirmar nº com ela]
@@ -551,12 +613,12 @@ html.anima .tracar{stroke-dasharray:1;stroke-dashoffset:1}
       "Olá, Huallany! Vi sua página e queria conversar sobre Pilates na gestação."
     ],
     pontos: [
-      { id: "pescoco", nome: "Pescoço", x: 158, y: 127, texto: "Tensão de quem passa horas no celular ou no computador. Na avaliação olho postura, mobilidade e rotina, e monto exercícios para você se mover com mais conforto no dia a dia.", mensagem: "Olá, Huallany! Vi sua página e queria conversar sobre um incômodo no pescoço." },
-      { id: "ombros", nome: "Ombros", x: 136, y: 182, texto: "Ombro que pesa, trava ao levantar o braço ou incomoda ao dormir. Avalio movimento e força e proponho exercícios no seu ritmo, com progressão segura.", mensagem: "Olá, Huallany! Vi sua página e queria conversar sobre os meus ombros." },
+      { id: "pescoco", nome: "Pescoço", x: 152, y: 120, texto: "Tensão de quem passa horas no celular ou no computador. Na avaliação olho postura, mobilidade e rotina, e monto exercícios para você se mover com mais conforto no dia a dia.", mensagem: "Olá, Huallany! Vi sua página e queria conversar sobre um incômodo no pescoço." },
+      { id: "ombros", nome: "Ombros", x: 132, y: 194, texto: "Ombro que pesa, trava ao levantar o braço ou incomoda ao dormir. Avalio movimento e força e proponho exercícios no seu ritmo, com progressão segura.", mensagem: "Olá, Huallany! Vi sua página e queria conversar sobre os meus ombros." },
       { id: "lombar", nome: "Lombar", x: 133, y: 274, texto: "A lombar sente o tempo sentado, o esforço e o estresse. Fisioterapia e Pilates trabalham a força do centro do corpo e a mobilidade, sempre a partir de uma avaliação.", mensagem: "Olá, Huallany! Vi sua página e queria conversar sobre a minha lombar." },
-      { id: "quadril", nome: "Quadril", x: 152, y: 338, texto: "Rigidez ao levantar da cadeira, ao caminhar ou ao subir escadas. Exercícios de mobilidade e fortalecimento ajudam a entender e a cuidar desse movimento.", mensagem: "Olá, Huallany! Vi sua página e queria conversar sobre o meu quadril." },
+      { id: "quadril", nome: "Quadril", x: 158, y: 350, texto: "Rigidez ao levantar da cadeira, ao caminhar ou ao subir escadas. Exercícios de mobilidade e fortalecimento ajudam a entender e a cuidar desse movimento.", mensagem: "Olá, Huallany! Vi sua página e queria conversar sobre o meu quadril." },
       { id: "joelhos", nome: "Joelhos", x: 168, y: 468, texto: "Joelho que incomoda na escada, no agachamento ou depois de uma lesão. Trabalho força e controle do movimento, com cargas que avançam aos poucos.", mensagem: "Olá, Huallany! Vi sua página e queria conversar sobre os meus joelhos." },
-      { id: "gestacao", nome: "Gestação", x: 203, y: 300, texto: "Pilates e exercícios adaptados a cada fase da gestação, com liberação do obstetra. Depois do parto, acompanho a volta ao movimento com calma.", mensagem: "Olá, Huallany! Vi sua página e estou grávida. Queria saber sobre Pilates na gestação." }
+      { id: "gestacao", nome: "Gestação", x: 204, y: 290, texto: "Pilates e exercícios adaptados a cada fase da gestação, com liberação do obstetra. Depois do parto, acompanho a volta ao movimento com calma.", mensagem: "Olá, Huallany! Vi sua página e estou grávida. Queria saber sobre Pilates na gestação." }
     ],
     reels: [
       // capa: caminho da foto em fotos/huallany/ (só capa em que ela aparece sozinha); vazio usa o desenho em traço
@@ -670,6 +732,48 @@ html.anima .tracar{stroke-dasharray:1;stroke-dashoffset:1}
   }
   corpo.addEventListener("click", function (e) { var b = e.target.closest(".ponto"); if (b) abrirPonto(b.getAttribute("data-id")); });
   regioes.addEventListener("click", function (e) { var b = e.target.closest("button"); if (b) abrirPonto(b.getAttribute("data-id")); });
+
+  /* ===== traço de pincel: a silhueta engrossa nas curvas e afina nas pontas, como linha feita à mão ===== */
+  var qTraco = /[?&]traco=(\w+)/.exec(location.search);
+  if (qTraco) CONFIG.traco = qTraco[1];
+  if (CONFIG.traco === "pincel") (function () {
+    var NS = "http://www.w3.org/2000/svg", svg = $("svg", corpo), linha = $(".traco", svg);
+    var forma = "";
+    linha.getAttribute("d").split(/(?=M)/).forEach(function (sub, parte) {
+      var tmp = document.createElementNS(NS, "path"); tmp.setAttribute("d", sub); svg.appendChild(tmp);
+      var L = tmp.getTotalLength(), n = Math.max(60, Math.round(L / 1.2)), pts = [], i;
+      for (i = 0; i <= n; i++) pts.push(tmp.getPointAtLength(L * i / n));
+      svg.removeChild(tmp);
+      var k = 5, curva = [];
+      for (i = 0; i <= n; i++) {
+        var a = pts[Math.max(0, i - k)], b = pts[i], c = pts[Math.min(n, i + k)];
+        var d = Math.atan2(c.y - b.y, c.x - b.x) - Math.atan2(b.y - a.y, b.x - a.x);
+        while (d > Math.PI) d -= 2 * Math.PI; while (d < -Math.PI) d += 2 * Math.PI;
+        curva.push(Math.abs(d));
+      }
+      var esq = [], dir = [];
+      for (i = 0; i <= n; i++) {
+        var soma = 0, cont = 0;
+        for (var j = Math.max(0, i - 6); j <= Math.min(n, i + 6); j++) { soma += curva[j]; cont++; }
+        var t = i / n, ponta = Math.min(1, t / 0.04, (1 - t) / 0.04);
+        var w = (1.55 + 1.9 * Math.min(1, (soma / cont) * 2.6) + 0.5 * Math.sin(i * 0.045 + parte * 2)) * (0.25 + 0.75 * ponta);
+        var p0 = pts[Math.max(0, i - 1)], p1 = pts[Math.min(n, i + 1)], dx = p1.x - p0.x, dy = p1.y - p0.y, l = Math.hypot(dx, dy) || 1;
+        var nx = -dy / l, ny = dx / l, h = Math.max(0.3, w / 2);
+        esq.push((pts[i].x + nx * h).toFixed(1) + " " + (pts[i].y + ny * h).toFixed(1));
+        dir.push((pts[i].x - nx * h).toFixed(1) + " " + (pts[i].y - ny * h).toFixed(1));
+      }
+      forma += "M" + esq.join("L") + "L" + dir.reverse().join("L") + "Z";
+    });
+    // a linha original vira a máscara que revela o pincel enquanto se desenha
+    var mask = document.createElementNS(NS, "mask");
+    mask.setAttribute("id", "mascaraCorpo"); mask.setAttribute("maskUnits", "userSpaceOnUse");
+    mask.setAttribute("x", "-20"); mask.setAttribute("y", "-20"); mask.setAttribute("width", "360"); mask.setAttribute("height", "700");
+    linha.parentNode.insertBefore(mask, linha); mask.appendChild(linha);
+    linha.style.stroke = "#fff"; linha.style.strokeWidth = "12";
+    var pin = document.createElementNS(NS, "path");
+    pin.setAttribute("d", forma); pin.setAttribute("class", "pincel"); pin.setAttribute("mask", "url(#mascaraCorpo)");
+    mask.parentNode.insertBefore(pin, mask.nextSibling);
+  })();
 
   /* ===== reels ===== */
   var DESENHOS = {

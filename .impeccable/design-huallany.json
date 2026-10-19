@@ -1,0 +1,539 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-19T03:42:09+00:00",
+  "title": "Design System: Huallany · Fisioterapia e Pilates (Noite cacau)",
+  "scope": "landings-motion/huallany.html only (and celular/huallany.html, generated from it)",
+  "extensions": {
+    "colorMeta": {
+      "cacau": {
+        "role": "neutral",
+        "displayName": "Cacau",
+        "canonical": "oklch(33.3% 0.045 40.4)",
+        "tonalRamp": [
+          "#1A0400",
+          "#361C13",
+          "#54382D",
+          "#74554A",
+          "#957569",
+          "#B89689",
+          "#DFBBAE",
+          "#FEE9E2"
+        ]
+      },
+      "noite": {
+        "role": "neutral",
+        "displayName": "Noite",
+        "canonical": "oklch(23.8% 0.030 43.2)",
+        "tonalRamp": [
+          "#160703",
+          "#311F18",
+          "#4E3B33",
+          "#6D5850",
+          "#8E786F",
+          "#B09990",
+          "#D6BEB5",
+          "#FEE9E1"
+        ]
+      },
+      "creme": {
+        "role": "neutral",
+        "displayName": "Creme",
+        "canonical": "oklch(93.9% 0.026 84.6)",
+        "tonalRamp": [
+          "#100A01",
+          "#2A2315",
+          "#463F30",
+          "#645D4D",
+          "#847C6C",
+          "#A69D8D",
+          "#CCC3B2",
+          "#F7EEDB"
+        ]
+      },
+      "creme-2": {
+        "role": "neutral",
+        "displayName": "Creme Dois",
+        "canonical": "oklch(89.9% 0.037 82.2)",
+        "tonalRamp": [
+          "#130900",
+          "#2D220E",
+          "#493E29",
+          "#685C46",
+          "#887C65",
+          "#AA9D85",
+          "#D0C2AA",
+          "#FBEDD3"
+        ]
+      },
+      "terracota": {
+        "role": "secondary",
+        "displayName": "Terracota dos Posts",
+        "canonical": "oklch(51.5% 0.070 42.4)",
+        "tonalRamp": [
+          "#210000",
+          "#3F1604",
+          "#5E3220",
+          "#7F503D",
+          "#A1705C",
+          "#C5907C",
+          "#ECB6A1",
+          "#FFE9E1"
+        ]
+      },
+      "terracota-2": {
+        "role": "secondary",
+        "displayName": "Terracota Funda",
+        "canonical": "oklch(43.1% 0.064 41.6)",
+        "tonalRamp": [
+          "#1F0000",
+          "#3D1708",
+          "#5C3424",
+          "#7D5141",
+          "#9E7160",
+          "#C29280",
+          "#E9B7A4",
+          "#FFE9E2"
+        ]
+      },
+      "ouro": {
+        "role": "primary",
+        "displayName": "Ouro Lua da Parede",
+        "canonical": "oklch(80.0% 0.134 77.8)",
+        "tonalRamp": [
+          "#150800",
+          "#332000",
+          "#553A04",
+          "#7B560B",
+          "#A57200",
+          "#CC9227",
+          "#F4B855",
+          "#FEECD0"
+        ]
+      },
+      "ouro-claro": {
+        "role": "primary",
+        "displayName": "Ouro Claro",
+        "canonical": "oklch(88.0% 0.130 89.0)",
+        "tonalRamp": [
+          "#130900",
+          "#2F2200",
+          "#4F3D05",
+          "#735A0D",
+          "#9A7803",
+          "#BF9929",
+          "#E6BF57",
+          "#FFEDC0"
+        ]
+      },
+      "tinta": {
+        "role": "neutral",
+        "displayName": "Tinta",
+        "canonical": "oklch(28.5% 0.037 43.0)",
+        "tonalRamp": [
+          "#180601",
+          "#331E15",
+          "#513930",
+          "#70574D",
+          "#91766C",
+          "#B4978C",
+          "#DABDB1",
+          "#FEEAE2"
+        ]
+      },
+      "tinta-2": {
+        "role": "neutral",
+        "displayName": "Tinta Dois",
+        "canonical": "oklch(45.6% 0.041 45.1)",
+        "tonalRamp": [
+          "#190500",
+          "#351D13",
+          "#52392D",
+          "#72574A",
+          "#937669",
+          "#B5978A",
+          "#DCBCAF",
+          "#FEEAE1"
+        ]
+      },
+      "leite": {
+        "role": "neutral",
+        "displayName": "Leite",
+        "canonical": "oklch(96.0% 0.019 83.1)",
+        "tonalRamp": [
+          "#0F0A04",
+          "#28231A",
+          "#453F35",
+          "#635D52",
+          "#837C71",
+          "#A49E92",
+          "#CAC3B7",
+          "#F5EEE1"
+        ]
+      },
+      "leite-2": {
+        "role": "neutral",
+        "displayName": "Leite Dois",
+        "canonical": "oklch(82.9% 0.046 78.0)",
+        "tonalRamp": [
+          "#150800",
+          "#302106",
+          "#4D3D23",
+          "#6C5B40",
+          "#8D7A5E",
+          "#AF9B7E",
+          "#D5C1A3",
+          "#FFECCF"
+        ]
+      },
+      "parede": {
+        "role": "neutral",
+        "displayName": "Parede do Estúdio",
+        "canonical": "#8E693B",
+        "tonalRamp": [
+          "#1A0D00",
+          "#33240B",
+          "#4F3E23",
+          "#6E5A3B",
+          "#8E7856",
+          "#B09874",
+          "#D6BD97",
+          "#FEEBC9"
+        ]
+      },
+      "erro-borda": {
+        "role": "error",
+        "displayName": "Erro (borda)",
+        "canonical": "#F0A08A",
+        "tonalRamp": [
+          "#220500",
+          "#401A10",
+          "#5F3426",
+          "#80513F",
+          "#A3705D",
+          "#C7917D",
+          "#EEB6A1",
+          "#FFE9E1"
+        ]
+      },
+      "erro-texto": {
+        "role": "error",
+        "displayName": "Erro (texto)",
+        "canonical": "#F6B9A6",
+        "tonalRamp": [
+          "#220500",
+          "#401A10",
+          "#5F3426",
+          "#80513F",
+          "#A3705D",
+          "#C7917D",
+          "#EEB6A1",
+          "#FFE9E1"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Nome",
+        "purpose": "Só o nome Huallany no topo, em itálico; teto de 104px para não encostar no arco."
+      },
+      "headline": {
+        "displayName": "Título de seção",
+        "purpose": "Títulos de seção, até 18ch; 34px no celular."
+      },
+      "proposition": {
+        "displayName": "Frase do topo",
+        "purpose": "A proposta sob o nome, até 20ch."
+      },
+      "list-display": {
+        "displayName": "Lista corrida",
+        "purpose": "Quem pode fazer Pilates, com anéis terracota entre itens; 27px no celular."
+      },
+      "title": {
+        "displayName": "Título",
+        "purpose": "Fases, passos, reels e perguntas do FAQ."
+      },
+      "title-italic": {
+        "displayName": "Título itálico",
+        "purpose": "Nome da região aberta no painel do mapa do corpo."
+      },
+      "phase-label": {
+        "displayName": "Nome da fase",
+        "purpose": "Nomes das fases da lua junto das luas e na lateral."
+      },
+      "body": {
+        "displayName": "Texto",
+        "purpose": "Texto corrido em Jost 300, até 60ch."
+      },
+      "lead": {
+        "displayName": "Lead",
+        "purpose": "Parágrafo sob cada título, até 46ch, em tinta-2 ou leite-2."
+      },
+      "label": {
+        "displayName": "Rótulo",
+        "purpose": "Navegação, credenciais, regiões, rótulos de campo e avisos."
+      },
+      "button": {
+        "displayName": "Botão",
+        "purpose": "Texto dos botões em pílula."
+      }
+    },
+    "shadows": [
+      {
+        "name": "brilho-ouro",
+        "value": "0 10px 24px -12px rgba(20,10,5,.7)",
+        "purpose": "Botão dourado sobre cacau ou noite."
+      },
+      {
+        "name": "brilho-cacau",
+        "value": "0 10px 26px -14px rgba(43,26,19,.7)",
+        "purpose": "Botão cacau sobre creme."
+      },
+      {
+        "name": "flutuante",
+        "value": "0 12px 26px -10px rgba(43,26,19,.6)",
+        "purpose": "Botão flutuante do WhatsApp no celular."
+      },
+      {
+        "name": "barra",
+        "value": "0 8px 24px -16px rgba(43,26,19,.8)",
+        "purpose": "Barra fixa do celular."
+      },
+      {
+        "name": "halo-lua",
+        "value": "0 0 0 1px rgba(237,178,78,.5), 0 0 0 10px var(--cacau), 0 0 0 11px rgba(237,178,78,.28), 0 30px 60px -30px rgba(20,10,5,.8)",
+        "purpose": "Aros dourados da foto circular das fases (no celular, 6px e 7px sem a sombra longa)."
+      },
+      {
+        "name": "aro-formatura",
+        "value": "0 0 0 6px var(--creme), 0 0 0 7px rgba(138,90,71,.4)",
+        "purpose": "Foto circular da formatura sobreposta ao retrato em arco."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease",
+        "value": "cubic-bezier(.16,1,.3,1)",
+        "purpose": "Subida dos textos, pontos do corpo, barra, botão flutuante, FAQ."
+      },
+      {
+        "name": "ease-traco",
+        "value": "cubic-bezier(.45,0,.2,1)",
+        "purpose": "Desenho dos traços por stroke-dashoffset."
+      },
+      {
+        "name": "traco-orbita",
+        "value": "2.6s, atraso 0.5s",
+        "purpose": "Órbita dourada em volta do arco do topo."
+      },
+      {
+        "name": "traco-corpo",
+        "value": "2.8s ao entrar 35% na tela",
+        "purpose": "Silhueta do corpo; os pontos aparecem depois (stagger 0.12s a partir de 2.2s)."
+      },
+      {
+        "name": "traco-fio",
+        "value": "1.6s",
+        "purpose": "Fio dos passos."
+      },
+      {
+        "name": "sobe",
+        "value": "translateY(18px) para 0, fade 0.9s, stagger 0.08s",
+        "purpose": "Textos que sobem por bloco ao entrar na tela."
+      },
+      {
+        "name": "respira",
+        "value": "4.8s ease-in-out infinito, atrasos -1.6s e -3.2s",
+        "purpose": "Anel em volta dos pontos do corpo."
+      },
+      {
+        "name": "rebote",
+        "value": "pressão scale .96 em 0.08s; mola stiffness 700, damping 14, mass 0.6",
+        "purpose": "Botões, chips de região e botão flutuante."
+      },
+      {
+        "name": "fase-lua",
+        "value": "aproximação de 0.12 por quadro até a fase alvo",
+        "purpose": "Lua fixa girando entre fases conforme a seção no meio da tela."
+      },
+      {
+        "name": "lenis",
+        "value": "lerp 0.1, scrollTo 1.3s",
+        "purpose": "Rolagem suave e âncoras."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "prefers-reduced-motion: reduce",
+        "purpose": "Tudo parado e completo: sem Lenis, sem traçado, sem respiração, sem transições."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "celular",
+        "value": "max-width: 600px"
+      },
+      {
+        "name": "tablet",
+        "value": "601px"
+      },
+      {
+        "name": "duas-colunas",
+        "value": "900px"
+      },
+      {
+        "name": "fases-sticky",
+        "value": "1000px"
+      },
+      {
+        "name": "desktop",
+        "value": "1100px"
+      }
+    ],
+    "traco": {
+      "option": "CONFIG.traco",
+      "compare": "?traco=fino na URL",
+      "values": {
+        "pincel": "Padrão. Contorno de espessura variável gerado em JS a partir do caminho (engrossa nas curvas, afina nas pontas), revelado pela linha original usada como máscara.",
+        "fino": "Traço uniforme de 2.2 em terracota."
+      }
+    },
+    "lua": {
+      "texture": "fotos/huallany/lua-textura.webp",
+      "hemisphere": "sul: a crescente acende à esquerda",
+      "phases": {
+        "0": "lua nova (só o aro)",
+        "0.25": "crescente",
+        "0.5": "cheia",
+        "0.75": "minguante"
+      }
+    }
+  },
+  "components": [
+    {
+      "name": "Botão dourado",
+      "kind": "button",
+      "refersTo": "button-ouro",
+      "description": "Ação principal (agendar pelo WhatsApp) sobre cacau ou noite.",
+      "html": "<div class=\"ds-noite\"><button class=\"ds-btn-ouro\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path fill=\"currentColor\" d=\"M12 2.2a9.7 9.7 0 0 0-8.4 14.6L2.3 21.7l5-1.3A9.7 9.7 0 1 0 12 2.2Zm0 17.7a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 19.9Z\"/></svg>Agendar pelo WhatsApp</button></div>",
+      "css": ".ds-noite{background:#4A2E24;padding:32px} .ds-btn-ouro{display:inline-flex;align-items:center;justify-content:center;gap:12px;min-height:56px;padding:0 28px;border-radius:999px;border:0;cursor:pointer;font:500 16px/1 Jost,system-ui,-apple-system,\"Segoe UI\",sans-serif;letter-spacing:.02em;text-decoration:none;transition:background-color .25s,color .25s,transform .15s;background:#EDB24E;color:#2B1A13;box-shadow:0 10px 24px -12px rgba(20,10,5,.7)} .ds-btn-ouro svg{width:20px;height:20px} .ds-btn-ouro:hover{background:#FAD36B} .ds-btn-ouro:active{transform:scale(.96)} .ds-btn-ouro:focus-visible{outline:2px solid #EDB24E;outline-offset:4px}"
+    },
+    {
+      "name": "Botão cacau",
+      "kind": "button",
+      "refersTo": "button-cacau",
+      "description": "Ação sobre creme, como o botão do painel do mapa do corpo.",
+      "html": "<div class=\"ds-dia\"><button class=\"ds-btn-cacau\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path fill=\"currentColor\" d=\"M12 2.2a9.7 9.7 0 0 0-8.4 14.6L2.3 21.7l5-1.3A9.7 9.7 0 1 0 12 2.2Zm0 17.7a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 19.9Z\"/></svg>Conversar sobre lombar</button></div>",
+      "css": ".ds-dia{background:#F3EAD8;padding:32px} .ds-btn-cacau{display:inline-flex;align-items:center;justify-content:center;gap:12px;min-height:56px;padding:0 28px;border-radius:999px;border:0;cursor:pointer;font:500 16px/1 Jost,system-ui,-apple-system,\"Segoe UI\",sans-serif;letter-spacing:.02em;text-decoration:none;transition:background-color .25s,color .25s,transform .15s;background:#4A2E24;color:#F8F1E4;box-shadow:0 10px 26px -14px rgba(43,26,19,.7)} .ds-btn-cacau svg{width:20px;height:20px} .ds-btn-cacau:hover{background:#2B1A13} .ds-btn-cacau:active{transform:scale(.96)} .ds-btn-cacau:focus-visible{outline:2px solid #8A5A47;outline-offset:4px}"
+    },
+    {
+      "name": "Chips de região",
+      "kind": "chip",
+      "refersTo": "chip-regiao",
+      "description": "Regiões do mapa do corpo; a ativa fica terracota cheia.",
+      "html": "<div class=\"ds-chips\"><button class=\"ds-chip\">Pescoço</button><button class=\"ds-chip\" aria-pressed=\"true\">Lombar</button><button class=\"ds-chip\">Joelhos</button></div>",
+      "css": ".ds-chips{display:flex;flex-wrap:wrap;gap:8px;background:#F3EAD8;padding:24px} .ds-chip{min-height:44px;padding:0 15px;border-radius:999px;border:1px solid rgba(138,90,71,.45);background:none;font:400 15px/1 Jost,system-ui,-apple-system,\"Segoe UI\",sans-serif;color:#3A241B;cursor:pointer;transition:background-color .2s,border-color .2s,color .2s} .ds-chip:hover{border-color:#8A5A47} .ds-chip[aria-pressed=true]{background:#8A5A47;border-color:#8A5A47;color:#F8F1E4} .ds-chip:focus-visible{outline:2px solid #8A5A47;outline-offset:4px}"
+    },
+    {
+      "name": "Campo do formulário",
+      "kind": "input",
+      "refersTo": "campo",
+      "description": "Campo sobre noite no formulário que monta a mensagem do WhatsApp.",
+      "html": "<div class=\"ds-form\"><label class=\"ds-label\" for=\"dsn\">Seu nome</label><input class=\"ds-input\" id=\"dsn\" placeholder=\"Ex.: Ana\"></div>",
+      "css": ".ds-form{display:grid;gap:8px;background:#2B1A13;padding:28px;max-width:420px} .ds-label{font:400 15px/1.4 Jost,system-ui,-apple-system,\"Segoe UI\",sans-serif;color:#F8F1E4} .ds-input{width:100%;min-height:52px;padding:12px 16px;border-radius:14px;border:1px solid rgba(216,196,166,.45);background:rgba(248,241,228,.06);color:#F8F1E4;font:300 17px/1.4 Jost,system-ui,-apple-system,\"Segoe UI\",sans-serif;caret-color:#EDB24E;transition:border-color .2s,background-color .2s} .ds-input::placeholder{color:rgba(216,196,166,.75)} .ds-input:hover{border-color:rgba(237,178,78,.6)} .ds-input:focus{outline:none;border-color:#EDB24E;background:rgba(248,241,228,.1)}"
+    },
+    {
+      "name": "Navegação do topo",
+      "kind": "nav",
+      "refersTo": "monograma",
+      "description": "Monograma HB em círculo com aro dourado e links leves sobre cacau.",
+      "html": "<nav class=\"ds-nav\"><a class=\"ds-hb\" href=\"#\"><span>HB</span></a><ul><li><a href=\"#\">Onde dói</a></li><li><a href=\"#\">Atendimentos</a></li><li><a href=\"#\">Sobre</a></li><li><a href=\"#\">Contato</a></li></ul></nav>",
+      "css": ".ds-nav{display:flex;align-items:center;justify-content:space-between;gap:24px;min-height:84px;padding:0 32px;background:#4A2E24} .ds-hb{display:inline-flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:50%;border:1px solid rgba(237,178,78,.7);font:italic 500 21px/1 \"Cormorant Garamond\",Georgia,\"Times New Roman\",serif;color:#F8F1E4;text-decoration:none} .ds-nav ul{display:flex;gap:30px;list-style:none;margin:0;padding:0} .ds-nav ul a{display:inline-flex;min-height:44px;align-items:center;font:400 15px/1 Jost,system-ui,-apple-system,\"Segoe UI\",sans-serif;color:#D8C4A6;text-decoration:none;transition:color .2s} .ds-nav ul a:hover{color:#F8F1E4} .ds-nav a:focus-visible{outline:2px solid #EDB24E;outline-offset:4px;border-radius:4px}"
+    },
+    {
+      "name": "Moldura em arco com órbita",
+      "kind": "custom",
+      "refersTo": "moldura-arco",
+      "description": "Foto real em arco, cantos de baixo de 18px, com a órbita dourada em traço contínuo.",
+      "html": "<div class=\"ds-arco-cena\"><div class=\"ds-arco-wrap\"><div class=\"ds-arco\"></div><svg class=\"ds-orbita\" viewBox=\"0 0 560 700\" preserveAspectRatio=\"none\"><path d=\"M34 690C10 520 8 300 92 170C170 52 300 30 400 70C500 112 548 230 546 380C544 520 520 620 462 668C430 694 392 690 376 664\"/></svg></div></div>",
+      "css": ".ds-arco-cena{background:#4A2E24;padding:48px 64px;display:flex;justify-content:center} .ds-arco-wrap{position:relative;width:220px} .ds-arco{aspect-ratio:11/14;border-radius:999px 999px 18px 18px;background:#8E693B} .ds-orbita{position:absolute;inset:-9% -14% -6% -14%;width:128%;height:115%;overflow:visible;pointer-events:none} .ds-orbita path{fill:none;stroke:#EDB24E;stroke-width:1.4;stroke-linecap:round;opacity:.85}"
+    },
+    {
+      "name": "Fase da lua",
+      "kind": "custom",
+      "refersTo": "",
+      "description": "Linha de atendimento: lua em fase (crescente acesa à esquerda), nome itálico em ouro claro, título serifado e link, sobre cacau.",
+      "html": "<div class=\"ds-fase\"><div class=\"ds-marca\"><svg viewBox=\"-4 -4 108 108\"><circle cx=\"50\" cy=\"50\" r=\"50\" fill=\"#2B1A13\"/><path d=\"M50 0A50 50 0 0 0 50 100A0 50 0 0 1 50 0Z\" fill=\"#EDB24E\"/><circle cx=\"50\" cy=\"50\" r=\"50\" fill=\"none\" stroke=\"#EDB24E\" stroke-width=\"2.5\" opacity=\".75\"/></svg><span>Crescente</span></div><div><h3>Fisioterapia em casa</h3><p>Sessões na sua casa, com exercícios pensados para o seu espaço.</p><a href=\"#\">Pedir atendimento em casa</a></div></div>",
+      "css": ".ds-fase{display:grid;grid-template-columns:72px 1fr;gap:4px 22px;background:#4A2E24;padding:34px;color:#F8F1E4} .ds-marca{display:flex;flex-direction:column;align-items:center;gap:8px} .ds-marca svg{width:52px;height:52px;overflow:visible} .ds-marca span{font:italic 400 17px/1.1 \"Cormorant Garamond\",Georgia,\"Times New Roman\",serif;color:#FAD36B} .ds-fase h3{margin:0;font:500 32px/1.12 \"Cormorant Garamond\",Georgia,\"Times New Roman\",serif;color:#F8F1E4} .ds-fase p{margin:10px 0 0;font:300 18px/1.65 Jost,system-ui,-apple-system,\"Segoe UI\",sans-serif;color:#D8C4A6} .ds-fase a{display:inline-flex;min-height:44px;align-items:center;font:400 18px/1 Jost,system-ui,-apple-system,\"Segoe UI\",sans-serif;color:#F8F1E4;text-underline-offset:.22em;text-decoration-thickness:1px} .ds-fase a:hover{text-decoration-thickness:2px} .ds-fase a:focus-visible{outline:2px solid #EDB24E;outline-offset:4px}"
+    },
+    {
+      "name": "Passo numerado",
+      "kind": "custom",
+      "refersTo": "numero-passo",
+      "description": "Número itálico em círculo creme-2 com aro terracota, preso ao fio dos passos.",
+      "html": "<div class=\"ds-passos\"><span class=\"ds-fio\"></span><div class=\"ds-passo\"><span class=\"ds-n\">1</span><h3>Contato</h3><p>Você manda uma mensagem e conta o que sente.</p></div></div>",
+      "css": ".ds-passos{position:relative;background:#EADCC3;padding:32px 32px 32px 96px} .ds-fio{position:absolute;left:55px;top:32px;bottom:32px;width:1.6px;background:#8A5A47} .ds-passo{position:relative} .ds-n{position:absolute;left:-64px;top:-2px;width:46px;height:46px;border-radius:50%;background:#EADCC3;border:1px solid #8A5A47;display:flex;align-items:center;justify-content:center;font:italic 500 22px/1 \"Cormorant Garamond\",Georgia,\"Times New Roman\",serif;color:#6E4434} .ds-passo h3{margin:0;font:500 30px/1.15 \"Cormorant Garamond\",Georgia,\"Times New Roman\",serif;color:#3A241B} .ds-passo p{margin:8px 0 0;font:300 18px/1.65 Jost,system-ui,-apple-system,\"Segoe UI\",sans-serif;color:#6B5044;max-width:34ch}"
+    }
+  ],
+  "narrative": {
+    "northStar": "O Calendário Lunar do Corpo",
+    "overview": "Esta página é um calendário lunar do corpo. Uma lua fixa cresce enquanto se lê, e as quatro fases (nova, crescente, cheia, minguante) dão nome aos quatro tipos de atendimento. O mundo vem do estúdio dela: a noite cacau das sombras das fotos, o dia creme dos posts, e o dourado da lua iluminada na parede do estúdio, tirado com conta-gotas das próprias fotos. Seções escuras e claras se alternam como noite e dia ao longo da rolagem.\n\nA mão é de desenho. A órbita em volta do arco do topo e a silhueta do corpo são, cada uma, um traço contínuo, como nos posts dela; o fio dos passos e os desenhos dos reels têm a mesma espessura e a mesma mão, sem precisar ser traço único. Não é uma linha só descendo a página. O ritmo é calmo e editorial: muito ar, serifa grande, texto leve em Jost, poucos elementos por tela.\n\nO mundo recusa o modelo de clínica: azul hospitalar, coração, foto de banco e cards com ícone. Foto só aparece dentro de molduras em arco ou círculo, e nunca há cartão com borda e sombra segurando conteúdo.\n\nOnde o build divergiu do contrato de direção, vale o build: no celular a foto em arco fica ao lado do texto, como no computador, e não \"espiando por baixo\" como o contrato previa.",
+    "keyCharacteristics": [
+      "Noite cacau e dia creme alternados por seção; o dourado é luz, não decoração.",
+      "A lua fixa muda de fase com a rolagem (hemisfério sul: a crescente acende à esquerda) e o lado aceso é a textura da lua da parede dela.",
+      "Traço contínuo desenhado à mão para a órbita e o corpo; mesma espessura nos fios e desenhos.",
+      "Cormorant Garamond itálica para o nome, Cormorant para títulos, Jost leve para o texto.",
+      "Fotos só em arco ou círculo; nenhum card com cromo, nenhum ladrilho de ícone."
+    ],
+    "rules": [
+      {
+        "name": "The Day and Night Rule",
+        "body": "Seções alternam noite (cacau ou noite) e dia (creme ou creme-2). No escuro a linha e o destaque são ouro; no claro são terracota. Desenho e divisão sobre creme são sempre terracota; sobre creme o ouro aparece só como luz da lua (a lua lateral e seu aro, os pontos do corpo, a lua dos desenhos), nunca como traço de desenho. Sobre cacau a terracota não aparece direto: só dentro de uma superfície creme, como a capa dos reels.",
+        "section": "colors"
+      },
+      {
+        "name": "The Moonlight Rule",
+        "body": "O ouro é a luz da lua e marca apenas a lua, a ação principal e a linha no escuro. Ele não vira fundo de seção nem cor de texto corrido.",
+        "section": "colors"
+      },
+      {
+        "name": "The Italic Is Her Name Rule",
+        "body": "O itálico grande pertence ao nome, ao monograma \"HB\" e às falas da lua (fases, painel, títulos da coluna de contato). Títulos de seção ficam em romano 500.",
+        "section": "typography"
+      },
+      {
+        "name": "The Light Body Rule",
+        "body": "O texto corrido é Jost 300. O peso 500 fica para botões e para strong; não há negrito de destaque em parágrafo.",
+        "section": "typography"
+      },
+      {
+        "name": "The Photo Beside Rule",
+        "body": "Em toda largura a foto em arco do topo fica ao lado do texto, nunca empilhada embaixo. O nome, o papel, a frase e o botão cabem na primeira tela do celular.",
+        "section": "layout"
+      },
+      {
+        "name": "The Warm Shadow Rule",
+        "body": "Sombra é sempre cacau translúcido, longa e macia, com deslocamento negativo de espalhamento. Nenhuma sombra dura, nenhuma sombra em bloco de texto.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Arch and Circle Rule",
+        "body": "Foto real só entra em arco ou círculo. Retângulo de foto, cartão com borda ou moldura com cromo não existem neste mundo.",
+        "section": "shapes"
+      }
+    ],
+    "dos": [
+      "**Do** alternar seções de noite (cacau, noite) e dia (creme, creme-2), com linha ouro no escuro e terracota no claro.",
+      "**Do** tirar o lado aceso de toda lua da textura da lua da parede dela, cortada pela linha da fase, com a crescente acesa à esquerda.",
+      "**Do** desenhar órbita e corpo como traço contínuo de ponta redonda e manter fios e desenhos na mesma espessura (1.4 a 2.2).",
+      "**Do** pôr fotos reais só em arco ou círculo, com a foto do topo ao lado do texto em toda largura.",
+      "**Do** usar Cormorant Garamond itálica para o nome e o monograma, Cormorant 500 para títulos e Jost 300 para texto.",
+      "**Do** manter alvos de toque de pelo menos 44px e desligar todo movimento com prefers-reduced-motion."
+    ],
+    "donts": [
+      "**Don't** usar azul de clínica, coração, foto de banco ou cards com ícone.",
+      "**Don't** colocar conteúdo em cartão com borda e sombra, nem ícones em ladrilho.",
+      "**Don't** usar o ouro como fundo de seção ou cor de texto corrido.",
+      "**Don't** usar sombra dura ou preta; sombra é cacau translúcido e macio.",
+      "**Don't** pôr foto em retângulo solto."
+    ]
+  }
+}

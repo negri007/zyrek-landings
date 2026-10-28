@@ -22,7 +22,6 @@ Regra da página (Provimento 205/2021 da OAB): nada de resultado, decisão, nome
 | videos/topo-defesa-nao-para.mp4 + .jpg | Fundo do topo | os 11 s inteiros | Sem áudio, desfocado e escurecido; em loop, só com movimento liberado. 239 KB. |
 | videos/sustentacao-oral.mp4 + .jpg | No tribunal, vídeo principal ("Sustentação oral no TRF3") | 0:23,9 a 1:06,5 de alisson-video-sustentacao-pf.mp4 | 5ª Turma do TRF3. Fica de fora a abertura, em que ele cumprimenta o relator e uma servidora pelo nome. O trecho é só o argumento contra o decreto de prisão preventiva: sem nomes e sem resultado (conferido por transcrição automática). 3,4 MB. |
 | videos/sustentacao-tjsc.mp4 + .jpg | No tribunal, trecho | 0:00 a 0:39 de alisson-video-sustentacao-tjsc.mp4 | Argumento sobre a Súmula 582 do STJ. Sem nomes (uma testemunha é citada pelo nome só aos 2 min 29 s, fora do trecho) e sem resultado. 3,3 MB. |
-| videos/audiencia-videoconferencia.jpg | No tribunal, só o poster, com "Assistir no Instagram" | quadro de alisson-video-audiencia-flagrante.mp4, recortado | O vídeo inteiro tem legenda com fatos do caso ("R$ 350", "ele determinou a prisão") e o nome dos participantes embaixo de cada janela. Nenhum trecho passou. O poster recorta só a fileira de cima das janelas, sem nomes e sem legenda (os rostos dos outros já vinham desfocados). |
 
 Na versão de celular (`celular/alisson.html`) nenhum vídeo é embutido: os três cartões ficam só com o poster e o link para o Instagram, e o topo usa o poster parado.
 
@@ -30,13 +29,14 @@ Na versão de celular (`celular/alisson.html`) nenhum vídeo é embutido: os tr�
 
 | Arquivo | Motivo |
 |---|---|
+| videos/audiencia-videoconferencia.jpg | Poster da audiência de flagrante (recorte de 670×250 da janela dele): ficava pixelado ampliado. Desde 28/10/2026 o cartão usa uma placa com o arco e o monograma, com o link para o Instagram. Em `nao-usadas/` (ignorada pelo git). |
 | plenario-crucifixo.webp, beca-punhos.webp | Recortes de alisson-foto-plenario-equipe-1.jpg usados na v1; tirados da página a pedido em 15/10/2026. Ficam em `nao-usadas/` (ignorada pelo git). |
 | alisson-arte-hc-1.jpg | Post de resultado ("ordem concedida por unanimidade e liberdade garantida"). |
 | alisson-foto-juri-paraguacu-1 a 6.jpg | Carrossel de resultado de júri ("4ª vitória em 15 dias", "crime desclassificado") com o caso concreto; a 1 tem o rosto do público e de familiares. |
 | alisson-foto-dia-de-juri-2 a 6.jpg | Slides só de texto do mesmo carrossel; a capa já representa o post. |
 | alisson-na-midia-1.jpg | Repost de terceiro (@aparte.criminal) com rosto de ministro e decisão concreta do STJ. |
 | alisson-video-juri-dolo-culpa.mp4 e capa | Story gravado em casa, com a legenda fixa "Veja como foi o júri de hoje!": fala de um júri concreto. Não é cena de tribunal. |
-| alisson-video-audiencia-flagrante.mp4 (vídeo) | Ver acima: legendas com fatos e decisão do caso e nomes dos participantes. Só o poster recortado foi usado. |
+| alisson-video-audiencia-flagrante.mp4 (vídeo) | Legendas com fatos e decisão do caso e nomes dos participantes; nenhum trecho passou. Hoje nada dele é usado (ver o poster acima). |
 | alisson-video-sustentacao-pf-capa.jpg, alisson-video-sustentacao-tjsc-capa.jpg | Os posters foram tirados de dentro dos trechos usados (a capa do pf é o logo, repetido). |
 | Arquivos com "(1)" no nome | Duplicados; ficaram em Downloads. |
 

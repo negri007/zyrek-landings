@@ -238,6 +238,10 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .trechos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:40px 28px;align-content:start;padding-top:24px}
 .trechos .quadro-janela{aspect-ratio:4/5}
 .trechos .quadro-janela img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:42% 40%;filter:saturate(.62) brightness(.72) contrast(1.05)}
+.placa{position:absolute;inset:0;display:grid;place-items:center;background:radial-gradient(120% 90% at 50% 30%,#1F3159,var(--marinho-2) 60%,#0F1830)}
+.placa svg{position:absolute;left:24%;top:16%;width:52%;height:84%;overflow:visible}
+.placa path{fill:none;stroke:var(--ouro);stroke-opacity:.55;stroke-width:1;vector-effect:non-scaling-stroke}
+.placa b{position:relative;margin-top:-12%;font-family:var(--f-mono);font-weight:600;font-size:clamp(30px,3vw,44px);letter-spacing:.14em;color:var(--ouro-claro);opacity:.9}
 .trechos-cab{grid-column:1/-1;font-family:var(--f-titulo);font-weight:600;font-size:27px;line-height:1.2}
 
 /* IV. a defesa não para: o fio da página se ramifica para cada dia */
@@ -536,7 +540,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
       <div class="assina sobe"><span class="fio" aria-hidden="true"></span><p>A defesa não para.</p></div>
       <div class="assinatura-bloco">
         <svg class="assinatura" id="assinatura" viewBox="-4 2 460 88" role="img" aria-label="Alisson Sousa Cruz"><text x="2" y="62">Alisson Sousa Cruz</text></svg>
-        <p class="quem sobe">Advogado · <span class="pend" data-oab>[OAB/SP nº a confirmar]</span></p>
+        <p class="quem sobe">Advogado criminalista<span data-oab></span></p>
       </div>
       <div class="plantao sobe" id="plantao" data-plantao>
         <div class="plantao-cab">
@@ -563,7 +567,6 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
       <span class="num" aria-hidden="true"><span>I</span><span class="num-traco"></span></span>
       <div>
         <h2 class="h2 mascara" id="guiaT">Alguém da família foi preso? O que fazer agora</h2>
-        <p class="lead sobe">Um roteiro simples para as primeiras horas.</p>
       </div>
     </div>
     <div class="passos-caixa" id="passosCaixa">
@@ -646,12 +649,12 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
   <div class="wrap">
     <div class="bloco sobe">
       <h2 class="rot">Endereço</h2>
-      <p>Rua João Ceribelli Pacca, 81, Jd. Everest<small>Presidente Prudente/SP · CEP 19066-140 <span class="pend">[confirmar se é o escritório]</span></small></p>
+      <p>Rua João Ceribelli Pacca, 81, Jd. Everest<small>Presidente Prudente/SP · CEP 19066-140</small></p>
       <a class="btn contorno vira-link" data-mapa href="https://www.google.com/maps/search/?api=1&amp;query=Rua%20Jo%C3%A3o%20Ceribelli%20Pacca%2C%2081%2C%20Jardim%20Everest%2C%20Presidente%20Prudente%20-%20SP%2C%2019066-140" target="_blank" rel="noopener"><svg class="ic" aria-hidden="true"><use href="#i-pino"/></svg>Como chegar</a>
     </div>
     <div class="bloco sobe">
       <h2 class="rot">Horário</h2>
-      <p data-horario><span class="pend">[confirmar]</span></p>
+      <p data-horario></p>
       <p data-plantao><small>Plantão 24h para prisão em flagrante</small></p>
     </div>
     <div class="bloco sobe">
@@ -669,7 +672,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
           <span class="num" aria-hidden="true"><span>III</span><span class="num-traco"></span></span>
           <div>
             <h2 class="h2 mascara" id="tribT">No tribunal</h2>
-            <p class="lead sobe">Trechos de sustentações orais e registros do plenário. Os vídeos só carregam quando você aperta o play.</p>
+            <p class="lead sobe">Trechos de sustentações orais e registros do plenário.</p>
             <!-- revisar com o Dr. Alisson -->
             <div class="nota-trib sobe">
               <h3>O que é a sustentação oral</h3>
@@ -699,17 +702,18 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
     <div class="cap">
       <span class="num" aria-hidden="true"><span>IV</span><span class="num-traco"></span></span>
       <div>
-        <h2 class="h2 mascara" id="semanaT">A defesa não para</h2>
-        <p class="lead sobe">Uma semana real de agenda, do plenário do júri às sessões dos tribunais. <span class="pend">[confirmar os dias com o Dr. Alisson]</span></p>
+        <h2 class="h2 mascara" id="semanaT">Da delegacia ao STJ</h2>
+        <!-- revisar com o Dr. Alisson -->
+        <p class="lead sobe">Onde a defesa atua, em cada etapa do processo.</p>
       </div>
     </div>
     <div class="linha-tempo" id="linhaTempo">
       <ol>
-      <li class="sobe"><p class="dia">Segunda</p><h3>Sustentação oral no TRF3</h3><p>Sessão de julgamento no Tribunal Regional Federal da 3ª Região.</p></li>
-      <li class="sobe"><p class="dia">Terça</p><h3>Sustentação oral no TJSP</h3><p>Sessão de julgamento no Tribunal de Justiça de São Paulo.</p></li>
-      <li class="sobe"><p class="dia">Quarta</p><h3>Tribunal do Júri</h3><p>Dia inteiro em plenário: depoimentos, interrogatório e debates.</p></li>
-      <li class="sobe"><p class="dia">Quinta</p><h3>Audiência</h3><p>Audiência de instrução no fórum.</p></li>
-      <li class="sobe"><p class="dia">Sexta</p><h3>Audiência</h3><p>Mais uma audiência, e a semana segue no escritório.</p></li>
+      <li class="sobe"><p class="dia">Delegacia</p><h3>Prisão em flagrante</h3><p>Presidente Prudente e cidades do Oeste Paulista.</p></li>
+      <li class="sobe"><p class="dia">Fórum</p><h3>Audiências</h3><p>Custódia e instrução, nas comarcas da região.</p></li>
+      <li class="sobe"><p class="dia">Plenário</p><h3>Tribunal do Júri</h3><p>Depoimentos, interrogatório e debates diante dos jurados.</p></li>
+      <li class="sobe"><p class="dia">TJSP · TRF3 · TJSC</p><h3>Recursos e sustentação oral</h3><p>Sessões de julgamento presenciais e por videoconferência.</p></li>
+      <li class="sobe"><p class="dia">STJ</p><h3>Tribunais superiores</h3><p>Habeas corpus e recursos em Brasília.</p></li>
       </ol>
     </div>
   </div>
@@ -730,7 +734,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
         <div class="lead sobe">
           <p><b>Alisson Sousa Cruz</b> é advogado criminalista em Presidente Prudente, à frente da ASC Advocacia Criminal.</p>
           <div class="ler-mais" data-ler-mais>
-            <p>Atua no Tribunal do Júri e em processos criminais desde a investigação, com sustentação oral no TJSP, no TRF3, no TJSC e no STJ. Atende Presidente Prudente e as cidades do Oeste Paulista. <span class="pend">[trajetória: revisar com ele]</span></p>
+            <p>Atua no Tribunal do Júri e em processos criminais desde a investigação, com sustentação oral no TJSP, no TRF3, no TJSC e no STJ. Atende Presidente Prudente e as cidades do Oeste Paulista.</p>
             <ul class="formacao">
               <li>Tribuno do Júri</li>
               <li>Pós-graduado em Lei de Drogas</li>
@@ -783,7 +787,6 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
         <span class="num" aria-hidden="true"><span>VII</span><span class="num-traco"></span></span>
         <div>
           <h2 class="h2 mascara" id="igT">@alissonoscruz</h2>
-          <p class="lead sobe">Conteúdo informativo sobre direito penal e a rotina da advocacia criminal.</p>
         </div>
       </div>
       <a class="btn contorno vira-link sobe" href="https://www.instagram.com/alissonoscruz/" target="_blank" rel="noopener"><svg class="ic" aria-hidden="true"><use href="#i-insta"/></svg>Ver no Instagram</a>
@@ -791,7 +794,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
     <div class="capas" id="capas">
       <a class="capa cartao" href="https://www.instagram.com/alissonoscruz/" target="_blank" rel="noopener"><div class="quadro"><div class="quadro-janela"><img src="fotos/alisson/insta-coautoria.webp" width="1080" height="1350" alt="Post: duas pessoas numa moto, uma atira e a outra dirigia. As duas respondem igual?" loading="lazy"></div></div><span>Coautoria: quem responde pelo quê</span></a>
       <a class="capa cartao" href="https://www.instagram.com/alissonoscruz/" target="_blank" rel="noopener"><div class="quadro"><div class="quadro-janela"><img src="fotos/alisson/insta-custodia.webp" width="720" height="1280" alt="Alisson Sousa Cruz no escritório, com a mão na testa, em capa de vídeo" loading="lazy"></div></div><span>Audiência de custódia</span></a>
-      <a class="capa cartao" href="https://www.instagram.com/alissonoscruz/" target="_blank" rel="noopener"><div class="quadro"><div class="quadro-janela"><img src="fotos/alisson/insta-defesa-nao-para.webp" width="558" height="990" alt="Monograma ASC Advocacia Criminal em dourado sobre fundo preto" loading="lazy"></div></div><span>A defesa não para</span></a>
+      <a class="capa cartao" href="https://www.instagram.com/alissonoscruz/" target="_blank" rel="noopener"><div class="quadro"><div class="quadro-janela"><img src="fotos/alisson/insta-defesa-nao-para.webp" width="558" height="990" alt="Monograma ASC Advocacia Criminal em dourado sobre fundo preto" loading="lazy"></div></div><span>ASC Advocacia Criminal</span></a>
     </div>
   </div>
 </section>
@@ -808,29 +811,19 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
         <div class="dado sobe">
           <h3 class="rot">WhatsApp e telefone</h3>
           <p><a href="tel:+5518996758191" data-tel data-tel-texto>(18) 99675-8191</a></p>
-          <div class="acoes"><a class="btn vira-link" href="https://wa.me/5518996758191" target="_blank" rel="noopener" data-wa="Olá, Dr. Alisson. Vim pelo site e gostaria de conversar com o senhor."><svg class="ic" aria-hidden="true"><use href="#i-msg"/></svg>Falar com o advogado</a><a class="btn contorno so-pc" href="tel:+5518996758191" data-tel><svg class="ic" aria-hidden="true"><use href="#i-tel"/></svg>Ligar</a></div>
-        </div>
-        <div class="dado sobe">
-          <h3 class="rot">Endereço</h3>
-          <p>Rua João Ceribelli Pacca, 81, Jd. Everest<small>Presidente Prudente/SP · CEP 19066-140 <span class="pend">[confirmar se é o escritório]</span></small></p>
-          <div class="acoes"><a class="btn contorno vira-link" data-mapa href="https://www.google.com/maps/search/?api=1&amp;query=Rua%20Jo%C3%A3o%20Ceribelli%20Pacca%2C%2081%2C%20Jardim%20Everest%2C%20Presidente%20Prudente%20-%20SP%2C%2019066-140" target="_blank" rel="noopener"><svg class="ic" aria-hidden="true"><use href="#i-pino"/></svg>Como chegar</a></div>
+          <div class="acoes"><a class="link" href="https://wa.me/5518996758191" target="_blank" rel="noopener" data-wa="Olá, Dr. Alisson. Vim pelo site e gostaria de conversar com o senhor.">Falar com o advogado pelo WhatsApp<svg class="ic" aria-hidden="true"><use href="#i-seta"/></svg></a></div>
         </div>
         <div class="dado sobe">
           <h3 class="rot">Horário do escritório</h3>
-          <p data-horario><span class="pend">[confirmar]</span></p>
+          <p data-horario></p>
         </div>
       </div>
       <div>
         <div class="destaque sobe" data-plantao>
           <h3>Plantão 24h para prisão em flagrante</h3>
-          <p>Fora do horário do escritório, o plantão atende casos de prisão em flagrante, todos os dias.</p>
+          <p>O plantão atende casos de prisão em flagrante a qualquer hora, todos os dias.</p>
           <p class="relogio"><span class="ponto" aria-hidden="true"></span>Agora: <time data-relogio>--:--</time><span class="sr"> (horário de Brasília)</span> · plantão disponível</p>
           <div class="acoes"><a class="btn" href="tel:+5518996758191" data-tel><svg class="ic" aria-hidden="true"><use href="#i-tel"/></svg>Ligar agora</a><a class="btn contorno" href="https://wa.me/5518996758191" target="_blank" rel="noopener" data-wa-plantao><svg class="ic" aria-hidden="true"><use href="#i-msg"/></svg>WhatsApp</a></div>
-        </div>
-        <div class="cidades-bloco sobe">
-          <h3 class="rot">Cidades atendidas</h3>
-          <ul class="cidades" data-cidades></ul>
-          <p>Nos tribunais: TJSP, TRF3, TJSC e STJ.</p>
         </div>
       </div>
     </div>
@@ -840,7 +833,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 
 <footer class="rodape">
   <div class="wrap">
-    <div><b>Alisson Sousa Cruz · Advogado · <span data-oab-rodape>OAB/SP <span class="pend">[a confirmar]</span></span></b>ASC Advocacia Criminal</div>
+    <div><b>Alisson Sousa Cruz · Advogado criminalista<span data-oab-rodape></span></b>ASC Advocacia Criminal</div>
     <div>Rua João Ceribelli Pacca, 81, Jd. Everest<br>Presidente Prudente/SP · CEP 19066-140</div>
     <div><a href="tel:+5518996758191" data-tel data-tel-texto>(18) 99675-8191</a><br><a href="https://www.instagram.com/alissonoscruz/" target="_blank" rel="noopener">@alissonoscruz</a></div>
     <p class="legal">Página informativa, conforme o Provimento 205/2021 do Conselho Federal da OAB. Página de demonstração feita pela Zyrek. Não é o site oficial.</p>
@@ -878,8 +871,8 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
   var CONFIG = {
     whatsapp: "5518996758191",
     telefone: "+5518996758191", telefoneTexto: "(18) 99675-8191",
-    oab: "",          // número da OAB/SP; vazio mostra a pendência em amarelo
-    horario: "",      // ex.: "Segunda a sexta, das 8h às 18h"; vazio mostra [confirmar]
+    oab: "",          // número da OAB/SP; vazio: aparece só "Advogado criminalista"
+    horario: "",      // ex.: "Segunda a sexta, das 8h às 18h"; vazio esconde o horário
     plantao24h: true, // false: some o painel de plantão e o relógio; a barra de baixo vira "Fale com o advogado"
     instagram: "https://www.instagram.com/alissonoscruz/",
     equipe: [],       // { nome: "", funcao: "", oab: "" }; vazio: a seção some
@@ -892,7 +885,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
     videos: [
       { arquivo: "fotos/alisson/videos/sustentacao-oral.mp4", poster: "fotos/alisson/videos/sustentacao-oral.jpg", w: 720, h: 1280, legenda: "Sustentação oral no TRF3", detalhe: "Trecho de 43 segundos · sessão por videoconferência" },
       { arquivo: "fotos/alisson/videos/sustentacao-tjsc.mp4", poster: "fotos/alisson/videos/sustentacao-tjsc.jpg", w: 720, h: 1280, legenda: "Sustentação oral no TJSC", detalhe: "Trecho de 39 segundos" },
-      { arquivo: null, poster: "fotos/alisson/videos/audiencia-videoconferencia.jpg", w: 670, h: 250, legenda: "Audiência por videoconferência", detalhe: "Vídeo completo no Instagram" }
+      { arquivo: null, poster: null, legenda: "Audiência por videoconferência", detalhe: "Vídeo completo no Instagram" }
     ]
   };
   // gerar_celular troca as fotos (e os posters) por data URIs: aí os vídeos ficam só como poster + Instagram
@@ -921,10 +914,15 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
   $$("[data-tel]").forEach(function (a) { a.href = "tel:" + CONFIG.telefone; });
   $$("[data-tel-texto]").forEach(function (a) { a.textContent = CONFIG.telefoneTexto; });
   if (CONFIG.oab) {
-    $$("[data-oab]").forEach(function (el) { el.className = ""; el.textContent = "OAB/SP " + CONFIG.oab; });
-    $$("[data-oab-rodape]").forEach(function (el) { el.textContent = "OAB/SP " + CONFIG.oab; });
+    $$("[data-oab]").forEach(function (el) { el.textContent = " · OAB/SP " + CONFIG.oab; });
+    $$("[data-oab-rodape]").forEach(function (el) { el.textContent = " · OAB/SP " + CONFIG.oab; });
   }
   if (CONFIG.horario) $$("[data-horario]").forEach(function (el) { el.textContent = CONFIG.horario; });
+  else {
+    // sem horário confirmado: some a linha; no contato some o bloco inteiro
+    $$("[data-horario]").forEach(function (el) { var d = el.closest(".dado"); if (d) d.remove(); else el.remove(); });
+    $$(".resumo .rot").forEach(function (h) { if (h.textContent === "Horário") h.textContent = "Atendimento"; });
+  }
   if (!CONFIG.plantao24h) {
     $$("[data-plantao]").forEach(function (el) { el.hidden = true; });
     $$("[data-sem-plantao]").forEach(function (el) { el.hidden = false; });
@@ -970,10 +968,23 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
       var p = document.createElementNS("http://www.w3.org/2000/svg", "path"); p.setAttribute("pathLength", "1"); svg.appendChild(p);
       jan.insertAdjacentElement("afterend", svg);
     }
-    var w = jan.offsetWidth, h = jan.offsetHeight, r = Math.min(w / 2, h), o = DESLOC;
+    var w = jan.offsetWidth, h = jan.offsetHeight, r = Math.min(w / 2, h), o = DESLOC, fim = h - o;
+    // no celular o título sobe por cima da foto: o fio para antes dele, para não riscar as letras
+    var copia = fig.classList.contains("retrato") && $(".topo-copy");
+    if (copia) {
+      var cr = copia.getBoundingClientRect(), jr = jan.getBoundingClientRect(), dentro = cr.top - jr.top;
+      // só quando o texto fica por cima da foto (celular), não ao lado dela (desktop)
+      if (cr.left < jr.right && cr.right > jr.left && dentro > 0 && dentro < h) fim = dentro - 16;
+    }
     svg.setAttribute("width", w); svg.setAttribute("height", h); svg.setAttribute("viewBox", "0 0 " + w + " " + h);
     svg.style.left = jan.offsetLeft + "px"; svg.style.top = jan.offsetTop + "px";
-    $("path", svg).setAttribute("d", "M" + o + " " + (h - o) + "V" + (r - o) + "A" + r + " " + r + " 0 0 1 " + (w + o) + " " + (r - o) + "V" + (h - o));
+    var cx = w / 2 + o, cy = r - o, d;
+    if (fim >= cy) d = "M" + o + " " + fim + "V" + cy + "A" + r + " " + r + " 0 0 1 " + (w + o) + " " + cy + "V" + fim;
+    else { // o título começa dentro da curva: o fio vira só o pedaço do arco acima dele
+      var dx = Math.sqrt(Math.max(0, r * r - (cy - fim) * (cy - fim)));
+      d = "M" + (cx - dx) + " " + fim + "A" + r + " " + r + " 0 0 1 " + (cx + dx) + " " + fim;
+    }
+    $("path", svg).setAttribute("d", d);
   }
   function todosOsFios() { $$("[data-arco]").forEach(desenharFio); }
 
@@ -1001,7 +1012,9 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
   /* ===== vídeos: só baixam no clique; no celular, os três num carrossel ===== */
   function cartao(v, destaque) {
     var fig = document.createElement("figure");
-    var img = '<img src="' + v.poster + '" width="' + v.w + '" height="' + v.h + '" alt="" loading="lazy">';
+    // sem poster de qualidade: placa com o arco e o monograma, no lugar de uma imagem pixelada
+    var img = v.poster ? '<img src="' + v.poster + '" width="' + v.w + '" height="' + v.h + '" alt="" loading="lazy">'
+      : '<span class="placa" aria-hidden="true"><svg viewBox="0 0 100 120" preserveAspectRatio="none"><path d="M12 120V52a38 38 0 0 1 76 0v68"/></svg><b>ASC</b></span>';
     var cap = "<figcaption><b>" + esc(v.legenda) + "</b>" + esc(v.detalhe || "") + "</figcaption>";
     var abre = destaque ? '<div class="arco-janela">' : '<div class="quadro"><div class="quadro-janela">';
     var fecha = destaque ? "</div>" : "</div></div>";

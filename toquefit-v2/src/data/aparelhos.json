@@ -129,7 +129,8 @@
       "errs": [
         "Curvar a lombar para alcançar o puxador.",
         "Jogar o tronco para trás a cada repetição."
-      ]
+      ],
+      "roteiro": "remada-baixa"
     },
     {
       "slug": "cadeira-flexora",

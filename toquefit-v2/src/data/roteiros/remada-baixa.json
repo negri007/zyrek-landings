@@ -1,0 +1,24 @@
+{
+  "slug": "remada-baixa",
+  "instrutora": "Prof.ª Camila Rocha · CREF 054321-G/SP",
+  "voz": "pt-BR-FranciscaNeural",
+  "nota": "Mesma marcação do supino-reto.json. As câmeras (cam) estão em src/cena/remada.ts: side, tq, costas e lento (replay).",
+  "trechos": [
+    { "id": "posicao", "ch": "Posição", "cam": "side", "step": 0, "pausa": 1.6,
+      "say": "Sente com a [[coluna reta|ok]], pés no apoio e joelhos levemente dobrados." },
+    { "id": "puxada", "ch": "Puxada", "cam": "tq", "step": 1, "pausa": 0.8,
+      "say": "Puxe o triângulo levando os [[cotovelos para trás|ok]], rente ao corpo." },
+    { "id": "escapulas", "ch": "Escápulas", "cam": "costas", "step": 2, "pausa": 1.6,
+      "say": "No fim, [[aperte as escápulas|ok]] por um instante." },
+    { "id": "volta", "ch": "Volta", "cam": "side", "step": 3, "pausa": 0.6, "replay": { "de": 0.0, "ate": 2.6, "vel": 0.5 },
+      "say": "Volte em [[2 segundos|ok|grande]], estendendo os braços sem curvar as costas." },
+    { "id": "lombar-errado", "ch": "Lombar", "cam": "side", "step": 3, "pausa": 1.4, "selo": { "tx": "Errado", "tom": "bad" },
+      "say": "Curvar a lombar para alcançar mais longe [[machuca as costas|bad]]. [[Assim não.|bad]]" },
+    { "id": "tronco-errado", "ch": "Tronco", "cam": "side", "step": 1, "pausa": 1.4, "selo": { "tx": "Errado", "tom": "bad" },
+      "say": "Jogar o tronco para trás [[rouba o movimento|bad]]. [[Assim não.|bad]]" },
+    { "id": "certo", "ch": "Controle", "cam": "tq", "step": 1, "pausa": 3.4, "selo": { "tx": "Certo", "tom": "good" },
+      "say": "O certo é o [[tronco parado|ok]] e só os braços trabalhando." },
+    { "id": "final", "ch": "Séries", "cam": "side", "step": 3, "pausa": 2.0,
+      "say": "Faça as séries assim e descanse [[1 minuto|ok]] entre elas. Mandou bem!" }
+  ]
+}

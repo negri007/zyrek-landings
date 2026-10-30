@@ -4,6 +4,7 @@ import { criarDesenvolvimento } from "./desenvolvimento";
 import { criarExtensora } from "./extensora";
 import { criarFlexora } from "./flexora";
 import { criarLegPress } from "./legpress";
+import { criarRemada } from "./remada";
 import { criarSupino } from "./supino";
 
 export { motor } from "./motor";
@@ -16,4 +17,5 @@ export const CENAS: Record<string, (o: OpcoesCena) => CenaRoteiro> = {
   "cadeira-extensora": criarExtensora,
   "cadeira-flexora": criarFlexora,
   desenvolvimento: criarDesenvolvimento,
+  "remada-baixa": criarRemada,
 };

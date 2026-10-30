@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 384" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <rect width="400" height="384" fill="#0B0D10"/>
+  <g stroke="#3A4048" stroke-width="2"><path d="M30 300h340"/><path d="M330 300V90M300 300V90M296 90h38"/></g>
+  <g fill="#2A2F36" stroke="#3A4048" stroke-width="2"><rect x="300" y="236" width="30" height="12" rx="2"/><rect x="300" y="252" width="30" height="12" rx="2"/><rect x="300" y="268" width="30" height="12" rx="2"/><rect x="300" y="284" width="30" height="12" rx="2"/></g>
+  <g stroke="#3A4048" stroke-width="10"><path d="M70 262h120"/><path d="M262 246l4 50"/></g>
+  <g stroke="#8E96A0" stroke-width="10"><path d="M120 254V160"/><path d="M124 254l60-26 70 22"/><path d="M122 172l-6 34 48 6"/></g>
+  <circle cx="122" cy="140" r="16" stroke="#8E96A0" stroke-width="8"/>
+  <g stroke="#F3FF2C" stroke-width="4"><path d="M168 212l10-10M168 212l10 10"/><path d="M178 212h108"/></g>
+  <text x="200" y="352" fill="#8E96A0" font-family="system-ui,sans-serif" font-size="15" text-anchor="middle">Remada baixa · tronco parado, cotovelos para trás</text>
+</svg>

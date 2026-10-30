@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 384" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <rect width="400" height="384" fill="#0B0D10"/>
+  <g stroke="#3A4048" stroke-width="2"><path d="M30 300h340"/><path d="M60 300V130M100 300V130M56 130h48"/><path d="M180 300v-70M120 300v-60"/></g>
+  <g fill="#2A2F36" stroke="#3A4048" stroke-width="2"><rect x="62" y="236" width="36" height="12" rx="2"/><rect x="62" y="252" width="36" height="12" rx="2"/><rect x="62" y="268" width="36" height="12" rx="2"/><rect x="62" y="284" width="36" height="12" rx="2"/></g>
+  <g stroke="#3A4048" stroke-width="10"><path d="M128 222h96"/><path d="M128 216l-14-88"/></g>
+  <g stroke="#8E96A0" stroke-width="10"><path d="M134 206l-12-72"/><path d="M140 208h88"/></g>
+  <circle cx="118" cy="114" r="17" stroke="#8E96A0" stroke-width="8"/>
+  <g stroke="#F3FF2C" stroke-width="5"><circle cx="230" cy="208" r="9"/><path d="M230 208l-18 62"/><path d="M230 208l64-28" stroke="#F3FF2C" stroke-opacity=".35" stroke-dasharray="6 7"/></g>
+  <circle cx="208" cy="276" r="10" stroke="#8E96A0" stroke-width="6"/>
+  <text x="200" y="352" fill="#8E96A0" font-family="system-ui,sans-serif" font-size="15" text-anchor="middle">Cadeira flexora · rolo até embaixo do banco</text>
+</svg>

@@ -125,7 +125,19 @@ export async function renderAluno(slug: string, contarToque: boolean) {
       onFim() { steps.forEach((li) => li.classList.remove("on")); $("steps").classList.remove("live"); },
     });
   }
-  if (import.meta.env.DEV) (window as unknown as { __player: Player }).__player = player;
+  if (import.meta.env.DEV) {
+    // atalhos de teste: __ir("descida", "Desça") pausa e pula para a palavra (ou segundos) do trecho
+    const w = window as unknown as { __player: Player; __ir: (id: string, k: string | number) => string };
+    w.__player = player;
+    w.__ir = (id, k) => {
+      const p = player!, tr = p.linha.trechos.find((x) => x.id === id);
+      if (!tr) return "trecho não existe: " + id;
+      p.pausar();
+      p.posicionar(tr.t0 + (typeof k === "string" ? tr.cue(k) : k));
+      window.scrollTo({ top: 0, behavior: "instant" });
+      return "ok";
+    };
+  }
 }
 
 /** Cartão do fim do vídeo: a série que o aluno vai fazer agora. */

@@ -151,8 +151,40 @@ export function criarPessoa(model: THREE.Object3D, raiz: THREE.Group, ancora: An
     return { Q, K: M, A: P };
   }
 
+  // postura do corpo inteiro: giro em volta de um ponto (ex.: quadril descolando, tronco jogando para trás)
+  const baseQ = hum.quaternion.clone(), basePos = hum.position.clone();
+  const _gq = new THREE.Quaternion(), Z = V(0, 0, 1);
+  /** Gira o corpo `graus` em volta do eixo lateral (z) passando por `pivo`, e desloca por `desl`. 0 = postura de partida. */
+  function girarCorpo(graus: number, pivo: V3, desl?: V3) {
+    _gq.setFromAxisAngle(Z, (graus * Math.PI) / 180);
+    hum.quaternion.copy(_gq).multiply(baseQ);
+    hum.position.copy(basePos).sub(pivo).applyQuaternion(_gq).add(pivo);
+    if (desl) hum.position.add(desl);
+    hum.updateMatrixWorld(true);
+  }
+  const coluna = ["Spine", "Spine1", "Spine2"].map((n) => B[n]).filter(Boolean);
+  const _pw = new THREE.Quaternion(), _cq = new THREE.Quaternion(), _ax = V();
+  /**
+   * Curva a coluna em volta do eixo lateral, dividido entre as três vértebras do esqueleto.
+   * Positivo arredonda para a frente (lombar curvada); negativo arqueia para trás.
+   */
+  function curvarColuna(graus: number) {
+    const por = ((graus / coluna.length) * Math.PI) / 180;
+    raiz.updateMatrixWorld(true);
+    const zMundo = Z.clone().transformDirection(raiz.matrixWorld);
+    for (const b of coluna) {
+      b.parent!.updateMatrixWorld(true);
+      b.parent!.getWorldQuaternion(_pw).invert();
+      _ax.copy(zMundo).applyQuaternion(_pw).normalize();
+      b.quaternion.copy(b.userData.rq as THREE.Quaternion).premultiply(_cq.setFromAxisAngle(_ax, -por));
+      b.updateMatrixWorld(true);
+    }
+  }
+
   return {
-    B, grupo: hum, side, loc, aim, setGrip, orientHand, setLeg,
+    B, grupo: hum, side, loc, aim, setGrip, orientHand, setLeg, girarCorpo, curvarColuna,
     cabeca: () => loc(B.Head),
+    /** ombro onde está agora (depois de girar o corpo ou curvar a coluna) */
+    ombro: (s: { A: THREE.Bone }) => loc(s.A),
   };
 }

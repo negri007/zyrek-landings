@@ -28,13 +28,19 @@ const EXTENSORA: InfoCena = {
   desenho: `<path class="c-1" pathLength="1" d="M92 44l40-26"/><path class="c-2" pathLength="1" d="M92 44a5 5 0 1 0 0.1 0M132 18a6 6 0 1 0 0.1 0"/><path class="c-3" pathLength="1" d="M8 68h146M40 44h48M40 44L30 6M60 44v24M16 6v62M16 40h14"/>`,
 };
 
+const FLEXORA: InfoCena = {
+  estatica: "flexora-estatica.svg",
+  carregando: "Preparando a instrutora",
+  desenho: `<path class="c-1" pathLength="1" d="M92 44l-10 22"/><path class="c-2" pathLength="1" d="M92 44a5 5 0 1 0 0.1 0M80 66a6 6 0 1 0 0.1 0"/><path class="c-3" pathLength="1" d="M8 68h146M40 44h48M40 44L30 6M60 44v24M16 6v62M16 40h14"/>`,
+};
+
 const PILHA: InfoCena = {
   estatica: "pilha-estatica.svg",
   carregando: "Carregando o aparelho",
   desenho: `<path class="c-1" pathLength="1" d="M56 14h48M56 24h48M56 34h48"/><path class="c-2" pathLength="1" d="M80 4v10"/><path class="c-3" pathLength="1" d="M40 4v64M120 4v64M40 4h80M30 68h100"/>`,
 };
 
-const CATALOGO: Record<string, InfoCena> = { "supino-reto": SUPINO, "leg-press-45": LEG_PRESS, "cadeira-extensora": EXTENSORA };
+const CATALOGO: Record<string, InfoCena> = { "supino-reto": SUPINO, "leg-press-45": LEG_PRESS, "cadeira-extensora": EXTENSORA, "cadeira-flexora": FLEXORA };
 
 /** Cena de um roteiro; sem roteiro, a pilha de anilhas. */
 export const infoCena = (roteiro?: string) => (roteiro && CATALOGO[roteiro]) || PILHA;

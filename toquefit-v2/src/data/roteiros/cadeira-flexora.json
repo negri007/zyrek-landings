@@ -1,0 +1,26 @@
+{
+  "slug": "cadeira-flexora",
+  "instrutora": "Prof.ª Camila Rocha · CREF 054321-G/SP",
+  "voz": "pt-BR-FranciscaNeural",
+  "nota": "Mesma marcação do supino-reto.json. As câmeras (cam) estão em src/cena/flexora.ts: side, close, tq e lento (replay).",
+  "trechos": [
+    { "id": "ajuste", "ch": "Ajuste", "cam": "close", "step": 0, "pausa": 1.6,
+      "say": "Alinhe o [[joelho com o eixo|ok]] da máquina e deixe o rolo logo atrás do tornozelo." },
+    { "id": "apoio", "ch": "Posição", "cam": "side", "step": 0, "pausa": 1.4,
+      "say": "Desça o [[apoio sobre as coxas|ok]] e segure as alças laterais." },
+    { "id": "flexao", "ch": "Flexão", "cam": "tq", "step": 1, "pausa": 0.6,
+      "say": "Flexione as pernas e traga o rolo [[para baixo do banco|ok]]." },
+    { "id": "pico", "ch": "Flexão", "cam": "close", "step": 2, "pausa": 0.8,
+      "say": "Segure [[1 segundo|ok|grande]] no final do movimento." },
+    { "id": "volta", "ch": "Volta", "cam": "side", "step": 3, "pausa": 0.6, "replay": { "de": 0.2, "ate": 3.0, "vel": 0.5 },
+      "say": "Volte devagar, em [[3 segundos|ok|grande]], até estender as pernas." },
+    { "id": "quadril-errado", "ch": "Quadril", "cam": "side", "step": 1, "pausa": 1.4, "selo": { "tx": "Errado", "tom": "bad" },
+      "say": "Puxar com o corpo tira o [[quadril do banco|bad]]. [[Assim não.|bad]]" },
+    { "id": "curto-errado", "ch": "Amplitude", "cam": "side", "step": 3, "pausa": 1.6, "selo": { "tx": "Errado", "tom": "bad" },
+      "say": "Voltar só até a [[metade|bad]] encurta o exercício. [[Assim não.|bad]]" },
+    { "id": "certo", "ch": "Controle", "cam": "tq", "step": 3, "pausa": 3.4, "selo": { "tx": "Certo", "tom": "good" },
+      "say": "O certo é fazer o [[movimento todo|ok]], indo e voltando com controle." },
+    { "id": "final", "ch": "Séries", "cam": "side", "step": 3, "pausa": 2.0,
+      "say": "Faça assim todas as repetições e descanse [[1 minuto|ok]]. Mandou bem!" }
+  ]
+}

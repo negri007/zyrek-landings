@@ -151,7 +151,8 @@
       "errs": [
         "Tirar o quadril do banco.",
         "Encurtar o movimento na volta."
-      ]
+      ],
+      "roteiro": "cadeira-flexora"
     },
     {
       "slug": "desenvolvimento",

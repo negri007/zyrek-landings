@@ -122,22 +122,22 @@ export function criarPuxada(o: OpcoesCena): CenaRoteiro {
         break;
       }
       case "nuca-errado": {
-        const c = tr.cue("Puxar") - 0.4, fim = tr.cue("Assim") + 0.9;
+        const c = Math.max(0.2, tr.cue("Puxar") - 0.4), fim = tr.cue("Assim") + 0.9;
         P.tronco = 0;
-        if (u > c && u < fim) { const k = ciclo(u - c, 0.9, 0.3, 0.9, 0.2); P.puxa = k; P.nuca = 1; }
+        if (u > c && u < fim) { const k = ciclo(u - c, 0.9, 0.3, 0.9, 0.2, fim - c); P.puxa = k; P.nuca = 1; }
         if (u > tr.cue("força") - 0.2 && u < fim) P.labels.push({ tx: "Barra atrás da nuca", at: cabeca.clone().add(V(-0.12, 0.08, 0.22)), tom: "bad" });
         break;
       }
       case "balanco-errado": {
         // o tronco joga para trás a cada puxada para ajudar
-        const c = tr.cue("Balançar") - 0.4, fim = tr.cue("Assim") + 0.9;
-        if (u > c && u < fim) { const k = ciclo(u - c, 0.5, 0.15, 0.7, 0.15); P.puxa = k; P.tronco = INCLINA + 26 * k; }
+        const c = Math.max(0.2, tr.cue("Balançar") - 0.4), fim = tr.cue("Assim") + 0.9;
+        if (u > c && u < fim) { const k = ciclo(u - c, 0.5, 0.15, 0.7, 0.15, fim - c); P.puxa = k; P.tronco = INCLINA + 26 * k; }
         if (u > tr.cue("tira") - 0.2 && u < fim) P.labels.push({ tx: "Tronco balançando", at: cabeca.clone().add(V(-0.1, 0.12, 0.22)), tom: "bad" });
         break;
       }
       case "certo": {
-        const c = tr.cue("certo") - 0.3;
-        if (u > c) P.puxa = ciclo(u - c, 1.1, 0.5, 2, 0.4);
+        const c = Math.max(0.2, tr.cue("certo") - 0.3);
+        if (u > c) P.puxa = ciclo(u - c, 1.1, 0.5, 2, 0.4, tr.t1 - tr.t0 - c - 0.4);
         if (u > tr.cue("tronco") - 0.2) P.labels.push({ tx: "Tronco firme, barra na frente", at: peito.clone().add(V(0.14, 0.02, 0.24)) });
         break;
       }
@@ -156,6 +156,7 @@ export function criarPuxada(o: OpcoesCena): CenaRoteiro {
     if (HUM) {
       const h = HUM;
       h.girarCorpo(P.tronco, QUADRIL);
+      h.curvarColuna();
       const S0 = h.ombro(h.side[0]).add(h.ombro(h.side[1])).multiplyScalar(0.5);
       cabeca.copy(h.cabeca());
       // em cima: braços quase estendidos acima dos ombros; embaixo: barra no alto do peito (ou atrás da nuca)

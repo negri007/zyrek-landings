@@ -102,6 +102,7 @@ export function criarCadeira(maq: THREE.Group, o: OpcoesCadeira) {
       if (!HUM) return;
       const h = HUM;
       h.girarCorpo(-9 * tranco, ombros, V(0, 0.06 * tranco, 0));
+      h.curvarColuna();
       const can = V(Math.sin(a), -Math.cos(a), 0), frente = V(Math.cos(a), Math.sin(a), 0);
       for (let i = 0; i < 2; i++) {
         const s = h.side[i], sd = s.sd;

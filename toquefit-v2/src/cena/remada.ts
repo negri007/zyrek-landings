@@ -103,9 +103,9 @@ export function criarRemada(o: OpcoesCena): CenaRoteiro {
       }
       case "lombar-errado": {
         // estica para alcançar mais longe e arredonda as costas na volta de cada repetição
-        const c = tr.cue("Curvar") - 0.4, fim = tr.cue("Assim") + 0.9;
+        const c = Math.max(0.2, tr.cue("Curvar") - 0.4), fim = tr.cue("Assim") + 0.9;
         if (u > c && u < fim) {
-          const k = ciclo(u - c, 0.9, 0.2, 0.9, 0.2);
+          const k = ciclo(u - c, 0.9, 0.2, 0.9, 0.2, fim - c);
           P.puxa = k;
           P.curva = 1 - k;
           P.tronco = -14 * (1 - k);
@@ -115,9 +115,9 @@ export function criarRemada(o: OpcoesCena): CenaRoteiro {
       }
       case "tronco-errado": {
         // cada puxada vem com o tronco jogando para trás
-        const c = tr.cue("Jogar") - 0.4, fim = tr.cue("Assim") + 0.9;
+        const c = Math.max(0.2, tr.cue("Jogar") - 0.4), fim = tr.cue("Assim") + 0.9;
         if (u > c && u < fim) {
-          const k = ciclo(u - c, 0.55, 0.15, 0.8, 0.2);
+          const k = ciclo(u - c, 0.55, 0.15, 0.8, 0.2, fim - c);
           P.puxa = k;
           P.tronco = 22 * k;
         }
@@ -125,8 +125,8 @@ export function criarRemada(o: OpcoesCena): CenaRoteiro {
         break;
       }
       case "certo": {
-        const c = tr.cue("certo") - 0.3;
-        if (u > c) P.puxa = ciclo(u - c, 1.1, 0.5, 2, 0.4);
+        const c = Math.max(0.2, tr.cue("certo") - 0.3);
+        if (u > c) P.puxa = ciclo(u - c, 1.1, 0.5, 2, 0.4, tr.t1 - tr.t0 - c - 0.4);
         if (u > tr.cue("tronco") - 0.2) P.labels.push({ tx: "Tronco parado, braços puxando", at: costasLbl() });
         break;
       }

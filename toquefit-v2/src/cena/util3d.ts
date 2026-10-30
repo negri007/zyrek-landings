@@ -19,9 +19,14 @@ export function rep(u: number, d: number, h: number, up: number) {
 /** Aproxima `atual` de `alvo` de forma independente da taxa de quadros. */
 export const suave = (atual: number, alvo: number, dt: number, vel: number, reduzido: boolean) =>
   reduzido ? alvo : atual + (alvo - atual) * (1 - Math.exp(-dt * vel));
-/** Repetições seguidas: sobe em `up`, segura `top`, desce em `down`, descansa `pausa`. Devolve 0 → 1 → 0. */
-export function ciclo(u: number, up: number, top: number, down: number, pausa = 0.3) {
-  const per = up + top + down + pausa, k = ((u % per) + per) % per;
+/**
+ * Repetições seguidas: sobe em `up`, segura `top`, desce em `down`, descansa `pausa`. Devolve 0 → 1 → 0.
+ * Só começa uma repetição que termina antes de `limite`: o trecho nunca acaba no meio do movimento.
+ */
+export function ciclo(u: number, up: number, top: number, down: number, pausa = 0.3, limite = Infinity) {
+  if (u < 0) return 0;
+  const per = up + top + down + pausa, i = Math.floor(u / per), k = u - i * per;
+  if (i * per + up + top + down > limite) return 0;
   if (k < up) return seg(k, 0, up);
   if (k < up + top) return 1;
   if (k < up + top + down) return 1 - seg(k, up + top, up + top + down);

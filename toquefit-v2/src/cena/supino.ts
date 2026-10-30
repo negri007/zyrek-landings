@@ -5,6 +5,7 @@ import type { CenaRoteiro, OpcoesCena } from "./motor";
 import { criarRig, type Enquadramento } from "./camera";
 import { CRIT, NEON, materiais, montarEstudio } from "./estudio";
 import { carregarModelo, criarPessoa, ik2, type Lado, type Pessoa } from "./pessoa";
+import { criarSuavizador } from "./roteiro3d";
 import { criarRotulos, type Rotulo } from "./rotulos";
 import { V, cl, easeIO, lerp, rep, seg, suave, type V3 } from "./util3d";
 import { trechoEm, type Trecho } from "../player/timeline";
@@ -275,6 +276,7 @@ export function criarSupino(o: OpcoesCena) {
 
   function aplicar(P: Pose) {
     barG.position.set(P.bx, P.by, 0);
+    HUM?.curvarColuna();
     for (let idx = 0; idx < arms.length; idx++) {
       const a = arms[idx];
       const G = _t.set(P.bx, P.by, P.grip * a.sd);
@@ -373,6 +375,7 @@ export function criarSupino(o: OpcoesCena) {
   });
 
   let ultimoTr = "";
+  const suavizar = criarSuavizador(o.reduzido);
   const cena: CenaRoteiro & { medida: number[]; cams: typeof CAMS; dbg: () => unknown } = {
     scene, camera, pronto: false,
     resize(w, h) { rotulos.resize(w, h); },
@@ -389,6 +392,8 @@ export function criarSupino(o: OpcoesCena) {
         if (depois > 0) Object.assign(P, atP(1 - seg(depois, 0, 0.9)));
         else { P.depth = true; P.anilhas = 0.18; camNome = "lento"; chave = tr.id + ":replay"; }
       } else P = pose(tr, u);
+      // emendas entre trechos viram transições; o replay entra com corte de câmera e pode pular
+      suavizar(P, t, dt, chave !== ultimoTr && chave.endsWith(":replay"));
       aplicar(P);
       atualizarCunhas(P, dt);
       if (chave !== ultimoTr) { rig.ir(camNome, !ultimoTr || chave.endsWith(":replay")); ultimoTr = chave; }

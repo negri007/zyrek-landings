@@ -5,6 +5,7 @@ import type { CenaRoteiro, OpcoesCena } from "./motor";
 import { criarRig, type Enquadramento } from "./camera";
 import { NEON, materiais, montarEstudio } from "./estudio";
 import { carregarModelo, criarPessoa, ik2, type Pessoa } from "./pessoa";
+import { criarSuavizador } from "./roteiro3d";
 import { criarRotulos, type Rotulo } from "./rotulos";
 import { V, lerp, rep, seg, suave, type V3 } from "./util3d";
 import { trechoEm, type Trecho } from "../player/timeline";
@@ -298,6 +299,7 @@ export function criarLegPress(o: OpcoesCena): CenaRoteiro {
     h.grupo.quaternion.copy(_q).multiply(baseQ);
     h.grupo.position.copy(basePos).sub(ombros).applyQuaternion(_q).add(ombros);
     h.grupo.updateMatrixWorld(true);
+    h.curvarColuna();
     for (let i = 0; i < 2; i++) {
       const s = h.side[i], sd = s.sd;
       const ankle = pe.clone().setZ(0.13 * sd);
@@ -385,6 +387,7 @@ export function criarLegPress(o: OpcoesCena): CenaRoteiro {
   });
 
   let ultimoTr = "";
+  const suavizar = criarSuavizador(o.reduzido);
   const cena: CenaRoteiro & { medida: number[]; cams: typeof CAMS; dbg: () => unknown } = {
     scene, camera, pronto: false, medida, cams: CAMS,
     dbg: () => ({ cunha: [cunha.m.visible, cunha.op], guia: [guias[1].visible, guiaOp], fant: fantOp, k: joelhos[1].toArray(), q: quadris[1].toArray() }),
@@ -403,6 +406,8 @@ export function criarLegPress(o: OpcoesCena): CenaRoteiro {
         if (depois > 0) { P.ext = lerp(P.ext, 1, seg(depois, 0, 0.9)); P.cunha = ""; }
         else { P.plat = 0.35; camNome = "lento"; chave = tr.id + ":replay"; }
       } else P = pose(tr, u);
+      // emendas entre trechos viram transições; o replay entra com corte de câmera e pode pular
+      suavizar(P, t, dt, chave !== ultimoTr && chave.endsWith(":replay"));
       aplicar(P);
       atualizarMarcas(P, dt);
       if (chave !== ultimoTr) { rig.ir(camNome, !ultimoTr || chave.endsWith(":replay")); ultimoTr = chave; }

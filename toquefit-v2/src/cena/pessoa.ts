@@ -163,13 +163,16 @@ export function criarPessoa(model: THREE.Object3D, raiz: THREE.Group, ancora: An
     hum.updateMatrixWorld(true);
   }
   const coluna = ["Spine", "Spine1", "Spine2"].map((n) => B[n]).filter(Boolean);
+  const calma = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const _pw = new THREE.Quaternion(), _cq = new THREE.Quaternion(), _ax = V();
   /**
    * Curva a coluna em volta do eixo lateral, dividido entre as três vértebras do esqueleto.
    * Positivo arredonda para a frente (lombar curvada); negativo arqueia para trás.
+   * Soma uma respiração leve (o peito sobe e desce), para a instrutora não ficar parada como estátua.
    */
-  function curvarColuna(graus: number) {
-    const por = ((graus / coluna.length) * Math.PI) / 180;
+  function curvarColuna(graus = 0) {
+    const resp = calma ? 0 : Math.sin((performance.now() / 1000) * 2.1) * 1.4;
+    const por = (((graus - resp) / coluna.length) * Math.PI) / 180;
     raiz.updateMatrixWorld(true);
     const zMundo = Z.clone().transformDirection(raiz.matrixWorld);
     for (const b of coluna) {

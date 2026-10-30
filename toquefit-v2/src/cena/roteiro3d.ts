@@ -35,6 +35,7 @@ export function cenaComRoteiro<P extends PoseBase>(o: OpcoesCena, d: DefCena<P>)
   const rig = criarRig(d.camera, d.cams, o.reduzido, d.fixas);
   const rotulos = criarRotulos({ overlay: o.overlay, camera: d.camera, raiz: d.raiz, evitar: o.evitar, obstaculos: d.obstaculos });
   let ultimo = "";
+  const suavizar = criarSuavizador(o.reduzido);
   const cena: CenaRoteiro = {
     scene: d.scene, camera: d.camera, pronto: false,
     resize(w, h) { rotulos.resize(w, h); },
@@ -53,6 +54,8 @@ export function cenaComRoteiro<P extends PoseBase>(o: OpcoesCena, d: DefCena<P>)
         if (depois > 0) d.aposReplay?.(P, Math.min(1, depois / 0.9));
         else { d.noReplay?.(P); camNome = d.lento || "lento"; chave = tr.id + ":replay"; }
       } else P = d.pose(tr, u);
+      // o replay entra com corte de câmera: ali a pose pode pular de uma vez
+      suavizar(P, t, dt, chave !== ultimo && chave.endsWith(":replay"));
       d.aplicar(P, now, dt);
       if (chave !== ultimo) { rig.ir(camNome, !ultimo || chave.endsWith(":replay")); ultimo = chave; }
       rig.quadro(now, dt);
@@ -65,4 +68,32 @@ export function cenaComRoteiro<P extends PoseBase>(o: OpcoesCena, d: DefCena<P>)
     },
   };
   return cena;
+}
+
+/**
+ * Suaviza os números da pose com uma mola criticamente amortecida: as emendas entre trechos
+ * (cada trecho calcula a pose do zero) viram transições em vez de saltos, e as acelerações ficam macias.
+ * Pula direto para a pose quando o vídeo é arrastado ou num corte de câmera.
+ */
+export function criarSuavizador(reduzido: boolean, tempo = 0.12) {
+  const est = new Map<string, { v: number; vel: number }>();
+  let ultimoT = NaN;
+  const omega = 2 / tempo;
+  return (P: object, t: number, dt: number, cortar = false) => {
+    const salto = reduzido || cortar || !(Math.abs(t - ultimoT) < 0.4) || dt <= 0;
+    ultimoT = t;
+    const p = P as Record<string, unknown>;
+    for (const k in p) {
+      const alvo = p[k];
+      if (typeof alvo !== "number" || !Number.isFinite(alvo)) continue;
+      const e = est.get(k);
+      if (!e || salto) { est.set(k, { v: alvo, vel: 0 }); continue; }
+      // SmoothDamp: chega no alvo sem passar dele e sem tranco
+      const x = omega * dt, ex = 1 / (1 + x + 0.48 * x * x + 0.235 * x * x * x);
+      const dif = e.v - alvo, tmp = (e.vel + omega * dif) * dt;
+      e.vel = (e.vel - omega * tmp) * ex;
+      e.v = alvo + (dif + tmp) * ex;
+      p[k] = e.v;
+    }
+  };
 }

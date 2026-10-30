@@ -82,9 +82,9 @@ export function criarFlexora(o: OpcoesCena): CenaRoteiro {
         break;
       }
       case "quadril-errado": {
-        const c = tr.cue("Puxar") - 0.5, fim = tr.cue("Assim") + 0.9;
+        const c = Math.max(0.2, tr.cue("Puxar") - 0.5), fim = tr.cue("Assim") + 0.9;
         if (u > c && u < fim) {
-          const k = ciclo(u - c, 0.35, 0.05, 0.6, 0.15);
+          const k = ciclo(u - c, 0.35, 0.05, 0.6, 0.15, fim - c);
           P.ang = lerp(INICIO, FIM, k);
           P.tranco = k;
         }
@@ -93,16 +93,16 @@ export function criarFlexora(o: OpcoesCena): CenaRoteiro {
       }
       case "curto-errado": {
         // flexiona e volta só até a metade: a perna nunca estende de novo
-        const c = tr.cue("Voltar") - 0.4;
-        if (u > c) P.ang = lerp(MEIO, FIM, ciclo(u - c, 0.9, 0.1, 0.9, 0.1));
+        const c = Math.max(0.2, tr.cue("Voltar") - 0.4);
+        if (u > c) P.ang = lerp(MEIO, FIM, ciclo(u - c, 0.9, 0.1, 0.9, 0.1, tr.t1 - tr.t0 - c - 0.4));
         else P.ang = lerp(INICIO, MEIO, seg(u, 0, Math.max(0.3, c)));
         P.falta = u > tr.cue("metade") - 0.2 && u < D - 0.4;
         if (P.falta) P.labels.push({ tx: "Faltou estender", at: cad.rolo(INICIO), tom: "bad" });
         break;
       }
       case "certo": {
-        const c = tr.cue("certo") - 0.3;
-        if (u > c) P.ang = lerp(INICIO, FIM, ciclo(u - c, 1.2, 0.5, 2.2, 0.4));
+        const c = Math.max(0.2, tr.cue("certo") - 0.3);
+        if (u > c) P.ang = lerp(INICIO, FIM, ciclo(u - c, 1.2, 0.5, 2.2, 0.4, tr.t1 - tr.t0 - c - 0.4));
         if (u > tr.cue("todo") - 0.2) P.labels.push({ tx: "Movimento completo", at: cad.eixo.clone().add(V(0.05, 0.1, 0.22)) });
         break;
       }

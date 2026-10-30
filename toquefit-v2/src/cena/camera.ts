@@ -35,7 +35,7 @@ export function criarRig(camera: THREE.PerspectiveCamera, cams: Record<string, E
       if (k < 1) {
         _d.set(C.l[0], C.l[1], C.l[2]).sub(_t).normalize();
         _s.set(C.u[0], C.u[1], C.u[2]);
-        cam.p.addScaledVector(_d.cross(_s).normalize(), Math.sin(Math.PI * k) * 0.6 * lado);
+        cam.p.addScaledVector(_d.cross(_s).normalize(), Math.sin(Math.PI * k) * 0.3 * lado);
       }
       cam.l.lerpVectors(de.l, _t.set(C.l[0], C.l[1], C.l[2]), k);
       cam.u.lerpVectors(de.u, _t.set(C.u[0], C.u[1], C.u[2]), k);

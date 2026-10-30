@@ -125,9 +125,9 @@ export function criarDesenvolvimento(o: OpcoesCena): CenaRoteiro {
       }
       case "lombar-errado": {
         // empurra arqueando: a lombar sai do encosto a cada subida
-        const c = tr.cue("Arquear") - 0.4, fim = tr.cue("Assim") + 0.9;
+        const c = Math.max(0.2, tr.cue("Arquear") - 0.4), fim = tr.cue("Assim") + 0.9;
         if (u > c && u < fim) {
-          const k = ciclo(u - c, 0.8, 0.2, 0.8, 0.1);
+          const k = ciclo(u - c, 0.8, 0.2, 0.8, 0.1, fim - c);
           P.alt = k;
           P.arco = Math.min(1, seg(u, c, c + 0.8)) * (0.6 + 0.4 * k);
         }
@@ -142,8 +142,8 @@ export function criarDesenvolvimento(o: OpcoesCena): CenaRoteiro {
         break;
       }
       case "certo": {
-        const c = tr.cue("certo") - 0.3;
-        if (u > c) P.alt = ciclo(u - c, 1.2, 0.3, 2, 0.4);
+        const c = Math.max(0.2, tr.cue("certo") - 0.3);
+        if (u > c) P.alt = ciclo(u - c, 1.2, 0.3, 2, 0.4, tr.t1 - tr.t0 - c - 0.4);
         P.queixo = u > c;
         if (u > tr.cue("queixo") - 0.2) P.labels.push({ tx: "Do queixo até quase travar", at: V(PEGA_X, Y_TOPO + 0.1, 0.4) });
         break;

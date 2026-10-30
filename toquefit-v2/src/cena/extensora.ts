@@ -76,9 +76,9 @@ export function criarExtensora(o: OpcoesCena): CenaRoteiro {
       }
       case "impulso-errado": {
         // chutes rápidos: o quadril descola a cada subida
-        const c = tr.cue("Chutar") - 0.6, fim = tr.cue("Assim") + 0.9;
+        const c = Math.max(0.2, tr.cue("Chutar") - 0.6), fim = tr.cue("Assim") + 0.9;
         if (u > c && u < fim) {
-          const k = ciclo(u - c, 0.32, 0.05, 0.55, 0.15);
+          const k = ciclo(u - c, 0.32, 0.05, 0.55, 0.15, fim - c);
           P.ang = TOPO * k;
           P.tranco = k;
         }
@@ -95,8 +95,8 @@ export function criarExtensora(o: OpcoesCena): CenaRoteiro {
         break;
       }
       case "certo": {
-        const c = tr.cue("certo") - 0.3;
-        if (u > c) P.ang = TOPO * ciclo(u - c, 1.2, 0.5, 2, 0.4);
+        const c = Math.max(0.2, tr.cue("certo") - 0.3);
+        if (u > c) P.ang = TOPO * ciclo(u - c, 1.2, 0.5, 2, 0.4, tr.t1 - tr.t0 - c - 0.4);
         if (u > tr.cue("controlando") - 0.2) P.labels.push({ tx: "Controle na subida e na descida", at: cad.eixo.clone().add(V(0.05, 0.1, 0.22)) });
         break;
       }

@@ -84,7 +84,8 @@
       "errs": [
         "Puxar a barra atrás da nuca.",
         "Balançar o tronco para ganhar impulso."
-      ]
+      ],
+      "roteiro": "puxada-frontal"
     },
     {
       "slug": "cadeira-extensora",

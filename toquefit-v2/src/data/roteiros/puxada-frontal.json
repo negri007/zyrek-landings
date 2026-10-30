@@ -1,0 +1,26 @@
+{
+  "slug": "puxada-frontal",
+  "instrutora": "Prof.ª Camila Rocha · CREF 054321-G/SP",
+  "voz": "pt-BR-FranciscaNeural",
+  "nota": "Mesma marcação do supino-reto.json. As câmeras (cam) estão em src/cena/puxada.ts: side, tq, front, tras e lento (replay).",
+  "trechos": [
+    { "id": "ajuste", "ch": "Ajuste", "cam": "side", "step": 0, "pausa": 1.4,
+      "say": "Ajuste o rolo para [[prender as coxas|ok]] sem apertar." },
+    { "id": "pegada", "ch": "Pegada", "cam": "front", "step": 0, "pausa": 1.8,
+      "say": "Segure a barra com a [[pegada aberta|ok]], além da largura dos ombros." },
+    { "id": "inclinacao", "ch": "Tronco", "cam": "side", "step": 1, "pausa": 1.2,
+      "say": "Incline o tronco [[um pouco para trás|ok]]." },
+    { "id": "puxada", "ch": "Puxada", "cam": "tq", "step": 2, "pausa": 0.8,
+      "say": "Puxe a barra até o [[alto do peito|ok]], levando os cotovelos para baixo." },
+    { "id": "volta", "ch": "Volta", "cam": "side", "step": 3, "pausa": 0.6, "replay": { "de": 0.0, "ate": 2.6, "vel": 0.5 },
+      "say": "Volte em [[2 segundos|ok|grande]] até estender os braços." },
+    { "id": "nuca-errado", "ch": "Nuca", "cam": "tras", "step": 2, "pausa": 1.4, "selo": { "tx": "Errado", "tom": "bad" },
+      "say": "Puxar [[atrás da nuca|bad]] força o ombro e o pescoço. [[Assim não.|bad]]" },
+    { "id": "balanco-errado", "ch": "Balanço", "cam": "side", "step": 1, "pausa": 1.4, "selo": { "tx": "Errado", "tom": "bad" },
+      "say": "Balançar o tronco para ajudar [[tira o trabalho das costas|bad]]. [[Assim não.|bad]]" },
+    { "id": "certo", "ch": "Controle", "cam": "tq", "step": 2, "pausa": 3.4, "selo": { "tx": "Certo", "tom": "good" },
+      "say": "O certo é o [[tronco firme|ok]] e a barra descendo na frente do rosto." },
+    { "id": "final", "ch": "Séries", "cam": "side", "step": 3, "pausa": 2.0,
+      "say": "Faça as séries assim e descanse [[1 minuto|ok]] entre elas. Mandou bem!" }
+  ]
+}

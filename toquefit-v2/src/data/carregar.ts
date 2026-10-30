@@ -3,6 +3,7 @@ import dados from "./aparelhos.json";
 import roteiroExtensora from "./roteiros/cadeira-extensora.json";
 import roteiroFlexora from "./roteiros/cadeira-flexora.json";
 import roteiroDesenvolvimento from "./roteiros/desenvolvimento.json";
+import roteiroPuxada from "./roteiros/puxada-frontal.json";
 import roteiroRemada from "./roteiros/remada-baixa.json";
 import roteiroLegPress from "./roteiros/leg-press-45.json";
 import roteiroSupino from "./roteiros/supino-reto.json";
@@ -26,6 +27,7 @@ const ROTEIROS: Record<string, Roteiro> = {
   "cadeira-flexora": roteiroFlexora as Roteiro,
   desenvolvimento: roteiroDesenvolvimento as Roteiro,
   "remada-baixa": roteiroRemada as Roteiro,
+  "puxada-frontal": roteiroPuxada as Roteiro,
 };
 
 export interface RoteiroPronto {

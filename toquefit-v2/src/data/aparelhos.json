@@ -61,7 +61,8 @@
       "errs": [
         "Tirar o quadril do banco na descida.",
         "Deixar os joelhos caírem para dentro."
-      ]
+      ],
+      "roteiro": "leg-press-45"
     },
     {
       "slug": "puxada-frontal",

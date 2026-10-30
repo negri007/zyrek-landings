@@ -37,7 +37,14 @@ export function fresh(): Estado {
 }
 
 function load(): Estado | null {
-  try { const r = localStorage.getItem(KEY); return r ? (JSON.parse(r) as Estado) : null; } catch { return null; }
+  try {
+    const r = localStorage.getItem(KEY);
+    if (!r) return null;
+    const e = JSON.parse(r) as Estado;
+    // roteiros gravados depois que o estado foi salvo passam a valer para os aparelhos de exemplo
+    for (const m of e.machines) m.roteiro = DADOS.aparelhos.find((a) => a.slug === m.slug)?.roteiro;
+    return e;
+  } catch { return null; }
 }
 export function save() {
   try { localStorage.setItem(KEY, JSON.stringify(S)); } catch { /* modo privado: segue só na memória */ }

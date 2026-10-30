@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 384" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <rect width="400" height="384" fill="#0B0D10"/>
+  <g stroke="#3A4048" stroke-width="2"><path d="M30 300h340"/><path d="M110 300v-50M236 300v-74M330 300v-168"/><path d="M200 228l136-136"/></g>
+  <g stroke="#3A4048" stroke-width="10"><path d="M96 246l42 6"/><path d="M90 236l-62-54"/></g>
+  <g stroke="#8E96A0" stroke-width="10"><path d="M118 238L58 186"/><path d="M118 238l22-82 64 6"/></g>
+  <circle cx="44" cy="172" r="17" stroke="#8E96A0" stroke-width="8"/>
+  <path d="M74 200l52 34" stroke="#8E96A0" stroke-width="8"/>
+  <g stroke="#F3FF2C" stroke-width="5"><path d="M186 132l50 50"/><path d="M226 122l-20 20M250 146l-20 20"/></g>
+  <text x="200" y="352" fill="#8E96A0" font-family="system-ui,sans-serif" font-size="15" text-anchor="middle">Leg press 45° · joelhos a 90° na linha dos pés</text>
+</svg>

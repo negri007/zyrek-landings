@@ -1,18 +1,21 @@
 // Player do roteiro: relógio guiado pelo áudio, legenda, números de ênfase, cena 3D e controles.
 import { animate } from "motion";
-import type { Motor } from "../cena/motor";
-import type { criarSupino } from "../cena/supino";
+import { infoCena } from "../cena/catalogo";
+import type { CenaRoteiro, Motor } from "../cena/motor";
 import { Legenda } from "./legenda";
 import { trechoEm, type Destaque, type Linha, type Trecho } from "./timeline";
 import { icone } from "../ui/icones";
+import { esc } from "../ui/util";
 
 export interface OpcoesPlayer {
   linha: Linha;
   instrutora: string;
   selos?: Record<string, { tx: string; tom: "bad" | "good" }>;
   reduzido: boolean;
-  /** supino = instrutora 3D com roteiro; pilha = pilha de anilhas para aparelhos sem roteiro próprio */
-  tipo?: "supino" | "pilha";
+  /** roteiro gravado: abre a cena 3D da instrutora; sem ele, a pilha de anilhas */
+  roteiro?: string;
+  /** cartão no fim do vídeo: o que o aluno faz agora */
+  fim?: { titulo: string; texto: string };
   /** só para testes: usa a imagem estática no lugar da cena 3D */
   sem3d?: boolean;
   onTrecho?(tr: Trecho): void;
@@ -25,7 +28,7 @@ let somLiberado = false; // depois do primeiro toque, a voz fica ligada nas pró
 
 export function criarPlayer(host: HTMLElement, o: OpcoesPlayer) {
   const L = o.linha;
-  const tipo = o.tipo || "supino";
+  const info = infoCena(o.roteiro);
   const temVoz = L.trechos.some((x) => x.audio);
   host.classList.add("player");
   host.innerHTML = `
@@ -36,10 +39,11 @@ export function criarPlayer(host: HTMLElement, o: OpcoesPlayer) {
       <div class="big" aria-hidden="true"><span class="big-t"></span><i class="big-x"></i></div>
       <button class="ouvir" type="button" ${somLiberado || !temVoz ? "hidden" : ""}>${icone("som")}<span>Toque para ouvir a instrutora</span></button>
       <div class="carregando" role="status">
-        <svg viewBox="0 0 160 70" aria-hidden="true"><path class="c-bar" pathLength="1" d="M6 22h148"/><path class="c-anilha" pathLength="1" d="M22 8v28M30 4v36M138 8v28M130 4v36"/><path class="c-banco" pathLength="1" d="M18 56h124M44 56v12M116 56v12M60 22l-4 34M100 22l4 34"/></svg>
-        <span class="c-t">${tipo === "supino" ? "Preparando a instrutora" : "Carregando o aparelho"}</span><span class="c-p num">0%</span>
+        <svg viewBox="0 0 160 70" aria-hidden="true">${info.desenho}</svg>
+        <span class="c-t">${info.carregando}</span><span class="c-p num">0%</span>
       </div>
       <div class="replay" hidden>${icone("lento")} Replay em câmera lenta · 0,5×</div>
+      ${o.fim ? `<div class="fim" hidden><b>${esc(o.fim.titulo)}</b><span>${esc(o.fim.texto)}</span><button class="btn sm" type="button" data-a="denovo">${icone("repetir")} Ver de novo</button></div>` : ""}
     </div>
     <div class="ctl">
       <div class="bar" role="slider" tabindex="0" aria-label="Posição do vídeo" aria-valuemin="0" aria-valuemax="${Math.round(L.dur)}" aria-valuenow="0">
@@ -79,7 +83,7 @@ export function criarPlayer(host: HTMLElement, o: OpcoesPlayer) {
 
   // ---- cena 3D (three.js baixado só quando o player aparece na tela) ----
   let m: Motor | null = null;
-  let cena: ReturnType<typeof criarSupino> | null = null;
+  let cena: CenaRoteiro | null = null;
   let destruido = false;
   const caixas = (sel: string[]) => {
     const sr = stage.getBoundingClientRect();
@@ -98,7 +102,7 @@ export function criarPlayer(host: HTMLElement, o: OpcoesPlayer) {
   };
   // sem WebGL ou se algo falhar: imagem estática, nunca área vazia
   const estatica = () => {
-    stage.insertAdjacentHTML("afterbegin", `<img class="estatica" src="${import.meta.env.BASE_URL}img/${tipo === "supino" ? "supino-estatico" : "pilha-estatica"}.svg" alt="">`);
+    stage.insertAdjacentHTML("afterbegin", `<img class="estatica" src="${import.meta.env.BASE_URL}img/${info.estatica}" alt="">`);
     queueMicrotask(() => marcarPronto("estatico")); // depois que os controles abaixo existirem
   };
   const temWebGL = () => { try { const c = document.createElement("canvas"); return !!(c.getContext("webgl2") || c.getContext("webgl")); } catch { return false; } };
@@ -112,8 +116,9 @@ export function criarPlayer(host: HTMLElement, o: OpcoesPlayer) {
         if (destruido) return;
         m = mod.motor();
         if (!m) { estatica(); return; }
-        if (tipo === "supino") {
-          cena = mod.criarSupino({ linha: () => L, tempo: () => t, overlay: ov, reduzido: o.reduzido, evitar: () => caixas([".ouvir", ".selo", ".replay", ".who b", ".big.on"]) });
+        const criar = o.roteiro ? mod.CENAS[o.roteiro] : undefined;
+        if (criar) {
+          cena = criar({ linha: () => L, tempo: () => t, overlay: ov, reduzido: o.reduzido, evitar: () => caixas([".ouvir", ".selo", ".replay", ".who b", ".big.on"]) });
           if (import.meta.env.DEV) (window as unknown as { __cena: typeof cena }).__cena = cena;
           m.montar(stage, cena);
           const modo = await cena.carregar((p) => {
@@ -127,6 +132,7 @@ export function criarPlayer(host: HTMLElement, o: OpcoesPlayer) {
         }
       } catch (e) {
         console.warn("[toquefit] cena 3D indisponível", e);
+        m?.desmontar();
         estatica();
       }
     });
@@ -141,9 +147,17 @@ export function criarPlayer(host: HTMLElement, o: OpcoesPlayer) {
     bPlay.innerHTML = icone(tocando ? "pausa" : fim ? "repetir" : "play");
     bPlay.setAttribute("aria-label", tocando ? "Pausar" : fim ? "Ver de novo" : "Tocar");
   }
+  const cartaoFim = host.querySelector<HTMLElement>(".fim");
+  function mostrarFim(v: boolean) {
+    if (!cartaoFim || cartaoFim.hidden === !v) return;
+    cartaoFim.hidden = !v;
+    stage.classList.toggle("no-fim", v);
+    if (v && !o.reduzido) animate(cartaoFim, { opacity: [0, 1], transform: ["translateY(14px) scale(.96)", "translateY(0px) scale(1)"] }, { type: "spring", bounce: 0.25, visualDuration: 0.45 });
+  }
   function play() {
     if (!pronto) return;
     if (fim) { seek(0); fim = false; }
+    mostrarFim(false);
     tocando = true;
     host.classList.add("tocando");
     setPlayIcon();
@@ -158,6 +172,7 @@ export function criarPlayer(host: HTMLElement, o: OpcoesPlayer) {
   function seek(nt: number) {
     t = Math.max(0, Math.min(L.dur - 0.01, nt));
     fim = false;
+    mostrarFim(false);
     destFeitos.clear(); // a janela de 1,5 s no laço impede que destaques antigos reapareçam
     esconderGrande();
     syncVoz(true);
@@ -207,6 +222,7 @@ export function criarPlayer(host: HTMLElement, o: OpcoesPlayer) {
   };
   bOuvir.onclick = ligarSom;
   // tocar no vídeo também libera a voz
+  host.querySelector<HTMLElement>("[data-a=denovo]")?.addEventListener("click", play);
   stage.addEventListener("pointerup", (e) => {
     if ((e.target as HTMLElement).closest("button")) return;
     if (!som && temVoz) ligarSom();
@@ -287,7 +303,10 @@ export function criarPlayer(host: HTMLElement, o: OpcoesPlayer) {
     selo.innerHTML = icone(s.tom === "bad" ? "x" : "check") + s.tx;
     selo.className = "selo " + s.tom;
     selo.hidden = false;
-    if (!o.reduzido) animate(selo, { opacity: [0, 1], transform: ["translateY(-6px)", "none"] }, { duration: 0.3 });
+    if (o.reduzido) return;
+    // certo entra com mola; errado chega com um tremor curto, como um "não" de cabeça
+    if (s.tom === "good") animate(selo, { opacity: [0, 1], transform: ["scale(.6)", "scale(1)"] }, { type: "spring", bounce: 0.45, visualDuration: 0.35 });
+    else animate(selo, { opacity: [0, 1, 1, 1, 1], transform: ["translateX(0)", "translateX(-6px)", "translateX(5px)", "translateX(-3px)", "translateX(0)"] }, { duration: 0.42, ease: "easeOut" });
   }
 
   // ---- laço da interface ----
@@ -313,7 +332,7 @@ export function criarPlayer(host: HTMLElement, o: OpcoesPlayer) {
         if (Math.abs(dif) > 0.8) { voz.currentTime = t - tr.t0 - tr.ini; seekEm = now; }
         else if (dif > 0 || dif < -0.08) t = alvo;
       }
-      if (t >= L.dur) { t = L.dur - 0.01; tocando = false; fim = true; host.classList.remove("tocando"); voz.pause(); setPlayIcon(); o.onFim?.(); }
+      if (t >= L.dur) { t = L.dur - 0.01; tocando = false; fim = true; host.classList.remove("tocando"); voz.pause(); setPlayIcon(); mostrarFim(true); o.onFim?.(); }
       syncVoz();
     }
     const tr = trechoEm(L, t);

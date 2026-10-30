@@ -33,7 +33,7 @@ export function renderPainel(animar: boolean) {
   $("tbody").innerHTML = S.machines.map((m) => `<tr>
     <td><b>${esc(m.name)}</b><small>${esc(m.group)}</small></td>
     <td><span class="tg">${esc(m.tag)}</span></td>
-    <td>${m.video ? `<span class="pill ok">Com vídeo</span>` : `<span class="pill no">Sem vídeo</span>`}</td>
+    <td>${!m.video ? `<span class="pill no">Sem vídeo</span>` : m.roteiro ? `<span class="pill neon">Instrutora 3D</span>` : `<span class="pill ok">Com vídeo</span>`}</td>
     <td><div class="cell-n"><span class="num">${fmt(m.t7)}</span>${haltere(m.t7 / max, "mini-h")}</div></td>
     <td><div class="row-acts"><a href="#m-${m.slug}">Ver página</a><button type="button" data-edit="${m.slug}">${m.video ? "Editar" : "Enviar vídeo"}</button></div></td></tr>`).join("");
   // halteres: o eixo acende até o valor e as anilhas deslizam até lá

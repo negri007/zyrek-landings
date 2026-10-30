@@ -1,11 +1,31 @@
 // Renderizador único reaproveitado entre os aparelhos. Só desenha quando o player está na tela e a aba visível.
 import * as THREE from "three";
+import type { Linha } from "../player/timeline";
+import type { Caixa } from "./rotulos";
 
 export interface Cena {
   scene: THREE.Scene;
   camera: THREE.PerspectiveCamera;
   frame(now: number, dt: number): void;
   resize?(w: number, h: number): void;
+}
+
+/** O que o player passa para uma cena com instrutora e roteiro. */
+export interface OpcoesCena {
+  linha: () => Linha;
+  tempo: () => number;
+  overlay: HTMLElement;
+  reduzido: boolean;
+  /** caixas da interface por cima do vídeo (aviso, selos) que os rótulos também devem evitar */
+  evitar?: () => Caixa[];
+}
+
+/** Cena com instrutora: carrega o modelo e ajuda o player a achar espaço livre na tela. */
+export interface CenaRoteiro extends Cena {
+  pronto: boolean;
+  /** "manequim" quando o modelo não carregou e a cena usa o boneco de reserva; rejeita quando não há reserva */
+  carregar(onProg: (p: number) => void): Promise<"modelo" | "manequim">;
+  livre(cands: { x: number; y: number }[], w: number, h: number, margem?: number, topo?: number, evitar?: Caixa[], folga?: number): { x: number; y: number };
 }
 
 export class Motor {

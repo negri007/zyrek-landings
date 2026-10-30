@@ -1,8 +1,10 @@
 """Gera a narração de cada trecho do roteiro com edge-tts e salva os tempos das palavras.
 
 Uso:
-  python ferramentas/gerar_voz.py                      # todos os trechos
-  python ferramentas/gerar_voz.py cotovelos-errado ... # só os trechos indicados
+  python ferramentas/gerar_voz.py                                   # todos os trechos do supino
+  python ferramentas/gerar_voz.py cotovelos-errado ...              # só os trechos indicados
+  python ferramentas/gerar_voz.py --roteiro leg-press-45            # outro roteiro
+  python ferramentas/gerar_voz.py --roteiro leg-press-45 descida    # um trecho de outro roteiro
 
 Saída em public/audio/<slug>/: <id>.mp3 e <id>.json com
   { id, dur, words: [{ w, t, d }] }   (t e d em segundos)
@@ -20,7 +22,7 @@ from pathlib import Path
 import edge_tts
 
 RAIZ = Path(__file__).resolve().parent.parent
-ROTEIRO = RAIZ / "src" / "data" / "roteiros" / "supino-reto.json"
+ROTEIROS = RAIZ / "src" / "data" / "roteiros"
 MARCA = re.compile(r"\[\[([^\]|]+)(?:\|[^\]]*)?\]\]")
 
 
@@ -106,10 +108,16 @@ async def gerar(trecho, voz, pasta: Path):
 
 
 async def main():
-    rot = json.loads(ROTEIRO.read_text(encoding="utf-8"))
+    args = sys.argv[1:]
+    slug = "supino-reto"
+    if args[:1] == ["--roteiro"]:
+        if len(args) < 2:
+            sys.exit("Informe o roteiro: --roteiro leg-press-45")
+        slug, args = args[1], args[2:]
+    rot = json.loads((ROTEIROS / f"{slug}.json").read_text(encoding="utf-8"))
     pasta = RAIZ / "public" / "audio" / rot["slug"]
     pasta.mkdir(parents=True, exist_ok=True)
-    so = set(sys.argv[1:])
+    so = set(args)
     for t in rot["trechos"]:
         if not so or t["id"] in so:
             await gerar(t, rot["voz"], pasta)

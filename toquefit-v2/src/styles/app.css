@@ -19,6 +19,10 @@ body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.55 var(
 button, input, select, textarea { font: inherit; color: inherit }
 button { cursor: pointer; -webkit-tap-highlight-color: transparent }
 :focus-visible { outline: 2px solid var(--neon); outline-offset: 3px; border-radius: 8px }
+::selection { background: var(--neon); color: var(--neon-ink) }
+input, textarea { caret-color: var(--neon) }
+html { scrollbar-color: var(--surface-2) var(--bg) }
+a { text-underline-offset: .2em }
 h1, h2, h3 { margin: 0; text-wrap: balance }
 p { text-wrap: pretty }
 [hidden] { display: none !important }
@@ -61,9 +65,9 @@ p { text-wrap: pretty }
 .carregando { position: absolute; inset: 0; z-index: 5; display: grid; place-content: center; justify-items: center; gap: 6px; background: radial-gradient(120% 90% at 50% 18%, #222830, #0B0D10 72%); --prog: 0 }
 .carregando svg { width: 150px; height: 66px; margin-bottom: 12px; overflow: visible }
 .carregando path { fill: none; stroke: var(--neon); stroke-width: 2.4; stroke-linecap: round; stroke-dasharray: 1; filter: drop-shadow(0 0 6px var(--neon-glow)) }
-.carregando .c-bar { stroke-dashoffset: calc(1 - min(1, var(--prog) * 2.2)) }
-.carregando .c-anilha { stroke-dashoffset: calc(1 - min(1, max(0, var(--prog) * 2.2 - .5))) }
-.carregando .c-banco { stroke: var(--dim); filter: none; stroke-dashoffset: calc(1 - min(1, max(0, var(--prog) * 1.6 - .5))) }
+.carregando .c-1 { stroke-dashoffset: calc(1 - min(1, var(--prog) * 2.2)) }
+.carregando .c-2 { stroke-dashoffset: calc(1 - min(1, max(0, var(--prog) * 2.2 - .5))) }
+.carregando .c-3 { stroke: var(--dim); filter: none; stroke-dashoffset: calc(1 - min(1, max(0, var(--prog) * 1.6 - .5))) }
 .carregando .c-t { font: 600 14px/1.2 var(--display); letter-spacing: .02em }
 .carregando .c-p { font: 500 12px/1 var(--mono); color: var(--muted) }
 .carregando::after { content: ""; position: absolute; left: 0; right: 0; height: 40%; top: -40%; background: linear-gradient(transparent, rgba(243, 255, 44, .05), transparent); animation: varre 1.8s var(--ease) infinite }
@@ -71,6 +75,13 @@ p { text-wrap: pretty }
 
 .replay { position: absolute; top: 34px; right: 12px; z-index: 3; display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 999px; background: rgba(10, 12, 15, .78); border: 1px solid var(--edge-2); font: 600 11.5px/1 var(--body); color: var(--ink) }
 .replay .ic { width: 14px; height: 14px; color: var(--neon) }
+
+/* fim do vídeo: a série que o aluno faz agora */
+.fim { position: absolute; left: 12px; right: 12px; bottom: 12px; z-index: 6; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 2px 12px; padding: 14px 14px 14px 16px; border-radius: 16px; background: rgba(11, 13, 16, .86); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); box-shadow: 0 0 0 1px rgba(243, 255, 44, .35) inset, 0 18px 40px -18px rgba(0, 0, 0, .8); cursor: default }
+.fim b { font: 780 19px/1.1 var(--display); font-stretch: 88%; color: var(--neon) }
+.fim span { grid-column: 1; font-size: 13.5px; color: var(--ink-2) }
+.fim .btn { grid-column: 2; grid-row: 1 / span 2 }
+.stage.no-fim canvas { filter: brightness(.55) saturate(.8); transition: filter .4s var(--ease) }
 
 /* legenda karaokê */
 .cap { position: relative; padding: 12px 16px 2px; min-height: calc(2 * 1.36em + 14px); font: 620 17px/1.36 var(--display); font-stretch: 96%; letter-spacing: .003em; }

@@ -59,7 +59,7 @@ export async function renderAluno(slug: string, contarToque: boolean) {
     <section class="sec"><h2>Passo a passo</h2><ol class="steps" id="steps">${m.steps.map((s) => `<li><span>${esc(s)}</span></li>`).join("")}</ol></section>
     ${m.errs?.length ? `<section class="sec"><h2>Evite</h2><ul class="errs">${m.errs.map((e) => `<li>${esc(e)}</li>`).join("")}</ul></section>` : ""}
     <section class="sec" id="fbsec"><h2>Esse vídeo te ajudou?</h2><div class="fb"><button class="btn" type="button" data-fb="yes">Ajudou</button><button class="btn" type="button" data-fb="no">Não ajudou</button></div></section>
-    <p class="p-foot">${esc(DADOS.academia.toUpperCase())} · TECNOLOGIA TOQUEFIT</p>`;
+    <p class="p-foot">${esc(DADOS.academia)} · com tecnologia ToqueFit</p>`;
   $("p-cta").innerHTML = pendente
     ? `<button class="btn primary" type="button" disabled>${icone("check")} Instrutor avisado · aguarde no aparelho</button>`
     : `<button class="btn primary" type="button" id="call">${icone("chamar")} Chamar instrutor</button>`;
@@ -95,7 +95,7 @@ export async function renderAluno(slug: string, contarToque: boolean) {
     const chs = $("chapters");
     chs.innerHTML = r.linha.capitulos.map((c) => `<button type="button" data-t="${c.t0}" aria-current="false">${esc(c.ch)}</button>`).join("");
     player = criarPlayer(host, {
-      linha: r.linha, instrutora: r.instrutora, selos: r.selos, reduzido: RM, sem3d,
+      linha: r.linha, instrutora: r.instrutora, selos: r.selos, reduzido: RM, sem3d, roteiro: m.roteiro, fim: proximoPasso(m),
       onTrecho(tr) {
         marcarPasso(tr.step);
         chs.querySelectorAll<HTMLButtonElement>("button").forEach((b) => {
@@ -113,12 +113,19 @@ export async function renderAluno(slug: string, contarToque: boolean) {
     chs.querySelectorAll<HTMLButtonElement>("button").forEach((b) => (b.onclick = () => player?.seek(+b.dataset.t!)));
   } else {
     player = criarPlayer(host, {
-      linha: linhaDePassos(m), instrutora: DADOS.instrutorPadrao, reduzido: RM, sem3d, tipo: "pilha",
+      linha: linhaDePassos(m), instrutora: DADOS.instrutorPadrao, reduzido: RM, sem3d, fim: proximoPasso(m),
       onTrecho(tr) { marcarPasso(tr.step); },
       onFim() { steps.forEach((li) => li.classList.remove("on")); $("steps").classList.remove("live"); },
     });
   }
   if (import.meta.env.DEV) (window as unknown as { __player: Player }).__player = player;
+}
+
+/** Cartão do fim do vídeo: a série que o aluno vai fazer agora. */
+function proximoPasso(m: Maquina) {
+  const se = lerSeries(m.sets || "");
+  const texto = se ? `${se.n} séries de ${se.reps} repetições` : m.sets || "Siga o passo a passo abaixo";
+  return { titulo: "Agora é com você", texto: m.rest ? `${texto} · descanso de ${m.rest}` : texto };
 }
 
 /** Séries como anilhas na barra e ajuste como o pino seletor da máquina. */

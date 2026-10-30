@@ -67,7 +67,7 @@
 .pecas { display: grid; grid-template-columns: 1fr 1fr; gap: 10px }
 .peca { position: relative; display: flex; flex-direction: column; gap: 8px; min-width: 0; padding: 14px 14px 13px; border-radius: var(--r-md); border: 1px solid var(--edge);
   background: linear-gradient(180deg, rgba(255, 255, 255, .035), transparent 40%), linear-gradient(160deg, #22262C, #181B20); box-shadow: 0 1px 0 rgba(255, 255, 255, .05) inset, 0 10px 24px -18px rgba(0, 0, 0, .9) }
-.peca .k { font: 650 11px/1 var(--display); letter-spacing: .14em; text-transform: uppercase; color: var(--muted) }
+.peca .k { font: 600 13px/1 var(--body); color: var(--muted) }
 .peca > svg { display: block; width: 100%; height: auto; overflow: visible }
 .peca .pv { margin: 0; font: 600 14px/1.25 var(--display); color: var(--muted) }
 .peca .pv b { font: 800 21px/1 var(--display); font-stretch: 86%; color: var(--ink) }
@@ -87,7 +87,7 @@
 .seletor .pino rect { fill: var(--aco-claro) }
 .seletor .pino circle { fill: var(--neon); stroke: rgba(20, 23, 27, .5); stroke-width: 1.2 }
 .sec { display: flex; flex-direction: column; gap: 12px }
-.sec h2 { font: 650 12px/1 var(--display); letter-spacing: .14em; text-transform: uppercase; color: var(--muted) }
+.sec h2 { font: 760 19px/1.15 var(--display); font-stretch: 88%; letter-spacing: -.005em; color: var(--ink) }
 .steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px; counter-reset: s }
 .steps li { counter-increment: s; display: grid; grid-template-columns: 28px 1fr; gap: 12px; align-items: start; transition: opacity .35s, transform .35s var(--ease); color: var(--ink-2) }
 /* número do passo numa anilha: aro e sulco; a do passo atual gira e acende */
@@ -103,7 +103,7 @@
 .fb { display: flex; gap: 8px; flex-wrap: wrap }
 .thanks { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--good); font-weight: 600; margin: 0 }
 .thanks .ic { width: 18px; height: 18px }
-.p-foot { font-size: 11px; color: var(--dim); text-align: center; letter-spacing: .06em; margin: 4px 0 0 }
+.p-foot { font-size: 12px; color: var(--dim); text-align: center; margin: 4px 0 0 }
 
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; border: 1px solid var(--edge-2); background: rgba(255, 255, 255, .03); border-radius: 12px; padding: 9px 16px; font-weight: 600; text-decoration: none; transition: border-color .2s, background .2s, transform .2s var(--ease), box-shadow .2s }
 .btn:hover { border-color: rgba(255, 255, 255, .3); background: rgba(255, 255, 255, .06) }
@@ -135,7 +135,6 @@
 /* lateral */
 .aside { display: flex; flex-direction: column; gap: 24px; min-width: 0 }
 .aside-h { display: flex; flex-direction: column; gap: 14px }
-.eyebrow { font: 650 12px/1 var(--display); letter-spacing: .18em; text-transform: uppercase; color: var(--neon) }
 .aside h2 { font: 800 48px/1 var(--display); font-stretch: 80%; letter-spacing: -.015em; max-width: 13ch }
 .aside p { margin: 0; color: var(--muted); max-width: 52ch }
 .mlist { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px }
@@ -201,7 +200,7 @@
 .kpi-barra { margin-top: 8px; display: flex; flex-direction: column; gap: 4px }
 .kpi-barra svg { display: block; width: 100%; max-width: 300px; height: auto; overflow: visible }
 .kb-leg { font-size: 11.5px; color: var(--dim) }
-.kpi .l { font: 650 11.5px/1.2 var(--display); color: var(--muted); letter-spacing: .14em; text-transform: uppercase }
+.kpi .l { font: 600 13.5px/1.2 var(--body); color: var(--ink-2) }
 .kpi .v { font: 800 46px/1 var(--display); font-stretch: 82%; margin-top: 6px }
 .kpi.hero { border-color: rgba(243, 255, 44, .3); background: radial-gradient(120% 140% at 100% 0%, rgba(243, 255, 44, .13), transparent 55%), linear-gradient(180deg, var(--surface), var(--bg-2)) }
 .kpi.hero .v { color: var(--neon); text-shadow: 0 0 24px rgba(243, 255, 44, .35) }
@@ -248,7 +247,7 @@
 .tbl-wrap { overflow-x: auto; margin: 0 -20px }
 table { width: 100%; border-collapse: collapse; min-width: 640px }
 th, td { text-align: left; padding: 13px 20px; border-top: 1px solid var(--edge); vertical-align: middle }
-th { font: 650 11px/1 var(--display); letter-spacing: .14em; text-transform: uppercase; color: var(--dim); border-top: 0 }
+th { font: 600 12.5px/1 var(--body); color: var(--muted); border-top: 0 }
 tbody tr { transition: background .2s }
 tbody tr:hover { background: rgba(255, 255, 255, .025) }
 td small { display: block; color: var(--muted); font-size: 12.5px }
@@ -257,6 +256,7 @@ td .tg { font: 500 12px var(--mono); color: var(--muted); white-space: nowrap }
 .pill::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; box-shadow: 0 0 8px currentColor }
 .pill.ok { background: var(--good-bg); color: var(--good) }
 .pill.no { background: var(--warn-bg); color: var(--warn) }
+.pill.neon { background: var(--neon-soft); color: var(--neon) }
 .cell-n { display: flex; align-items: center; gap: 10px }
 .cell-n .num { min-width: 2.5em }
 

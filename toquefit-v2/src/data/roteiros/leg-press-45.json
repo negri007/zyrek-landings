@@ -1,0 +1,26 @@
+{
+  "slug": "leg-press-45",
+  "instrutora": "Prof.ª Camila Rocha · CREF 054321-G/SP",
+  "voz": "pt-BR-FranciscaNeural",
+  "nota": "Mesma marcação do supino-reto.json. As câmeras (cam) estão em src/cena/legpress.ts: side, close, tq, cima e lento (replay).",
+  "trechos": [
+    { "id": "posicao", "ch": "Posição", "cam": "side", "step": 0, "pausa": 1.4,
+      "say": "Sente com as [[costas inteiras|ok]] no encosto e o quadril bem encaixado no banco." },
+    { "id": "pes", "ch": "Pés", "cam": "cima", "step": 0, "pausa": 1.6,
+      "say": "Pés no meio da plataforma, na [[largura do quadril|ok]], com as pontas um pouco para fora." },
+    { "id": "destravar", "ch": "Destravar", "cam": "tq", "step": 1, "pausa": 1.6,
+      "say": "Empurre um pouco a plataforma e [[gire as travas|ok]] para soltar." },
+    { "id": "descida", "ch": "Descida", "cam": "close", "step": 2, "pausa": 0.4, "replay": { "de": 0.0, "ate": 3.4, "vel": 0.5 },
+      "say": "Desça devagar, em uns [[3 segundos|ok|grande]], até os joelhos formarem [[90°|ok|grande]]." },
+    { "id": "quadril-errado", "ch": "Quadril", "cam": "side", "step": 2, "pausa": 1.6, "selo": { "tx": "Errado", "tom": "bad" },
+      "say": "Descer demais tira o [[quadril do banco|bad]] e força a lombar. [[Assim não.|bad]]" },
+    { "id": "joelhos-errado", "ch": "Joelhos", "cam": "cima", "step": 2, "pausa": 1.4, "selo": { "tx": "Errado", "tom": "bad" },
+      "say": "Visto de cima: joelhos [[caindo para dentro|bad]] machucam. [[Assim não.|bad]]" },
+    { "id": "joelhos-certo", "ch": "Joelhos", "cam": "cima", "step": 2, "pausa": 2.0, "selo": { "tx": "Certo", "tom": "good" },
+      "say": "O certo é manter os joelhos [[na linha dos pés|ok]], apontando para fora." },
+    { "id": "subida", "ch": "Subida", "cam": "tq", "step": 3, "antes": 1.4, "pausa": 1.2,
+      "say": "Empurre com o [[calcanhar|ok]], soltando o ar, [[sem travar os joelhos|ok]] no final." },
+    { "id": "travar", "ch": "Travas", "cam": "side", "step": 1, "pausa": 2.2,
+      "say": "Na última repetição, [[gire as travas|ok]] de volta antes de sair. Mandou bem!" }
+  ]
+}

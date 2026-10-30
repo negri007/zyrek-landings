@@ -1,5 +1,6 @@
 // Carrega os dados de exemplo e o roteiro. Hoje vêm de JSON estático; depois viram chamadas à API.
 import dados from "./aparelhos.json";
+import roteiroExtensora from "./roteiros/cadeira-extensora.json";
 import roteiroLegPress from "./roteiros/leg-press-45.json";
 import roteiroSupino from "./roteiros/supino-reto.json";
 import { montarLinha, type Linha, type TrechoRoteiro } from "../player/timeline";
@@ -18,6 +19,7 @@ interface Roteiro {
 const ROTEIROS: Record<string, Roteiro> = {
   "supino-reto": roteiroSupino as Roteiro,
   "leg-press-45": roteiroLegPress as Roteiro,
+  "cadeira-extensora": roteiroExtensora as Roteiro,
 };
 
 export interface RoteiroPronto {

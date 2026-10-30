@@ -106,7 +106,8 @@
       "errs": [
         "Usar impulso no início do movimento.",
         "Deixar a carga bater na pilha entre as repetições."
-      ]
+      ],
+      "roteiro": "cadeira-extensora"
     },
     {
       "slug": "remada-baixa",

@@ -50,6 +50,8 @@
 .chapters button { position: relative; flex: none; font-size: 13px; font-weight: 600; min-height: 40px; padding: 0 13px; border-radius: 999px; border: 1px solid var(--edge-2); background: transparent; color: var(--muted); transition: color .25s, background .25s, border-color .25s }
 .chapters button::after { content: ""; position: absolute; inset: -3px -2px }
 .chapters button:hover { color: var(--ink); border-color: rgba(255, 255, 255, .3) }
+.chapters button.visto { color: var(--ink-2); padding-left: 24px }
+.chapters button.visto::before { content: ""; position: absolute; left: 11px; top: 50%; width: 7px; height: 7px; margin-top: -3.5px; border-radius: 50%; background: var(--neon); box-shadow: 0 0 8px var(--neon-glow) }
 .chapters button[aria-current="true"] { background: var(--neon-soft); border-color: rgba(243, 255, 44, .55); color: var(--neon) }
 .m-title { display: flex; flex-direction: column; gap: 10px; margin-top: 4px }
 .m-title h1 { font: 800 36px/1 var(--display); font-stretch: 84%; letter-spacing: -.01em }
@@ -74,6 +76,15 @@
 .peca .pv.livre { font: 500 14px/1.4 var(--body); color: var(--ink) }
 .peca .ps { margin: 0; display: flex; align-items: center; gap: 6px; font-size: 12.5px; line-height: 1.35; color: var(--muted) }
 .barra-series .eixo, .barra-carregada .eixo { fill: var(--aco) }
+.barra-series .pl.feita { fill: var(--aco-claro) }
+/* contador de séries: botão da série, depois o descanso correndo */
+.serie-ctl { display: flex; flex-direction: column; gap: 8px; margin-top: 4px }
+.serie-ctl .btn { width: 100% }
+.desc-t { margin: 0; display: flex; align-items: baseline; justify-content: space-between; font-size: 12.5px; color: var(--muted) }
+.desc-t b { font: 800 22px/1 var(--display); font-stretch: 86%; color: var(--neon) }
+.desc-barra { height: 4px; border-radius: 2px; background: rgba(255, 255, 255, .1); overflow: hidden }
+.desc-barra i { display: block; height: 100%; background: var(--neon); transform-origin: 0 50%; transition: transform .25s linear }
+.serie-ok { margin: 0; font: 700 14px/1.2 var(--display); color: var(--good) }
 .barra-series .recart, .barra-carregada .recart { fill: #464D56 }
 .barra-series .colar, .barra-series .trava, .barra-carregada .colar { fill: var(--aco-claro) }
 .barra-series .pl, .barra-carregada .pl { fill: var(--neon); stroke: rgba(20, 23, 27, .45); stroke-width: 1 }

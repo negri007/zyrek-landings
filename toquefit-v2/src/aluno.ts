@@ -7,6 +7,7 @@ import { montarLinha } from "./player/timeline";
 import { icone } from "./ui/icones";
 import { $, RM, esc, toast } from "./ui/util";
 import { anilha, animarSeletor, animarSeries, barraSeries, cronometro, girarAnilha, lerAjuste, lerSeries, seletor } from "./ui/academia";
+import { lerDescanso, ligarSeries } from "./ui/series";
 
 type Player = ReturnType<typeof criarPlayer>;
 let player: Player | null = null;
@@ -66,6 +67,8 @@ export async function renderAluno(slug: string, contarToque: boolean) {
   sc.scrollTop = 0;
   animarSeries(sc);
   animarSeletor(sc);
+  const se = lerSeries(m.sets || "");
+  if (se) ligarSeries(sc.querySelector<HTMLElement>(".peca.series")!, se.n, lerDescanso(m.rest || ""));
 
   sc.querySelectorAll<HTMLButtonElement>("[data-fb]").forEach((b) => (b.onclick = () => {
     S.help[b.dataset.fb as "yes" | "no"]++;
@@ -98,7 +101,11 @@ export async function renderAluno(slug: string, contarToque: boolean) {
       linha: r.linha, instrutora: r.instrutora, selos: r.selos, reduzido: RM, sem3d, roteiro: m.roteiro, fim: proximoPasso(m),
       onTrecho(tr) {
         marcarPasso(tr.step);
-        chs.querySelectorAll<HTMLButtonElement>("button").forEach((b) => {
+        const bts = [...chs.querySelectorAll<HTMLButtonElement>("button")];
+        const idx = bts.findIndex((b) => b.textContent === tr.ch);
+        // capítulos anteriores ficam marcados como vistos
+        bts.forEach((b, k) => b.classList.toggle("visto", k < idx));
+        bts.forEach((b) => {
           const on = b.textContent === tr.ch;
           if (on && b.getAttribute("aria-current") !== "true") {
             // rola só na horizontal (scrollIntoView também rolaria a tela do celular)
@@ -136,7 +143,8 @@ function cartoes(m: Maquina) {
         ${barraSeries(se.n)}
         <p class="pv"><b class="num">${se.n}</b> séries</p>
         <p class="ps">de ${esc(se.reps)} repetições</p>
-        ${m.rest ? `<p class="ps">${cronometro()}Descanso ${esc(m.rest)}</p>` : ""}</div>`
+        ${m.rest ? `<p class="ps">${cronometro()}Descanso ${esc(m.rest)}</p>` : ""}
+        <div class="serie-ctl" aria-live="polite"></div></div>`
     : `<div class="peca series"><span class="k">Séries</span><p class="pv"><b>${esc(m.sets || "—")}</b></p>${m.rest ? `<p class="ps">${cronometro()}Descanso ${esc(m.rest)}</p>` : ""}</div>`;
   const ajuste = aj
     ? `<div class="peca ajuste"><span class="k">Ajuste</span>

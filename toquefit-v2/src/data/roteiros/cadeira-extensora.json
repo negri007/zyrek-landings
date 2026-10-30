@@ -1,0 +1,26 @@
+{
+  "slug": "cadeira-extensora",
+  "instrutora": "Prof.ª Camila Rocha · CREF 054321-G/SP",
+  "voz": "pt-BR-FranciscaNeural",
+  "nota": "Mesma marcação do supino-reto.json. As câmeras (cam) estão em src/cena/extensora.ts: side, close, tq, pilha e lento (replay).",
+  "trechos": [
+    { "id": "ajuste", "ch": "Ajuste", "cam": "close", "step": 0, "pausa": 1.8,
+      "say": "Antes de tudo: alinhe o [[joelho com o eixo|ok]] da máquina e o rolo logo acima do tornozelo." },
+    { "id": "posicao", "ch": "Posição", "cam": "side", "step": 1, "pausa": 1.4,
+      "say": "Segure as [[alças laterais|ok]] e mantenha o quadril firme no banco." },
+    { "id": "subida", "ch": "Subida", "cam": "tq", "step": 2, "pausa": 0.6,
+      "say": "Estenda as pernas até [[quase travar|ok]], soltando o ar." },
+    { "id": "pico", "ch": "Subida", "cam": "close", "step": 2, "pausa": 0.8,
+      "say": "Segure [[1 segundo|ok|grande]] lá em cima, apertando a coxa." },
+    { "id": "descida", "ch": "Descida", "cam": "side", "step": 3, "pausa": 0.6, "replay": { "de": 0.2, "ate": 3.0, "vel": 0.5 },
+      "say": "Agora desça devagar, em [[2 segundos|ok|grande]], sem deixar o peso bater." },
+    { "id": "impulso-errado", "ch": "Impulso", "cam": "side", "step": 2, "pausa": 1.4, "selo": { "tx": "Errado", "tom": "bad" },
+      "say": "Chutar com impulso tira o [[quadril do banco|bad]]. [[Assim não.|bad]]" },
+    { "id": "bater-errado", "ch": "Carga", "cam": "pilha", "step": 3, "antes": 1.6, "pausa": 1.6, "selo": { "tx": "Errado", "tom": "bad" },
+      "say": "Soltar o peso de uma vez faz a [[carga bater|bad]] na pilha. [[Assim não.|bad]]" },
+    { "id": "certo", "ch": "Controle", "cam": "tq", "step": 3, "pausa": 3.2, "selo": { "tx": "Certo", "tom": "good" },
+      "say": "O certo é subir e descer [[sempre controlando|ok]] o movimento." },
+    { "id": "final", "ch": "Séries", "cam": "side", "step": 3, "pausa": 2.0,
+      "say": "Faça as repetições assim e descanse [[1 minuto|ok]] entre as séries. Mandou bem!" }
+  ]
+}

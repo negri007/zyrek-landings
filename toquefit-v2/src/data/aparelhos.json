@@ -1,0 +1,223 @@
+{
+  "academia": "Titan Academia",
+  "instrutorPadrao": "Prof. Rafael Moura · CREF 012345-G/SP",
+  "toquesPorDia": [
+    96,
+    112,
+    88,
+    124,
+    131,
+    72,
+    58,
+    118,
+    127,
+    104,
+    139,
+    142,
+    81,
+    57
+  ],
+  "aparelhos": [
+    {
+      "slug": "supino-reto",
+      "name": "Supino reto",
+      "group": "Peito",
+      "tag": "TF-A01",
+      "w": 18,
+      "video": true,
+      "dur": 38,
+      "adjust": "Banco na posição 3 · pegada na linha do peito",
+      "sets": "3 × 8–12",
+      "rest": "60 a 90 s",
+      "steps": [
+        "Deite com os pés firmes no chão e as escápulas encaixadas no banco.",
+        "Segure a barra um pouco além da largura dos ombros.",
+        "Desça controlando até perto do peito, cotovelos a uns 45° do tronco.",
+        "Empurre de volta sem tirar o quadril do banco."
+      ],
+      "errs": [
+        "Abrir os cotovelos a 90°, forçando o ombro.",
+        "Quicar a barra no peito."
+      ],
+      "roteiro": "supino-reto"
+    },
+    {
+      "slug": "leg-press-45",
+      "name": "Leg press 45°",
+      "group": "Pernas",
+      "tag": "TF-A02",
+      "w": 22,
+      "video": true,
+      "dur": 42,
+      "adjust": "Encosto na posição 5 · pés na largura do quadril",
+      "sets": "4 × 10–15",
+      "rest": "90 s",
+      "steps": [
+        "Apoie as costas inteiras no encosto e os pés no meio da plataforma.",
+        "Destrave a plataforma girando as alavancas laterais.",
+        "Desça até os joelhos formarem cerca de 90°.",
+        "Empurre sem travar os joelhos no final."
+      ],
+      "errs": [
+        "Tirar o quadril do banco na descida.",
+        "Deixar os joelhos caírem para dentro."
+      ]
+    },
+    {
+      "slug": "puxada-frontal",
+      "name": "Puxada frontal",
+      "group": "Costas",
+      "tag": "TF-A03",
+      "w": 15,
+      "video": true,
+      "dur": 35,
+      "adjust": "Rolo da coxa na altura 4",
+      "sets": "3 × 10–12",
+      "rest": "60 s",
+      "steps": [
+        "Prenda as coxas sob o rolo e segure a barra com pegada aberta.",
+        "Incline levemente o tronco para trás.",
+        "Puxe a barra até a parte de cima do peito, levando os cotovelos para baixo.",
+        "Volte devagar até estender os braços."
+      ],
+      "errs": [
+        "Puxar a barra atrás da nuca.",
+        "Balançar o tronco para ganhar impulso."
+      ]
+    },
+    {
+      "slug": "cadeira-extensora",
+      "name": "Cadeira extensora",
+      "group": "Pernas",
+      "tag": "TF-A04",
+      "w": 12,
+      "video": true,
+      "dur": 30,
+      "adjust": "Encosto na posição 2 · rolo logo acima do tornozelo",
+      "sets": "3 × 12–15",
+      "rest": "60 s",
+      "steps": [
+        "Alinhe o joelho com o eixo de giro da máquina.",
+        "Segure as alças laterais e mantenha o quadril no banco.",
+        "Estenda as pernas até quase travar.",
+        "Desça em 2 segundos, sem deixar o peso bater."
+      ],
+      "errs": [
+        "Usar impulso no início do movimento.",
+        "Deixar a carga bater na pilha entre as repetições."
+      ]
+    },
+    {
+      "slug": "remada-baixa",
+      "name": "Remada baixa",
+      "group": "Costas",
+      "tag": "TF-A05",
+      "w": 11,
+      "video": true,
+      "dur": 34,
+      "adjust": "Pés no apoio · joelhos levemente flexionados",
+      "sets": "3 × 10–12",
+      "rest": "60 s",
+      "steps": [
+        "Sente com a coluna reta e segure o triângulo.",
+        "Puxe levando os cotovelos para trás, rente ao corpo.",
+        "Aperte as escápulas no fim do movimento.",
+        "Volte estendendo os braços sem curvar as costas."
+      ],
+      "errs": [
+        "Curvar a lombar para alcançar o puxador.",
+        "Jogar o tronco para trás a cada repetição."
+      ]
+    },
+    {
+      "slug": "cadeira-flexora",
+      "name": "Cadeira flexora",
+      "group": "Pernas",
+      "tag": "TF-A06",
+      "w": 9,
+      "video": true,
+      "dur": 31,
+      "adjust": "Encosto na posição 3 · rolo atrás do tornozelo",
+      "sets": "3 × 12",
+      "rest": "60 s",
+      "steps": [
+        "Alinhe o joelho com o eixo da máquina e trave o apoio da coxa.",
+        "Flexione as pernas trazendo o rolo para baixo do banco.",
+        "Segure um instante no final.",
+        "Volte controlando a subida."
+      ],
+      "errs": [
+        "Tirar o quadril do banco.",
+        "Encurtar o movimento na volta."
+      ]
+    },
+    {
+      "slug": "desenvolvimento",
+      "name": "Desenvolvimento na máquina",
+      "group": "Ombros",
+      "tag": "TF-A07",
+      "w": 8,
+      "video": true,
+      "dur": 29,
+      "adjust": "Banco na posição 4 · pegadores na altura do queixo",
+      "sets": "3 × 10",
+      "rest": "60 a 90 s",
+      "steps": [
+        "Sente com as costas apoiadas no encosto.",
+        "Segure os pegadores com os cotovelos abaixo das mãos.",
+        "Empurre para cima sem travar os cotovelos.",
+        "Desça até a altura do queixo."
+      ],
+      "errs": [
+        "Arquear a lombar para empurrar mais peso.",
+        "Descer demais e perder a tensão no ombro."
+      ]
+    },
+    {
+      "slug": "crossover",
+      "name": "Crossover",
+      "group": "Peito",
+      "tag": "TF-A08",
+      "w": 5,
+      "video": false,
+      "dur": 0,
+      "adjust": "Polias na altura dos ombros",
+      "sets": "3 × 12–15",
+      "rest": "45 a 60 s",
+      "steps": [
+        "Dê um passo à frente com os pegadores nas mãos.",
+        "Incline levemente o tronco.",
+        "Junte as mãos à frente do peito em arco.",
+        "Volte abrindo os braços devagar."
+      ],
+      "errs": [
+        "Dobrar demais os cotovelos e transformar em supino.",
+        "Deixar os pesos baterem na volta."
+      ]
+    }
+  ],
+  "chamados": [
+    {
+      "id": 3,
+      "slug": "leg-press-45",
+      "minutosAtras": 2,
+      "atendido": false
+    },
+    {
+      "id": 2,
+      "slug": "remada-baixa",
+      "minutosAtras": 17,
+      "atendido": false
+    },
+    {
+      "id": 1,
+      "slug": "cadeira-flexora",
+      "minutosAtras": 48,
+      "atendido": true
+    }
+  ],
+  "avaliacoes": {
+    "ajudou": 41,
+    "naoAjudou": 6
+  }
+}

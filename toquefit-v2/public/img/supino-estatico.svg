@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 384" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <rect width="400" height="384" fill="#0B0D10"/>
+  <g stroke="#3A4048" stroke-width="2"><path d="M40 300h320"/><path d="M110 300v40M290 300v40"/><path d="M70 262h250"/></g>
+  <g stroke="#8E96A0" stroke-width="10"><path d="M100 250h170"/><path d="M270 250l40-6 26 56"/><path d="M150 248l-6-58"/><path d="M230 248l6-58"/></g>
+  <circle cx="84" cy="246" r="18" stroke="#8E96A0" stroke-width="8"/>
+  <g stroke="#F3FF2C" stroke-width="5"><path d="M60 188h280"/><path d="M76 160v56M92 150v76M324 160v56M308 150v76"/></g>
+  <text x="200" y="352" fill="#8E96A0" font-family="system-ui,sans-serif" font-size="15" text-anchor="middle">Supino reto · cotovelos a 45° do corpo</text>
+</svg>

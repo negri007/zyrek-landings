@@ -1,0 +1,28 @@
+{
+  "slug": "supino-reto",
+  "instrutora": "Prof.ª Camila Rocha · CREF 054321-G/SP",
+  "voz": "pt-BR-FranciscaNeural",
+  "nota": "Marcação: [[texto|tom]] destaca o termo na legenda (tom ok = neon, bad = vermelho). Acrescente |grande para o número aparecer grande sobre o vídeo. 'pausa' é o tempo em segundos que o trecho continua depois da fala; 'antes' atrasa a fala para o movimento começar primeiro; 'replay' revê [de, ate] do trecho em câmera lenta depois da fala.",
+  "trechos": [
+    { "id": "posicao", "ch": "Posição", "cam": "side", "step": 0, "pausa": 1.6,
+      "say": "Oi! Deite no banco com os [[pés firmes|ok]] no chão e os olhos logo abaixo da barra." },
+    { "id": "pegada", "ch": "Pegada", "cam": "top", "step": 1, "pausa": 2.4,
+      "say": "Vista de cima: mãos [[um pouco mais abertas|ok]] que os ombros. Agora tire a barra do suporte." },
+    { "id": "descida", "ch": "Descida", "cam": "close", "step": 2, "pausa": 0.2, "replay": { "de": 0.0, "ate": 2.6, "vel": 0.5 },
+      "say": "Desça devagar, em uns [[2 segundos|ok|grande]], até encostar de leve no peito, na altura do mamilo." },
+    { "id": "cotovelos-errado", "ch": "Cotovelos", "cam": "cima", "step": 2, "pausa": 1.4, "selo": { "tx": "Errado", "tom": "bad" },
+      "say": "Visto de cima: cotovelos abertos a [[90°|bad|grande]] forçam o ombro. [[Assim não.|bad]]" },
+    { "id": "cotovelos-certo", "ch": "Cotovelos", "cam": "cima", "step": 2, "pausa": 2.0, "selo": { "tx": "Certo", "tom": "good" },
+      "say": "O certo é manter os cotovelos a uns [[45°|ok|grande]] do corpo." },
+    { "id": "subida", "ch": "Subida", "cam": "tq", "step": 3, "antes": 1.6, "pausa": 1.0,
+      "say": "Empurre [[soltando o ar|ok]], sem tirar o quadril do banco, até estender os braços." },
+    { "id": "pegada-aberta", "ch": "Variações", "cam": "top", "step": 1, "pausa": 1.4,
+      "say": "Variação com [[pegada aberta|ok]]: trabalha mais o peito." },
+    { "id": "pegada-fechada", "ch": "Variações", "cam": "top", "step": 1, "pausa": 1.4,
+      "say": "[[Pegada fechada|ok]], na largura dos ombros: mais tríceps." },
+    { "id": "pegada-padrao", "ch": "Variações", "cam": "top", "step": 1, "pausa": 1.4,
+      "say": "E a [[pegada padrão|ok]], que equilibra os dois. É a ideal pra começar." },
+    { "id": "suporte", "ch": "Suporte", "cam": "side", "step": 3, "pausa": 2.2,
+      "say": "Ao terminar, volte a barra pro suporte com os [[braços estendidos|ok]]. Mandou bem!" }
+  ]
+}

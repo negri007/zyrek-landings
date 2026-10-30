@@ -1,0 +1,26 @@
+{
+  "slug": "desenvolvimento",
+  "instrutora": "Prof.ª Camila Rocha · CREF 054321-G/SP",
+  "voz": "pt-BR-FranciscaNeural",
+  "nota": "Mesma marcação do supino-reto.json. As câmeras (cam) estão em src/cena/desenvolvimento.ts: side, tq, front e lento (replay).",
+  "trechos": [
+    { "id": "ajuste", "ch": "Ajuste", "cam": "side", "step": 0, "pausa": 1.4,
+      "say": "Ajuste o banco para os pegadores ficarem na [[altura do queixo|ok]]." },
+    { "id": "posicao", "ch": "Posição", "cam": "side", "step": 0, "pausa": 1.4,
+      "say": "Sente com as [[costas apoiadas|ok]] no encosto e os pés firmes no chão." },
+    { "id": "pegada", "ch": "Pegada", "cam": "front", "step": 1, "pausa": 1.8,
+      "say": "Segure os pegadores com os [[cotovelos abaixo das mãos|ok]]." },
+    { "id": "subida", "ch": "Subida", "cam": "tq", "step": 2, "pausa": 0.8,
+      "say": "Empurre para cima soltando o ar, [[sem travar os cotovelos|ok]]." },
+    { "id": "descida", "ch": "Descida", "cam": "side", "step": 3, "pausa": 0.6, "replay": { "de": 0.0, "ate": 2.8, "vel": 0.5 },
+      "say": "Desça em [[2 segundos|ok|grande]] até a altura do queixo." },
+    { "id": "lombar-errado", "ch": "Lombar", "cam": "side", "step": 2, "pausa": 1.4, "selo": { "tx": "Errado", "tom": "bad" },
+      "say": "Arquear a lombar para empurrar mais peso [[força a coluna|bad]]. [[Assim não.|bad]]" },
+    { "id": "fundo-errado", "ch": "Amplitude", "cam": "front", "step": 3, "pausa": 1.6, "selo": { "tx": "Errado", "tom": "bad" },
+      "say": "Descer [[abaixo do queixo|bad]] tira a tensão do ombro. [[Assim não.|bad]]" },
+    { "id": "certo", "ch": "Controle", "cam": "tq", "step": 2, "pausa": 3.4, "selo": { "tx": "Certo", "tom": "good" },
+      "say": "O certo é ir do [[queixo até quase travar|ok]], sempre controlando." },
+    { "id": "final", "ch": "Séries", "cam": "side", "step": 3, "pausa": 2.0,
+      "say": "Faça as repetições assim e descanse [[1 minuto|ok]] entre as séries. Mandou bem!" }
+  ]
+}

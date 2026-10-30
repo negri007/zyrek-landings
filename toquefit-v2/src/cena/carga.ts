@@ -1,5 +1,6 @@
 // Tudo o que depende do three.js fica neste pedaço, baixado só quando o player aparece na tela.
 import type { CenaRoteiro, OpcoesCena } from "./motor";
+import { criarDesenvolvimento } from "./desenvolvimento";
 import { criarExtensora } from "./extensora";
 import { criarFlexora } from "./flexora";
 import { criarLegPress } from "./legpress";
@@ -14,4 +15,5 @@ export const CENAS: Record<string, (o: OpcoesCena) => CenaRoteiro> = {
   "leg-press-45": criarLegPress,
   "cadeira-extensora": criarExtensora,
   "cadeira-flexora": criarFlexora,
+  desenvolvimento: criarDesenvolvimento,
 };

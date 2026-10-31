@@ -113,7 +113,9 @@ export function criarCadeira(maq: THREE.Group, o: OpcoesCadeira) {
         const r = h.setLeg(s, ankle, V(0, 1, 0), ponta);
         joelhos[i].copy(r.K); tornozelos[i].copy(r.A); quadris[i].copy(r.Q);
         // alça horizontal ao lado do assento: palma virada para o corpo, dedos fechando por baixo
-        h.segurar(s, V(0.09, 0.47, 0.31 * sd), { eixo: V(1, 0, 0), palma: V(0, 0, -sd), bend: V(-0.4, -0.3, 0.85 * sd), clavicula: 0.1 });
+        // com a carga subindo ela trava os braços nas alças: cotovelos abrem e os ombros sobem um pouco
+        const esf = Math.min(1, k + tranco);
+        h.segurar(s, V(0.09, 0.47, 0.31 * sd), { eixo: V(1, 0, 0), palma: V(0, 0, -sd), bend: V(-0.4, -0.3 - 0.25 * esf, (0.85 + 0.35 * esf) * sd), clavicula: 0.1 + 0.1 * esf });
       }
       const pesc = h.loc(h.B.Neck);
       h.aim(h.B.Neck, pesc.clone().addScaledVector(T, 0.2).addScaledVector(N, 0.06));

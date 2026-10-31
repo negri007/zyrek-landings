@@ -21,7 +21,7 @@ npm run build    # site estático em dist/
 - `src/player/`: linha do tempo, legenda karaokê e player (o áudio manda no relógio).
 - `src/cena/`: three.js, só baixado quando o player aparece na tela.
   - Uma cena por roteiro (`supino.ts`, `legpress.ts`, `extensora.ts`, `flexora.ts`, `desenvolvimento.ts`, `remada.ts`, `puxada.ts`): o aparelho, as câmeras e a coreografia de cada trecho. `carga.ts` liga o roteiro à cena e `catalogo.ts` guarda a imagem de reserva e o desenho de carregamento.
-  - Peças comuns: `roteiro3d.ts` (laço de quadro: trecho, câmera, replay e rótulos), `pessoa.ts` (instrutora, IK de braços e pernas, giro do corpo e coluna), `cadeira.ts` (extensora e flexora), `pecas.ts` (caixas, tubos e pilha de anilhas), `camera.ts`, `rotulos.ts`, `estudio.ts` e `pilha.ts` (aparelhos sem roteiro).
+  - Peças comuns: `roteiro3d.ts` (laço de quadro: trecho, câmera, replay, rótulos, suavização da pose e cabeça acompanhando a fala), `pessoa.ts` (instrutora: IK de braços e pernas, `segurar` para fechar a mão em qualquer barra, giro do corpo, coluna e respiração), `cadeira.ts` (extensora e flexora), `pecas.ts` (caixas, tubos e pilha de anilhas), `estudio.ts` (luz, névoa e sombras de contato), `motor.ts` (renderizador único; `descartarCena` libera a placa de vídeo ao trocar de aparelho), `camera.ts`, `rotulos.ts` e `pilha.ts` (aparelhos sem roteiro).
 - `src/ui/series.ts`: contador de séries com descanso no celular do aluno.
 
 ## Novo aparelho com instrutora

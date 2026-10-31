@@ -3,15 +3,26 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module.js";
+import { clone as cloneSkinned } from "three/examples/jsm/utils/SkeletonUtils.js";
 import { V, lerp, type V3 } from "./util3d";
 
-/** Baixa o modelo da instrutora. Cada cena recebe uma cópia própria, porque a pose altera os ossos. */
+let modelo: Promise<THREE.Object3D> | null = null;
+/**
+ * Baixa e decodifica o modelo da instrutora uma vez só; cada cena recebe uma cópia com esqueleto próprio,
+ * porque a pose altera os ossos. Trocar de aparelho não baixa nem decodifica de novo.
+ */
 export async function carregarModelo(onProg: (p: number) => void) {
-  const loader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
-  const g = await loader.loadAsync(`${import.meta.env.BASE_URL}models/michelle.glb`, (e) => {
-    if (e.total) onProg(e.loaded / e.total);
-  });
-  return g.scene;
+  if (!modelo) {
+    const loader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
+    modelo = loader.loadAsync(`${import.meta.env.BASE_URL}models/michelle.glb`, (e) => {
+      if (e.total) onProg(e.loaded / e.total);
+    }).then((g) => g.scene);
+    // se falhar (rede caiu), a próxima cena tenta de novo
+    modelo.catch(() => (modelo = null));
+  }
+  const original = await modelo;
+  onProg(1);
+  return cloneSkinned(original);
 }
 
 /** Resolve uma cadeia de dois ossos: devolve a junta do meio (cotovelo/joelho) e a ponta alcançável. */

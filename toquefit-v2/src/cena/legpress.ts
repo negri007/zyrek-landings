@@ -291,7 +291,8 @@ export function criarLegPress(o: OpcoesCena): CenaRoteiro {
   function aplicar(P: Pose) {
     const pe = pePlataforma(P.ext);
     carro.position.copy(pe).addScaledVector(R, 0.075).addScaledVector(RP, 0.06);
-    travas.forEach((t) => (t.g.rotation.x = -t.sd * P.trava * 1.15));
+    // gira para fora, junto com a mão (pontaTrava usa o mesmo ângulo)
+    travas.forEach((t) => (t.g.rotation.x = t.sd * P.trava * 1.15));
     if (!HUM) return;
     const h = HUM;
     // quadril descolando: o corpo gira em volta da linha dos ombros
@@ -310,8 +311,8 @@ export function criarLegPress(o: OpcoesCena): CenaRoteiro {
       joelhos[i].copy(r.K); tornozelos[i].copy(r.A); quadris[i].copy(r.Q);
       // braços nas travas
       const G = pontaTrava(sd, P.trava);
-      const { M: E, P: W } = ik2(s.S, G, s.L1, s.L2, V(0.15, -0.55, 0.85 * sd), s.braco);
-      h.aim(s.A, E); h.aim(s.F, W); h.setGrip(s, 1);
+      const eixoTrava = G.clone().sub(PIVO.clone().setZ(0.31 * sd));
+      h.segurar(s, G, { eixo: eixoTrava, palma: V(0, 0, -sd), bend: V(0.15, -0.55, 0.85 * sd), clavicula: 0.12 });
     }
     // cabeça olhando para os joelhos
     const pesc = h.loc(h.B.Neck);

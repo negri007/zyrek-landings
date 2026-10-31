@@ -81,6 +81,8 @@ export function criarPessoa(model: THREE.Object3D, raiz: THREE.Group, ancora: An
     const A = B[P + "Arm"], F = B[P + "ForeArm"], U = B[P + "UpLeg"], K = B[P + "Leg"], Ft = B[P + "Foot"];
     return {
       sd: i ? 1 : -1, P, A, F, U, K, Ft,
+      /** clavícula: sobe e avança um pouco junto com o braço */
+      C: B[P + "Shoulder"] as THREE.Bone | undefined,
       /** ombro e quadril na pose de repouso */
       S: loc(A), Q: loc(U),
       L1: dist(A, F), L2: dist(F, B[P + "Hand"]),
@@ -130,6 +132,7 @@ export function criarPessoa(model: THREE.Object3D, raiz: THREE.Group, ancora: An
     for (const f of sd.fing) f.b.quaternion.copy(f.b.userData.rq).multiply(_q.setFromAxisAngle(f.axl, lerp(f.rel, f.amt, k)));
   }
   const _m1 = new THREE.Matrix4(), _m2 = new THREE.Matrix4(), _qw = new THREE.Quaternion();
+  const _tr = new THREE.Quaternion(), _ti = new THREE.Quaternion(), _tw = new THREE.Quaternion(), _meia = new THREE.Quaternion();
   /** h = direção dos dedos, nw = normal da palma (locais); k = 0: punho reto, 1: mão nessa orientação */
   function orientHand(sd: Lado, h: V3, nw: V3, k: number) {
     const Hd = sd.hand, yl = Hd.fl, nl = Hd.pl, zl = yl.clone().cross(nl);
@@ -141,7 +144,60 @@ export function criarPessoa(model: THREE.Object3D, raiz: THREE.Group, ancora: An
     const pq = Hd.hand.parent!.getWorldQuaternion(new THREE.Quaternion()).invert();
     const tq = pq.multiply(raiz.getWorldQuaternion(new THREE.Quaternion())).multiply(_qw);
     Hd.hand.quaternion.copy(Hd.hand.userData.rq).slerp(tq, k);
+    // metade da torção do punho vai para o antebraço: sem isso o pulso torce como embalagem de bala
+    const F = Hd.hand.parent as THREE.Bone;
+    _tr.copy(Hd.hand.quaternion).multiply(_ti.copy(Hd.hand.userData.rq).invert());
+    _tw.set(0, _tr.y, 0, _tr.w);
+    if (_tw.lengthSq() > 1e-8) {
+      _tw.normalize();
+      _meia.identity().slerp(_tw, 0.5);
+      F.quaternion.multiply(_meia);
+      F.updateMatrixWorld(true);
+      Hd.hand.quaternion.premultiply(_meia.invert());
+    }
     Hd.hand.updateMatrixWorld(true);
+  }
+
+  const _sh = V(), _sn = V(), _sd = V();
+  /**
+   * Segura uma barra ou pegador. G = ponto da barra no meio da mão; eixo = direção da barra;
+   * palma = para onde a palma olha; bend = para onde o cotovelo aponta; clavicula = quanto o ombro acompanha a mão.
+   * O punho fica alinhado com o antebraço e os dedos fecham em volta da barra.
+   */
+  function segurar(s: Lado, G: V3, o: { eixo: V3; palma: V3; bend: V3; clavicula?: number; aperto?: number }) {
+    const eixo = o.eixo.clone().normalize();
+    const C = s.C;
+    if (C) {
+      C.quaternion.copy(C.userData.rq as THREE.Quaternion);
+      C.updateMatrixWorld(true);
+      const k = o.clavicula ?? 0.2;
+      if (k > 0) {
+        const pc = loc(C), resto = loc(s.A).sub(pc), len = resto.length();
+        const paraMao = G.clone().sub(pc).normalize();
+        aim(C, pc.clone().addScaledVector(resto.normalize().lerp(paraMao, k).normalize(), len));
+      }
+    }
+    const S = loc(s.A);
+    // primeira estimativa dos dedos: do ombro para a barra, sem a parte ao longo dela
+    _sh.copy(G).sub(S).addScaledVector(eixo, -G.clone().sub(S).dot(eixo)).normalize();
+    let E = V(), W = V();
+    for (let i = 0; i < 2; i++) {
+      _sn.crossVectors(eixo, _sh).normalize();
+      if (_sn.dot(o.palma) < 0) _sn.negate();
+      W = G.clone().addScaledVector(_sh, -s.hand.palmLen * 0.62).addScaledVector(_sn, -0.028);
+      const r = ik2(S, W, s.L1, s.L2, o.bend, i ? s.braco : undefined);
+      E = r.M; W = r.P;
+      // punho reto: os dedos seguem o antebraço, contornando a barra
+      _sd.copy(W).sub(E);
+      _sd.addScaledVector(eixo, -_sd.dot(eixo));
+      if (_sd.lengthSq() > 1e-6) _sh.copy(_sd.normalize());
+    }
+    _sn.crossVectors(eixo, _sh).normalize();
+    if (_sn.dot(o.palma) < 0) _sn.negate();
+    aim(s.A, E); aim(s.F, W);
+    orientHand(s, _sh.clone(), _sn.clone(), 1);
+    setGrip(s, o.aperto ?? 1);
+    return { E, W, S };
   }
   /** Perna inteira: quadril → joelho → tornozelo, com o pé apontando para `ponta`. */
   function setLeg(sd: Lado, ankle: V3, bend: V3, ponta: V3) {
@@ -185,7 +241,7 @@ export function criarPessoa(model: THREE.Object3D, raiz: THREE.Group, ancora: An
   }
 
   return {
-    B, grupo: hum, side, loc, aim, setGrip, orientHand, setLeg, girarCorpo, curvarColuna,
+    B, grupo: hum, side, loc, aim, setGrip, orientHand, segurar, setLeg, girarCorpo, curvarColuna,
     cabeca: () => loc(B.Head),
     /** ombro onde está agora (depois de girar o corpo ou curvar a coluna) */
     ombro: (s: { A: THREE.Bone }) => loc(s.A),

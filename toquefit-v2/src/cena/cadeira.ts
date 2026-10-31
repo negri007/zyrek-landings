@@ -5,7 +5,7 @@
 import * as THREE from "three";
 import { materiais } from "./estudio";
 import { criarPecas, criarPilhaPesos } from "./pecas";
-import { carregarModelo, criarPessoa, ik2, type Pessoa } from "./pessoa";
+import { carregarModelo, criarPessoa, type Pessoa } from "./pessoa";
 import { V, suave, type V3 } from "./util3d";
 
 export const ENCOSTO = 80; // inclinação do encosto em relação ao chão (graus)
@@ -110,8 +110,8 @@ export function criarCadeira(maq: THREE.Group, o: OpcoesCadeira) {
         const ponta = ankle.clone().addScaledVector(frente, 0.16).add(V(0, 0, 0.03 * sd));
         const r = h.setLeg(s, ankle, V(0, 1, 0), ponta);
         joelhos[i].copy(r.K); tornozelos[i].copy(r.A); quadris[i].copy(r.Q);
-        const { M: E, P: W } = ik2(h.ombro(s), V(0.1, 0.48, 0.31 * sd), s.L1, s.L2, V(-0.4, -0.3, 0.85 * sd), s.braco);
-        h.aim(s.A, E); h.aim(s.F, W); h.setGrip(s, 1);
+        // alça horizontal ao lado do assento: palma virada para o corpo, dedos fechando por baixo
+        h.segurar(s, V(0.09, 0.47, 0.31 * sd), { eixo: V(1, 0, 0), palma: V(0, 0, -sd), bend: V(-0.4, -0.3, 0.85 * sd), clavicula: 0.1 });
       }
       const pesc = h.loc(h.B.Neck);
       h.aim(h.B.Neck, pesc.clone().addScaledVector(T, 0.2).addScaledVector(N, 0.06));

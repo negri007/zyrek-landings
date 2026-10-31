@@ -6,7 +6,7 @@ import type { CenaRoteiro, OpcoesCena } from "./motor";
 import type { Enquadramento } from "./camera";
 import { materiais, montarEstudio } from "./estudio";
 import { criarPecas, criarPilhaPesos } from "./pecas";
-import { carregarModelo, criarPessoa, ik2, type Pessoa } from "./pessoa";
+import { carregarModelo, criarPessoa, type Pessoa } from "./pessoa";
 import { cenaComRoteiro, type PoseBase } from "./roteiro3d";
 import { V, ciclo, lerp, seg, suave, type V3 } from "./util3d";
 import type { Trecho } from "../player/timeline";
@@ -174,11 +174,9 @@ export function criarPuxada(o: OpcoesCena): CenaRoteiro {
         const joelho = Q.clone().add(V(Math.cos(0.08) * s.Lc, Math.sin(0.08) * s.Lc, 0.04 * sd));
         const ankle = V(joelho.x + 0.04, Math.max(0.1, joelho.y - s.Lp), joelho.z);
         h.setLeg(s, ankle, V(0, 1, 0), ankle.clone().add(V(0.16, -0.04, 0.02 * sd)));
-        const S = h.ombro(s);
+        // pegada pronada na barra: palmas para a frente; com os braços em cima o ombro sobe junto
         const G = B.clone().setZ(PEGA_Z * sd);
-        // cotovelos para baixo e para fora
-        const { M: E, P: W } = ik2(S, G, s.L1, s.L2, V(-0.15, -1, 0.9 * sd), s.braco);
-        h.aim(s.A, E); h.aim(s.F, W); h.setGrip(s, 1);
+        const { E, W, S } = h.segurar(s, G, { eixo: V(0, 0, 1), palma: V(1, 0, 0), bend: V(-0.15, -1, 0.9 * sd), clavicula: 0.3 * (1 - P.puxa) + 0.08 });
         cotovelos[i].copy(E); maos[i].copy(W); ombros[i].copy(S);
         ombroL[i].visible = ombroOp > 0.02;
         if (ombroL[i].visible) ligar(ombroL[i], V(S.x + 0.03, S.y - 0.25, S.z), V(S.x + 0.03, alto.y + 0.12, S.z));

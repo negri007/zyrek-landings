@@ -6,7 +6,7 @@ import type { CenaRoteiro, OpcoesCena } from "./motor";
 import type { Enquadramento } from "./camera";
 import { materiais, montarEstudio } from "./estudio";
 import { criarPecas, criarPilhaPesos } from "./pecas";
-import { carregarModelo, criarPessoa, ik2, type Pessoa } from "./pessoa";
+import { carregarModelo, criarPessoa, type Pessoa } from "./pessoa";
 import { cenaComRoteiro, type PoseBase } from "./roteiro3d";
 import { V, ciclo, lerp, seg, suave, type V3 } from "./util3d";
 import type { Trecho } from "../player/timeline";
@@ -170,11 +170,9 @@ export function criarDesenvolvimento(o: OpcoesCena): CenaRoteiro {
     h.curvarColuna(-20 * P.arco);
     for (let i = 0; i < 2; i++) {
       const s = h.side[i], sd = s.sd;
-      const S = h.ombro(s);
-      const G = V(PEGA_X, y, PEGA_Z * sd);
-      // cotovelos para baixo e um pouco para fora, embaixo das mãos
-      const { M: E, P: W } = ik2(S, G, s.L1, s.L2, V(0.15, -1, 0.55 * sd), s.braco);
-      h.aim(s.A, E); h.aim(s.F, W); h.setGrip(s, 1);
+      // pegador horizontal: palmas para a frente, cotovelos para baixo e um pouco para fora; o ombro sobe junto
+      const G = V(PEGA_X, y, (PEGA_Z + 0.03) * sd);
+      const { E, W, S } = h.segurar(s, G, { eixo: V(0, 0, 1), palma: V(1, 0, 0), bend: V(0.15, -1, 0.55 * sd), clavicula: 0.25 });
       cotovelos[i].copy(E); maos[i].copy(W); ombros[i].copy(S);
       antes[i].visible = anteOp > 0.02;
       if (antes[i].visible) ligar(antes[i], W.clone().add(V(0.03, 0.06, 0)), V(W.x + 0.03, W.y - 0.4, W.z));

@@ -6,7 +6,7 @@ import type { CenaRoteiro, OpcoesCena } from "./motor";
 import type { Enquadramento } from "./camera";
 import { materiais, montarEstudio } from "./estudio";
 import { criarPecas, criarPilhaPesos } from "./pecas";
-import { carregarModelo, criarPessoa, ik2, type Pessoa } from "./pessoa";
+import { carregarModelo, criarPessoa, type Pessoa } from "./pessoa";
 import { cenaComRoteiro, type PoseBase } from "./roteiro3d";
 import { V, ciclo, lerp, seg, type V3 } from "./util3d";
 import type { Trecho } from "../player/timeline";
@@ -64,8 +64,12 @@ export function criarRemada(o: OpcoesCena): CenaRoteiro {
   const cabo = tubo(0.007, V(), V(0, 1, 0), metal);
   const tri = new THREE.Group();
   maq.add(tri);
-  for (const sd of [-1, 1]) tubo(0.012, V(0.08, 0, 0), V(0, 0, 0.06 * sd), metal, tri);
-  tubo(0.02, V(0, 0, -0.08), V(0, 0, 0.08), neon, tri);
+  // triângulo: duas pegas quase verticais, palmas viradas uma para a outra
+  for (const sd of [-1, 1]) {
+    tubo(0.012, V(0.09, 0, 0), V(0, 0.055, 0.065 * sd), metal, tri);
+    tubo(0.012, V(0.09, 0, 0), V(0, -0.055, 0.065 * sd), metal, tri);
+    tubo(0.02, V(0, -0.055, 0.065 * sd), V(0, 0.055, 0.065 * sd), neon, tri);
+  }
 
   // ---- medidas (trocadas ao carregar o modelo) ----
   let HUM: Pessoa | null = null;
@@ -154,11 +158,9 @@ export function criarRemada(o: OpcoesCena): CenaRoteiro {
         const s = h.side[i], sd = s.sd;
         const ankle = PE.clone().setZ(0.11 * sd);
         h.setLeg(s, ankle, V(-0.2, 1, 0.12 * sd), ankle.clone().add(V(0.04, 0.17, 0.02 * sd)));
-        const S = h.ombro(s);
-        const G = H.clone().add(V(0, 0, 0.065 * sd));
-        // cotovelos para trás e para baixo, rentes ao corpo
-        const { M: E, P: W } = ik2(S, G, s.L1, s.L2, V(-1, -0.35, 0.18 * sd), s.braco);
-        h.aim(s.A, E); h.aim(s.F, W); h.setGrip(s, 1);
+        // pegas do triângulo: palmas uma para a outra, cotovelos para trás rentes ao corpo; o ombro avança no alcance
+        const G = H.clone().add(V(0.02, 0, 0.065 * sd));
+        const { E, W, S } = h.segurar(s, G, { eixo: V(0, 1, 0), palma: V(0, 0, -sd), bend: V(-1, -0.35, 0.18 * sd), clavicula: 0.18 * (1 - P.puxa) + 0.05 });
         cotovelos[i].copy(E); maos[i].copy(W); ombros[i].copy(S);
       }
       pescoco.copy(h.loc(h.B.Neck));

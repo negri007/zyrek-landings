@@ -42,6 +42,9 @@ export function criarRig(camera: THREE.PerspectiveCamera, cams: Record<string, E
       camera.position.copy(cam.p);
       camera.up.copy(cam.u).normalize();
       camera.lookAt(cam.l);
+      // só em desenvolvimento: window.__olhar = { p: [x, y, z], l: [x, y, z] } prende a câmera num ponto para inspecionar detalhes
+      const olhar = import.meta.env.DEV ? (window as unknown as { __olhar?: { p: number[]; l: number[] } }).__olhar : undefined;
+      if (olhar) { camera.position.set(olhar.p[0], olhar.p[1], olhar.p[2]); camera.up.set(0, 1, 0); camera.lookAt(olhar.l[0], olhar.l[1], olhar.l[2]); }
       camera.updateMatrixWorld();
     },
   };

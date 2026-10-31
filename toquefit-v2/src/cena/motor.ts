@@ -49,6 +49,10 @@ export class Motor {
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
     this.renderer.toneMappingExposure = 1.05;
     this.canvas = this.renderer.domElement;
+    // celular que troca de app pode derrubar o contexto 3D: avisar o navegador que queremos de volta
+    // (o three.js recria tudo quando ele volta) e redesenhar o quadro parado
+    this.canvas.addEventListener("webglcontextlost", (e) => e.preventDefault());
+    this.canvas.addEventListener("webglcontextrestored", () => this.desenhar());
     this.canvas.setAttribute("aria-hidden", "true");
     document.addEventListener("visibilitychange", () => this.agenda());
   }

@@ -2,13 +2,12 @@
 // Coordenadas locais do aparelho: x para a plataforma, y para cima, z para os lados; 1 unidade ≈ 85 cm.
 import * as THREE from "three";
 import type { CenaRoteiro, OpcoesCena } from "./motor";
-import { criarRig, type Enquadramento } from "./camera";
+import type { Enquadramento } from "./camera";
 import { NEON, materiais, montarEstudio, sombra } from "./estudio";
 import { carregarModelo, criarPessoa, ik2, type Pessoa } from "./pessoa";
-import { criarFala, criarSuavizador } from "./roteiro3d";
-import { criarRotulos, type Rotulo } from "./rotulos";
-import { V, lerp, rep, seg, suave, type V3 } from "./util3d";
-import { trechoEm, type Trecho } from "../player/timeline";
+import { cenaComRoteiro, type PoseBase } from "./roteiro3d";
+import { V, easeIO, lerp, rep, seg, suave, type V3 } from "./util3d";
+import type { Trecho } from "../player/timeline";
 
 const ENCOSTO = 38; // inclinação do encosto em relação ao chão (graus)
 const QUADRIL = V(0, 0.56, 0); // centro do quadril sentado
@@ -22,7 +21,7 @@ const R = V(Math.SQRT1_2, Math.SQRT1_2, 0);
 /** no plano da plataforma, para o lado da cabeça */
 const RP = V(-Math.SQRT1_2, Math.SQRT1_2, 0);
 
-interface Pose {
+interface Pose extends PoseBase {
   /** extensão das pernas: 1 = em cima (quase estendidas), 0 = joelhos a 90°, negativo = mais fundo que 90° */
   ext: number;
   /** quanto o quadril descola do banco (graus de giro do corpo em volta dos ombros) */
@@ -38,7 +37,6 @@ interface Pose {
   guias: boolean;
   /** contorno vermelho dos joelhos caídos, para comparar com o certo */
   fantasma: boolean;
-  labels: Rotulo[];
 }
 
 const CAMS: Record<string, Enquadramento> = {
@@ -198,7 +196,6 @@ export function criarLegPress(o: OpcoesCena): CenaRoteiro {
   /** distância quadril → tornozelo para uma extensão (aceita valores fora de 0..1) */
   const distExt = (e: number) => lerp(D90, D160, e);
   const ombros = V();
-  let baseQ = new THREE.Quaternion(), basePos = V();
 
   // ---- coreografia: cada trecho usa o tempo das palavras ditas ----
   function pose(tr: Trecho, u: number): Pose {
@@ -288,7 +285,6 @@ export function criarLegPress(o: OpcoesCena): CenaRoteiro {
   }
 
   const joelhos = [V(), V()], tornozelos = [V(), V()], quadris = [V(), V()];
-  const _q = new THREE.Quaternion(), _z = V(0, 0, 1);
   function aplicar(P: Pose) {
     const pe = pePlataforma(P.ext);
     carro.position.copy(pe).addScaledVector(R, 0.075).addScaledVector(RP, 0.06);
@@ -297,10 +293,7 @@ export function criarLegPress(o: OpcoesCena): CenaRoteiro {
     if (!HUM) return;
     const h = HUM;
     // quadril descolando: o corpo gira em volta da linha dos ombros
-    _q.setFromAxisAngle(_z, (P.quadril * Math.PI) / 180);
-    h.grupo.quaternion.copy(_q).multiply(baseQ);
-    h.grupo.position.copy(basePos).sub(ombros).applyQuaternion(_q).add(ombros);
-    h.grupo.updateMatrixWorld(true);
+    h.girarCorpo(P.quadril, ombros);
     h.curvarColuna();
     for (let i = 0; i < 2; i++) {
       const s = h.side[i], sd = s.sd;
@@ -320,7 +313,6 @@ export function criarLegPress(o: OpcoesCena): CenaRoteiro {
     h.aim(h.B.Neck, pesc.clone().addScaledVector(T, 0.2).addScaledVector(N, 0.07));
   }
 
-  const medida = [0, 0]; // ângulo real do joelho, em graus (conferido nos testes)
   const _a = V(), _b = V(), _ax = V();
   function atualizarMarcas(P: Pose, dt: number) {
     platOp = suave(platOp, P.plat, dt, 8, o.reduzido);
@@ -330,7 +322,6 @@ export function criarLegPress(o: OpcoesCena): CenaRoteiro {
       _a.copy(quadris[i]).sub(K).normalize();
       _b.copy(tornozelos[i]).sub(K).normalize();
       const ang = _a.angleTo(_b);
-      medida[i] = Math.round((ang * 180) / Math.PI);
       if (i === 0) continue;
       const c = cunha;
       c.op = suave(c.op, P.cunha ? 1 : 0, dt, 8, o.reduzido);
@@ -373,9 +364,9 @@ export function criarLegPress(o: OpcoesCena): CenaRoteiro {
     }
   }
 
-  const rig = criarRig(camera, CAMS, o.reduzido, ["cima"]);
-  const rotulos = criarRotulos({
-    overlay: o.overlay, camera, raiz: maq, evitar: o.evitar,
+  return cenaComRoteiro<Pose>(o, {
+    scene, camera, raiz: maq, cams: CAMS, fixas: ["cima"],
+    pessoa: () => HUM,
     obstaculos() {
       const pts: { a: V3; b: V3 }[] = [];
       for (let i = 0; i < 2; i++) pts.push({ a: quadris[i], b: joelhos[i] }, { a: joelhos[i], b: tornozelos[i] });
@@ -386,38 +377,11 @@ export function criarLegPress(o: OpcoesCena): CenaRoteiro {
       }
       return pts;
     },
-  });
-
-  let ultimoTr = "";
-  const suavizar = criarSuavizador(o.reduzido);
-  const fala = criarFala();
-  const cena: CenaRoteiro & { medida: number[]; cams: typeof CAMS; dbg: () => unknown } = {
-    scene, camera, pronto: false, medida, cams: CAMS,
-    dbg: () => ({ cunha: [cunha.m.visible, cunha.op], guia: [guias[1].visible, guiaOp], fant: fantOp, k: joelhos[1].toArray(), q: quadris[1].toArray() }),
-    resize(w, h) { rotulos.resize(w, h); },
-    livre: rotulos.livre,
-    frame(now, dt) {
-      const L = o.linha();
-      const t = Math.max(0, Math.min(L.dur - 0.001, o.tempo()));
-      const tr = trechoEm(L, t);
-      let u = t - tr.t0, camNome = tr.cam, chave = tr.id, P: Pose;
-      const r = tr.replay;
-      if (r && u >= r.em) {
-        // replay: a descida revista a 0,5×, depois as pernas voltam para cima antes do próximo capítulo
-        const dur = (r.ate - r.de) / r.vel, depois = u - r.em - dur;
-        P = pose(tr, depois < 0 ? r.de + (u - r.em) * r.vel : r.ate);
-        if (depois > 0) { P.ext = lerp(P.ext, 1, seg(depois, 0, 0.9)); P.cunha = ""; }
-        else { P.plat = 0.35; camNome = "lento"; chave = tr.id + ":replay"; }
-      } else P = pose(tr, u);
-      // emendas entre trechos viram transições; o replay entra com corte de câmera e pode pular
-      suavizar(P, t, dt, chave !== ultimoTr && chave.endsWith(":replay"));
-      aplicar(P);
-      fala(HUM, tr, t, now, dt);
-      atualizarMarcas(P, dt);
-      if (chave !== ultimoTr) { rig.ir(camNome, !ultimoTr || chave.endsWith(":replay")); ultimoTr = chave; }
-      rig.quadro(now, dt);
-      rotulos.desenhar(P.labels);
-    },
+    pose,
+    // replay da descida: plataforma translúcida; depois as pernas voltam para cima antes do próximo capítulo
+    noReplay(P) { P.plat = 0.35; },
+    aposReplay(P, k) { P.ext = lerp(P.ext, 1, easeIO(k)); P.cunha = ""; },
+    aplicar(P, _now, dt) { aplicar(P); atualizarMarcas(P, dt); },
     async carregar(onProg) {
       // sem o modelo não há o que demonstrar: o player mostra a imagem estática
       const modelo = await carregarModelo(onProg);
@@ -431,10 +395,6 @@ export function criarLegPress(o: OpcoesCena): CenaRoteiro {
       const s = HUM.side[0];
       LC = s.Lc; LP = s.Lp; D90 = distDe(90); D160 = distDe(158);
       ombros.copy(HUM.side[0].S).add(HUM.side[1].S).multiplyScalar(0.5);
-      baseQ = HUM.grupo.quaternion.clone(); basePos = HUM.grupo.position.clone();
-      cena.pronto = true;
-      return "modelo";
     },
-  };
-  return cena;
+  });
 }

@@ -124,6 +124,8 @@ function rota() {
   mostrar("aluno");
   document.title = bySlug(slug)!.name + " · ToqueFit";
   renderAluno(slug, true);
+  // a aba volta para o aparelho que está aberto agora (mostrar() roda antes de ele ser trocado)
+  $<HTMLAnchorElement>("tab-aluno").href = "#m-" + slug;
 }
 window.addEventListener("hashchange", rota);
 

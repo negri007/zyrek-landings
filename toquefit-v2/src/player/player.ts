@@ -31,6 +31,8 @@ export function criarPlayer(host: HTMLElement, o: OpcoesPlayer) {
   const info = infoCena(o.roteiro);
   const temVoz = L.trechos.some((x) => x.audio);
   host.classList.add("player");
+  host.setAttribute("role", "group");
+  host.setAttribute("aria-label", "Vídeo com a instrutora");
   host.innerHTML = `
     <div class="stage" data-loading>
       <div class="ov"></div>
@@ -43,7 +45,7 @@ export function criarPlayer(host: HTMLElement, o: OpcoesPlayer) {
         <span class="c-t">${info.carregando}</span><span class="c-p num">0%</span>
       </div>
       <div class="replay" hidden>${icone("lento")} Replay em câmera lenta · 0,5×</div>
-      ${o.fim ? `<div class="fim" hidden><b>${esc(o.fim.titulo)}</b><span>${esc(o.fim.texto)}</span><div class="fim-acts"><button class="btn sm" type="button" data-a="denovo">${icone("repetir")} Ver de novo</button>${o.fim.proximo ? `<button class="btn sm primary" type="button" data-a="proximo">${esc(o.fim.proximo.texto)}</button>` : ""}</div></div>` : ""}
+      ${o.fim ? `<div class="fim" role="status" hidden><b>${esc(o.fim.titulo)}</b><span>${esc(o.fim.texto)}</span><div class="fim-acts"><button class="btn sm" type="button" data-a="denovo">${icone("repetir")} Ver de novo</button>${o.fim.proximo ? `<button class="btn sm primary" type="button" data-a="proximo">${esc(o.fim.proximo.texto)}</button>` : ""}</div></div>` : ""}
     </div>
     <div class="ctl">
       <div class="bar" role="slider" tabindex="0" aria-label="Posição do vídeo" aria-valuemin="0" aria-valuemax="${Math.round(L.dur)}" aria-valuenow="0">

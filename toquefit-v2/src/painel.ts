@@ -44,7 +44,7 @@ export function renderPainel(animar: boolean) {
     <td>${!m.video ? `<span class="pill no">Sem vídeo</span>` : m.roteiro ? `<span class="pill neon">Instrutora 3D</span>` : `<span class="pill ok">Com vídeo</span>`}</td>
     <td><div class="cell-n"><span class="num">${fmt(m.t7)}</span>${haltere(m.t7 / max, "mini-h")}</div></td>
     <td>${hoje(m.slug)}</td>
-    <td><div class="row-acts"><a href="#m-${m.slug}">Ver página</a><button type="button" data-edit="${m.slug}">${m.video ? "Editar" : "Enviar vídeo"}</button></div></td></tr>`).join("");
+    <td><div class="row-acts"><a href="#m-${m.slug}" aria-label="Ver página do aparelho ${esc(m.name)}">Ver página</a><button type="button" data-edit="${m.slug}" aria-label="${m.video ? "Editar" : "Enviar vídeo do"} ${esc(m.name)}">${m.video ? "Editar" : "Enviar vídeo"}</button></div></td></tr>`).join("");
   // halteres: o eixo acende até o valor e as anilhas deslizam até lá
   const halteres = document.querySelectorAll<HTMLElement>(".haltere");
   halteres.forEach((h, k) => {
@@ -62,7 +62,7 @@ export function renderPainel(animar: boolean) {
   $("calls").innerHTML = S.calls.length
     ? S.calls.slice(0, 6).map((c) => {
       const m = bySlug(c.slug);
-      return `<li class="${c.done ? "done" : "wait"}" data-id="${c.id}"><div><b>${esc(m ? m.name : "Aparelho removido")}</b><small>${ago(c.at)} · ${c.done ? "Atendido" : "Aguardando"}</small></div>${c.done ? "" : `<button class="btn sm" type="button" data-done="${c.id}">Atendido</button>`}</li>`;
+      return `<li class="${c.done ? "done" : "wait"}" data-id="${c.id}"><div><b>${esc(m ? m.name : "Aparelho removido")}</b><small>${ago(c.at)} · ${c.done ? "Atendido" : "Aguardando"}</small></div>${c.done ? "" : `<button class="btn sm" type="button" data-done="${c.id}" aria-label="Marcar chamado do ${esc(m ? m.name : "aparelho")} como atendido">Atendido</button>`}</li>`;
     }).join("")
     : `<li class="empty-s">Quando um aluno tocar em "Chamar instrutor", o chamado aparece aqui.</li>`;
   document.querySelectorAll<HTMLButtonElement>("[data-done]").forEach((b) => (b.onclick = () => {

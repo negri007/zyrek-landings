@@ -111,6 +111,7 @@ export function criarExtensora(o: OpcoesCena): CenaRoteiro {
   return cenaComRoteiro<Pose>(o, {
     scene, camera, raiz: maq, cams: CAMS,
     obstaculos: cad.obstaculos,
+    pessoa: () => cad.pessoa,
     pose,
     aplicar: (P, now, dt) => cad.aplicar(P.ang, P.tranco, P.ang / TOPO, P.batida, P.eixo, now, dt),
     carregar: cad.carregar,

@@ -193,6 +193,7 @@ export function criarPuxada(o: OpcoesCena): CenaRoteiro {
 
   return cenaComRoteiro<Pose>(o, {
     scene, camera, raiz: maq, cams: CAMS,
+    pessoa: () => HUM,
     obstaculos() {
       const pts: { a: V3; b: V3 }[] = [];
       for (let i = 0; i < 2; i++) pts.push({ a: ombros[i], b: cotovelos[i] }, { a: cotovelos[i], b: maos[i] });

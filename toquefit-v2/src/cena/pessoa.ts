@@ -240,8 +240,24 @@ export function criarPessoa(model: THREE.Object3D, raiz: THREE.Group, ancora: An
     }
   }
 
+  const cab = B.Head, _ce = new THREE.Euler(), _cq2 = new THREE.Quaternion(), GR = Math.PI / 180;
+  /**
+   * Cabeça viva: acena de leve enquanto a instrutora fala (fala = 0 a 1) e balança devagar quando está calada.
+   * Mexe só no osso da cabeça; o pescoço continua com cada cena.
+   */
+  function animarCabeca(fala: number, s: number) {
+    if (!cab) return;
+    cab.quaternion.copy(cab.userData.rq as THREE.Quaternion);
+    if (!calma) {
+      const aceno = Math.sin(s * 8.3) * 2.4 * fala + Math.sin(s * 0.9) * 1.1;
+      const giro = Math.sin(s * 0.53) * 2.6 + Math.sin(s * 5.1) * 0.8 * fala;
+      cab.quaternion.multiply(_cq2.setFromEuler(_ce.set(aceno * GR, giro * GR, 0)));
+    }
+    cab.updateMatrixWorld(true);
+  }
+
   return {
-    B, grupo: hum, side, loc, aim, setGrip, orientHand, segurar, setLeg, girarCorpo, curvarColuna,
+    B, grupo: hum, side, loc, aim, setGrip, orientHand, segurar, animarCabeca, setLeg, girarCorpo, curvarColuna,
     cabeca: () => loc(B.Head),
     /** ombro onde está agora (depois de girar o corpo ou curvar a coluna) */
     ombro: (s: { A: THREE.Bone }) => loc(s.A),

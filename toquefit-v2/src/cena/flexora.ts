@@ -117,6 +117,7 @@ export function criarFlexora(o: OpcoesCena): CenaRoteiro {
   return cenaComRoteiro<Pose>(o, {
     scene, camera, raiz: maq, cams: CAMS,
     obstaculos: cad.obstaculos,
+    pessoa: () => cad.pessoa,
     pose,
     aplicar(P, now, dt) {
       cad.aplicar(P.ang, P.tranco, carga(P.ang), 0, P.eixo, now, dt);

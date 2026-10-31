@@ -2,6 +2,7 @@
 // troca a câmera, roda o replay em câmera lenta e desenha os rótulos.
 import * as THREE from "three";
 import type { CenaRoteiro, OpcoesCena } from "./motor";
+import type { Pessoa } from "./pessoa";
 import { criarRig, type Enquadramento } from "./camera";
 import { criarRotulos, type Rotulo } from "./rotulos";
 import type { V3 } from "./util3d";
@@ -27,6 +28,8 @@ export interface DefCena<P extends PoseBase> {
   /** durante o replay (ex.: deixar o aparelho translúcido) */
   noReplay?(P: P): void;
   aplicar(P: P, now: number, dt: number): void;
+  /** instrutora já carregada (para a cabeça acompanhar a fala) */
+  pessoa?: () => Pessoa | null;
   /** carrega o modelo e prepara as medidas; rejeita quando não dá (o player mostra a imagem estática) */
   carregar(onProg: (p: number) => void): Promise<void>;
 }
@@ -36,6 +39,7 @@ export function cenaComRoteiro<P extends PoseBase>(o: OpcoesCena, d: DefCena<P>)
   const rotulos = criarRotulos({ overlay: o.overlay, camera: d.camera, raiz: d.raiz, evitar: o.evitar, obstaculos: d.obstaculos });
   let ultimo = "";
   const suavizar = criarSuavizador(o.reduzido);
+  const fala = criarFala();
   const cena: CenaRoteiro = {
     scene: d.scene, camera: d.camera, pronto: false,
     resize(w, h) { rotulos.resize(w, h); },
@@ -57,6 +61,7 @@ export function cenaComRoteiro<P extends PoseBase>(o: OpcoesCena, d: DefCena<P>)
       // o replay entra com corte de câmera: ali a pose pode pular de uma vez
       suavizar(P, t, dt, chave !== ultimo && chave.endsWith(":replay"));
       d.aplicar(P, now, dt);
+      fala(d.pessoa?.() ?? null, tr, t, now, dt);
       if (chave !== ultimo) { rig.ir(camNome, !ultimo || chave.endsWith(":replay")); ultimo = chave; }
       rig.quadro(now, dt);
       rotulos.desenhar(P.labels);
@@ -95,5 +100,16 @@ export function criarSuavizador(reduzido: boolean, tempo = 0.12) {
       e.v = alvo + (dif + tmp) * ex;
       p[k] = e.v;
     }
+  };
+}
+
+/** Acompanha se a instrutora está falando agora (pelas palavras do trecho) e mexe a cabeça junto. */
+export function criarFala() {
+  let nivel = 0;
+  return (h: Pessoa | null, tr: Trecho, t: number, now: number, dt: number) => {
+    if (!h) return;
+    const falando = tr.palavras.some((w) => t >= w.t - 0.02 && t < w.t + w.d + 0.06) ? 1 : 0;
+    nivel += (falando - nivel) * Math.min(1, dt * 9);
+    h.animarCabeca(nivel, now / 1000);
   };
 }

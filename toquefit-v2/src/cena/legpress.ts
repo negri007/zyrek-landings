@@ -5,7 +5,7 @@ import type { CenaRoteiro, OpcoesCena } from "./motor";
 import { criarRig, type Enquadramento } from "./camera";
 import { NEON, materiais, montarEstudio, sombra } from "./estudio";
 import { carregarModelo, criarPessoa, ik2, type Pessoa } from "./pessoa";
-import { criarSuavizador } from "./roteiro3d";
+import { criarFala, criarSuavizador } from "./roteiro3d";
 import { criarRotulos, type Rotulo } from "./rotulos";
 import { V, lerp, rep, seg, suave, type V3 } from "./util3d";
 import { trechoEm, type Trecho } from "../player/timeline";
@@ -390,6 +390,7 @@ export function criarLegPress(o: OpcoesCena): CenaRoteiro {
 
   let ultimoTr = "";
   const suavizar = criarSuavizador(o.reduzido);
+  const fala = criarFala();
   const cena: CenaRoteiro & { medida: number[]; cams: typeof CAMS; dbg: () => unknown } = {
     scene, camera, pronto: false, medida, cams: CAMS,
     dbg: () => ({ cunha: [cunha.m.visible, cunha.op], guia: [guias[1].visible, guiaOp], fant: fantOp, k: joelhos[1].toArray(), q: quadris[1].toArray() }),
@@ -411,6 +412,7 @@ export function criarLegPress(o: OpcoesCena): CenaRoteiro {
       // emendas entre trechos viram transições; o replay entra com corte de câmera e pode pular
       suavizar(P, t, dt, chave !== ultimoTr && chave.endsWith(":replay"));
       aplicar(P);
+      fala(HUM, tr, t, now, dt);
       atualizarMarcas(P, dt);
       if (chave !== ultimoTr) { rig.ir(camNome, !ultimoTr || chave.endsWith(":replay")); ultimoTr = chave; }
       rig.quadro(now, dt);

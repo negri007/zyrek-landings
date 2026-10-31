@@ -177,7 +177,7 @@ function cartoes(m: Maquina) {
 function renderLista(slug: string) {
   const ml = $("mlist");
   ml.innerHTML = S.machines.map((m) => `<button class="mbtn" type="button" data-go="${m.slug}" aria-current="${m.slug === slug}">
-      ${anilha("mb-an")}<span class="mb-t"><b>${esc(m.name)}</b><small><span class="tg">${esc(m.tag)}</span> · ${esc(m.group)}${m.video ? "" : " · sem vídeo"}</small></span></button>`).join("");
+      ${anilha("mb-an")}<span class="mb-t"><b>${esc(m.name)}</b><small><span class="tg">${esc(m.tag)}</span> · ${esc(m.group)}${!m.video ? " · sem vídeo" : m.roteiro ? " · instrutora 3D" : ""}</small></span></button>`).join("");
   ml.querySelectorAll<HTMLButtonElement>("[data-go]").forEach((b) => (b.onclick = () => { girarAnilha(b.querySelector(".mb-an")); tocarTag(b.dataset.go!); }));
 }
 

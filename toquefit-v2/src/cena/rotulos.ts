@@ -49,8 +49,9 @@ export function criarRotulos(o: OpcoesRotulos) {
    */
   function livre(cands: { x: number; y: number }[], w: number, h: number, margem = 8, topo = 52, evitar: Caixa[] = [], folga = 30) {
     const ss = obstaculos();
-    let best = cands[0], bs = -Infinity;
-    for (const c of cands) {
+    let best = { ...cands[0], i: 0 }, bs = -Infinity;
+    for (let i = 0; i < cands.length; i++) {
+      const c = cands[i];
       const x = Math.max(margem, Math.min(W - w - margem, c.x)), y = Math.max(topo, Math.min(H - h - margem, c.y));
       let s = Infinity;
       for (const sg of ss) s = Math.min(s, distSegRet(sg, x - 6, y - 6, w + 12, h + 12));
@@ -58,8 +59,8 @@ export function criarRotulos(o: OpcoesRotulos) {
         const dx = Math.max(r.x - (x + w), 0, x - (r.x + r.w)), dy = Math.max(r.y - (y + h), 0, y - (r.y + r.h));
         s = Math.min(s, Math.hypot(dx, dy) - 4);
       }
-      if (s >= folga) return { x, y };
-      if (s > bs + 0.5) { bs = s; best = { x, y }; }
+      if (s >= folga) return { x, y, i };
+      if (s > bs + 0.5) { bs = s; best = { x, y, i }; }
     }
     return best;
   }
@@ -71,7 +72,8 @@ export function criarRotulos(o: OpcoesRotulos) {
       o.overlay.appendChild(sp);
       pool.push(sp);
     }
-    const ev = list.length ? o.evitar?.() || [] : [];
+    // cada rótulo desvia da interface e dos rótulos já colocados neste quadro
+    const ocupadas: Caixa[] = list.length ? (o.evitar?.() || []).slice() : [];
     for (let i = 0; i < pool.length; i++) {
       const sp = pool[i], L = list[i];
       if (!L) { sp.style.opacity = "0"; continue; }
@@ -80,10 +82,19 @@ export function criarRotulos(o: OpcoesRotulos) {
       if (sp.className !== c) sp.className = c;
       const pt = proj(L.at);
       const w = sp.offsetWidth, h = sp.offsetHeight, g = 26;
-      const pos = livre([
+      const cands = [
         { x: pt.x - w / 2, y: pt.y - h - g }, { x: pt.x - w / 2, y: pt.y + g },
         { x: pt.x + g, y: pt.y - h / 2 }, { x: pt.x - w - g, y: pt.y - h / 2 },
-      ], w, h, 8, 56, ev);
+        { x: pt.x + g, y: pt.y - h - g }, { x: pt.x - w - g, y: pt.y - h - g },
+        { x: pt.x + g, y: pt.y + g }, { x: pt.x - w - g, y: pt.y + g },
+        { x: pt.x - w / 2, y: pt.y - 2 * h - g }, { x: pt.x - w / 2, y: pt.y + h + g },
+      ];
+      // o lado escolhido no quadro anterior vem primeiro: o rótulo não fica pulando de um lado para o outro
+      const ant = sp.dataset.t === L.tx ? Number(sp.dataset.k) : NaN;
+      const ordem = Number.isInteger(ant) && ant < cands.length ? [ant, ...cands.keys()].filter((k, j, a) => a.indexOf(k) === j) : [...cands.keys()];
+      const pos = livre(ordem.map((k) => cands[k]), w, h, 8, 56, ocupadas);
+      sp.dataset.k = String(ordem[pos.i]);
+      ocupadas.push({ x: pos.x - 4, y: pos.y - 4, w: w + 8, h: h + 8 });
       sp.style.transform = `translate(${pos.x.toFixed(1)}px,${pos.y.toFixed(1)}px)`;
       sp.style.opacity = pt.z < 1 ? "1" : "0";
     }

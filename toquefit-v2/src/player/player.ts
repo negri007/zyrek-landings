@@ -84,6 +84,8 @@ export function criarPlayer(host: HTMLElement, o: OpcoesPlayer) {
   // ---- cena 3D (three.js baixado só quando o player aparece na tela) ----
   let m: Motor | null = null;
   let cena: CenaRoteiro | null = null;
+  /** libera a cena 3D da placa de vídeo quando o player sai da tela */
+  let liberar: (() => void) | null = null;
   let destruido = false;
   const caixas = (sel: string[]) => {
     const sr = stage.getBoundingClientRect();
@@ -120,14 +122,20 @@ export function criarPlayer(host: HTMLElement, o: OpcoesPlayer) {
         if (criar) {
           cena = criar({ linha: () => L, tempo: () => t, overlay: ov, reduzido: o.reduzido, evitar: () => caixas([".ouvir", ".selo", ".replay", ".who b", ".big.on"]) });
           if (import.meta.env.DEV) (window as unknown as { __cena: typeof cena }).__cena = cena;
+          const minha = cena;
+          liberar = () => mod.descartarCena(minha.scene);
           m.montar(stage, cena);
           const modo = await cena.carregar((p) => {
             $(".c-p").textContent = Math.round(p * 100) + "%";
             stage.style.setProperty("--prog", String(p));
           });
+          // o aluno trocou de aparelho enquanto o modelo baixava: a instrutora que acabou de chegar também sai
+          if (destruido) { liberar(); return; }
           marcarPronto(modo);
         } else {
-          m.montar(stage, mod.criarPilha({ tocando: () => tocando, reduzido: o.reduzido }));
+          const pilha = mod.criarPilha({ tocando: () => tocando, reduzido: o.reduzido });
+          liberar = () => mod.descartarCena(pilha.scene);
+          m.montar(stage, pilha);
           marcarPronto("pilha");
         }
       } catch (e) {
@@ -385,6 +393,7 @@ export function criarPlayer(host: HTMLElement, o: OpcoesPlayer) {
       for (const a of vozes.values()) { a.pause(); a.removeAttribute("src"); a.load(); }
       document.removeEventListener("visibilitychange", vis);
       m?.desmontar();
+      liberar?.();
     },
   };
 }

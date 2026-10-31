@@ -8,7 +8,8 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "voz": "python ferramentas/gerar_voz.py",
-    "modelo": "gltf-transform optimize assets/michelle.glb public/models/michelle.glb --compress meshopt --texture-compress webp --texture-size 1024 --simplify false"
+    "modelo": "gltf-transform optimize assets/michelle.glb public/models/michelle.glb --compress meshopt --texture-compress webp --texture-size 1024 --simplify false",
+    "checar": "node ferramentas/checar-roteiros.mjs && tsc --noEmit"
   },
   "dependencies": {
     "@fontsource-variable/archivo": "^5.3.0",

@@ -44,7 +44,9 @@ Para trocar um texto, edite o roteiro e rode `npm run voz`. A duração dos trec
 
 Só o supino tem voz gravada. Os outros seis roteiros tocam sem voz até rodar o comando acima para cada um: `leg-press-45`, `cadeira-extensora`, `cadeira-flexora`, `desenvolvimento`, `remada-baixa` e `puxada-frontal`.
 
-No modo dev, `__ir("descida", "Desça")` no console pausa o vídeo e pula para a palavra (ou para os segundos) de um trecho.
+Antes de publicar, rode `npm run checar`: confere se cada palavra que a coreografia espera está na fala da instrutora, se todo trecho tem coreografia e se o roteiro está registrado em todos os lugares, e roda a checagem de tipos.
+
+No modo dev, `__ir("descida", "Desça")` no console pausa o vídeo e pula para a palavra (ou para os segundos) de um trecho, e `window.__olhar = { p: [x, y, z], l: [x, y, z] }` prende a câmera num ponto para inspecionar detalhes (`null` solta).
 
 ## Testes (com `npm run dev` rodando, Chrome instalado)
 

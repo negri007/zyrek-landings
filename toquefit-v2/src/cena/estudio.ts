@@ -41,6 +41,7 @@ function texturaSombra() {
   g.fillStyle = r;
   g.fillRect(0, 0, 128, 128);
   texSombra = new THREE.CanvasTexture(c);
+  texSombra.userData.compartilhada = true;
   return texSombra;
 }
 

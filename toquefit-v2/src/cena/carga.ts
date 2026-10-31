@@ -8,7 +8,7 @@ import { criarPuxada } from "./puxada";
 import { criarRemada } from "./remada";
 import { criarSupino } from "./supino";
 
-export { motor } from "./motor";
+export { descartarCena, motor } from "./motor";
 export { criarPilha } from "./pilha";
 
 /** Cena 3D de cada roteiro gravado (a chave é o slug do roteiro). */

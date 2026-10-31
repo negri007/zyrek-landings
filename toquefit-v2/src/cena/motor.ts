@@ -114,6 +114,28 @@ export class Motor {
   };
 }
 
+/**
+ * Libera da placa de vídeo tudo o que a cena criou (geometrias, materiais, texturas).
+ * Sem isso, cada aparelho aberto deixaria memória presa até a aba travar no celular.
+ * Texturas marcadas com userData.compartilhada ficam (são reaproveitadas entre cenas).
+ */
+export function descartarCena(scene: THREE.Scene) {
+  const feitos = new Set<object>();
+  const largar = (x: { dispose(): void } | null | undefined) => { if (x && !feitos.has(x)) { feitos.add(x); x.dispose(); } };
+  scene.traverse((o) => {
+    const m = o as THREE.Mesh;
+    if (m.geometry) largar(m.geometry);
+    const mats = Array.isArray(m.material) ? m.material : m.material ? [m.material] : [];
+    for (const mat of mats) {
+      for (const v of Object.values(mat)) if (v instanceof THREE.Texture && !v.userData.compartilhada) largar(v);
+      largar(mat);
+    }
+    const s = o as THREE.SkinnedMesh;
+    if (s.isSkinnedMesh) largar(s.skeleton);
+  });
+  scene.clear();
+}
+
 let unico: Motor | null | undefined;
 /** null quando o navegador não tem WebGL. */
 export function motor(): Motor | null {
@@ -122,6 +144,7 @@ export function motor(): Motor | null {
     const t = document.createElement("canvas");
     if (!(t.getContext("webgl2") || t.getContext("webgl"))) throw new Error("sem webgl");
     unico = new Motor();
+    if (import.meta.env.DEV) (window as unknown as { __motor: Motor }).__motor = unico;
   } catch {
     unico = null;
   }

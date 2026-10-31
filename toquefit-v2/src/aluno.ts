@@ -1,7 +1,7 @@
 // Visão do aluno: o celular que abre ao encostar na tag NFC do aparelho.
 import { animate } from "motion";
 import { DADOS, carregarRoteiro } from "./data/carregar";
-import { S, blobs, bySlug, save, type Maquina } from "./estado";
+import { S, blobs, bySlug, contarTreino, save, type Maquina } from "./estado";
 import { criarPlayer } from "./player/player";
 import { montarLinha } from "./player/timeline";
 import { icone } from "./ui/icones";
@@ -68,7 +68,7 @@ export async function renderAluno(slug: string, contarToque: boolean) {
   animarSeries(sc);
   animarSeletor(sc);
   const se = lerSeries(m.sets || "");
-  if (se) ligarSeries(sc.querySelector<HTMLElement>(".peca.series")!, se.n, lerDescanso(m.rest || ""));
+  if (se) ligarSeries(sc.querySelector<HTMLElement>(".peca.series")!, se.n, lerDescanso(m.rest || ""), () => contarTreino("series", slug));
 
   sc.querySelectorAll<HTMLButtonElement>("[data-fb]").forEach((b) => (b.onclick = () => {
     S.help[b.dataset.fb as "yes" | "no"]++;
@@ -115,14 +115,14 @@ export async function renderAluno(slug: string, contarToque: boolean) {
           b.setAttribute("aria-current", String(on));
         });
       },
-      onFim() { steps.forEach((li) => li.classList.remove("on")); $("steps").classList.remove("live"); },
+      onFim() { steps.forEach((li) => li.classList.remove("on")); $("steps").classList.remove("live"); contarTreino("fins", slug); },
     });
     chs.querySelectorAll<HTMLButtonElement>("button").forEach((b) => (b.onclick = () => player?.seek(+b.dataset.t!)));
   } else {
     player = criarPlayer(host, {
       linha: linhaDePassos(m), instrutora: DADOS.instrutorPadrao, reduzido: RM, sem3d, fim: proximoPasso(m),
       onTrecho(tr) { marcarPasso(tr.step); },
-      onFim() { steps.forEach((li) => li.classList.remove("on")); $("steps").classList.remove("live"); },
+      onFim() { steps.forEach((li) => li.classList.remove("on")); $("steps").classList.remove("live"); contarTreino("fins", slug); },
     });
   }
   if (import.meta.env.DEV) {
@@ -144,7 +144,14 @@ export async function renderAluno(slug: string, contarToque: boolean) {
 function proximoPasso(m: Maquina) {
   const se = lerSeries(m.sets || "");
   const texto = se ? `${se.n} séries de ${se.reps} repetições` : m.sets || "Siga o passo a passo abaixo";
-  return { titulo: "Agora é com você", texto: m.rest ? `${texto} · descanso de ${m.rest}` : texto };
+  // próximo aparelho com vídeo na ordem da academia: o aluno segue o treino sem voltar à lista
+  const lista = S.machines.filter((x) => x.video || x.slug === m.slug);
+  const prox = lista[(lista.findIndex((x) => x.slug === m.slug) + 1) % lista.length];
+  return {
+    titulo: "Agora é com você",
+    texto: m.rest ? `${texto} · descanso de ${m.rest}` : texto,
+    proximo: prox && prox.slug !== m.slug ? { texto: "Próximo: " + prox.name, ir: () => tocarTag(prox.slug) } : undefined,
+  };
 }
 
 /** Séries como anilhas na barra e ajuste como o pino seletor da máquina. */

@@ -14,6 +14,10 @@ export interface Estado {
   calls: Chamado[];
   nextTag: number;
   nextCall: number;
+  /** vídeos assistidos até o fim hoje, por aparelho */
+  fins: Record<string, number>;
+  /** séries marcadas pelos alunos hoje, por aparelho */
+  series: Record<string, number>;
 }
 
 const KEY = "toquefit-demo-v2";
@@ -33,6 +37,7 @@ export function fresh(): Estado {
     help: { yes: DADOS.avaliacoes.ajudou, no: DADOS.avaliacoes.naoAjudou },
     calls: DADOS.chamados.map((c) => ({ id: c.id, slug: c.slug, at: now - c.minutosAtras * 60e3, done: c.atendido })),
     nextTag: ms.length + 1, nextCall: Math.max(...DADOS.chamados.map((c) => c.id)) + 1,
+    fins: {}, series: {},
   };
 }
 
@@ -43,6 +48,9 @@ function load(): Estado | null {
     const e = JSON.parse(r) as Estado;
     // roteiros gravados depois que o estado foi salvo passam a valer para os aparelhos de exemplo
     for (const m of e.machines) m.roteiro = DADOS.aparelhos.find((a) => a.slug === m.slug)?.roteiro;
+    // estados salvos antes de existir o registro de treino
+    e.fins ||= {};
+    e.series ||= {};
     return e;
   } catch { return null; }
 }
@@ -54,5 +62,10 @@ export let S: Estado = load() || fresh();
 export function restaurar() { S = fresh(); save(); }
 
 export const bySlug = (s: string) => S.machines.find((m) => m.slug === s);
+/** soma 1 num contador por aparelho e salva */
+export function contarTreino(tipo: "fins" | "series", slug: string) {
+  S[tipo][slug] = (S[tipo][slug] || 0) + 1;
+  save();
+}
 /** vídeos enviados pela gaveta nesta sessão (só na memória) */
 export const blobs: Record<string, string> = {};

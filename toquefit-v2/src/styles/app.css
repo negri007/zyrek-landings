@@ -80,7 +80,9 @@ p { text-wrap: pretty }
 .fim { position: absolute; left: 12px; right: 12px; bottom: 12px; z-index: 6; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 2px 12px; padding: 14px 14px 14px 16px; border-radius: 16px; background: rgba(11, 13, 16, .86); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); box-shadow: 0 0 0 1px rgba(243, 255, 44, .35) inset, 0 18px 40px -18px rgba(0, 0, 0, .8); cursor: default }
 .fim b { font: 780 19px/1.1 var(--display); font-stretch: 88%; color: var(--neon) }
 .fim span { grid-column: 1; font-size: 13.5px; color: var(--ink-2) }
-.fim .btn { grid-column: 2; grid-row: 1 / span 2 }
+.fim-acts { grid-column: 2; grid-row: 1 / span 2; display: flex; flex-direction: column; gap: 6px }
+.fim-acts .btn { white-space: nowrap }
+@container (max-width: 420px) { .fim { grid-template-columns: 1fr } .fim-acts { grid-column: 1; grid-row: auto; margin-top: 8px } .fim-acts .btn { width: 100%; white-space: normal; text-align: center; line-height: 1.2 } }
 .stage.no-fim canvas { filter: brightness(.55) saturate(.8); transition: filter .4s var(--ease) }
 
 /* legenda karaokê */

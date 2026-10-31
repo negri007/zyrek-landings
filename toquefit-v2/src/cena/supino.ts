@@ -3,7 +3,7 @@
 import * as THREE from "three";
 import type { CenaRoteiro, OpcoesCena } from "./motor";
 import { criarRig, type Enquadramento } from "./camera";
-import { CRIT, NEON, materiais, montarEstudio } from "./estudio";
+import { CRIT, NEON, materiais, montarEstudio, sombra } from "./estudio";
 import { carregarModelo, criarPessoa, ik2, type Lado, type Pessoa } from "./pessoa";
 import { criarSuavizador } from "./roteiro3d";
 import { criarRotulos, type Rotulo } from "./rotulos";
@@ -45,6 +45,7 @@ export function criarSupino(o: OpcoesCena) {
   benchG.scale.setScalar(1.7);
   benchG.position.y = -1.62;
   scene.add(benchG);
+  sombra(benchG, -0.3, 0, 2.1, 1.0);
   const box = (w: number, h: number, d: number, m: THREE.Material, x: number, y: number, z: number) => {
     const b = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m);
     b.position.set(x, y, z);

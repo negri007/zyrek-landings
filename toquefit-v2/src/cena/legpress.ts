@@ -3,7 +3,7 @@
 import * as THREE from "three";
 import type { CenaRoteiro, OpcoesCena } from "./motor";
 import { criarRig, type Enquadramento } from "./camera";
-import { NEON, materiais, montarEstudio } from "./estudio";
+import { NEON, materiais, montarEstudio, sombra } from "./estudio";
 import { carregarModelo, criarPessoa, ik2, type Pessoa } from "./pessoa";
 import { criarSuavizador } from "./roteiro3d";
 import { criarRotulos, type Rotulo } from "./rotulos";
@@ -61,6 +61,7 @@ export function criarLegPress(o: OpcoesCena): CenaRoteiro {
   maq.scale.setScalar(1.7);
   maq.position.y = -1.62;
   scene.add(maq);
+  sombra(maq, 0.4, 0, 2.8, 1.1);
   const _up = V(0, 1, 0), _v = V();
   /** caixa centrada em `c`, comprimento `w` ao longo da direção `dir` (no plano xy) */
   const peca = (w: number, h: number, d: number, m: THREE.Material, c: V3, dir = V(1, 0, 0), pai: THREE.Object3D = maq) => {

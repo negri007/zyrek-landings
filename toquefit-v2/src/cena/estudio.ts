@@ -23,6 +23,41 @@ export function montarEstudio(scene: THREE.Scene, piso = -1.62) {
   const grid = new THREE.GridHelper(10, 20, 0x3a4048, 0x262b31);
   grid.position.y = piso;
   scene.add(grid);
+  // a grade some no escuro ao longe: dá profundidade sem desenhar mais nada
+  scene.fog = new THREE.Fog(0x0b0d10, 8.5, 17);
+}
+
+let texSombra: THREE.CanvasTexture | null = null;
+/** Mancha radial escura feita uma vez e reaproveitada por todas as sombras. */
+function texturaSombra() {
+  if (texSombra) return texSombra;
+  const c = document.createElement("canvas");
+  c.width = c.height = 128;
+  const g = c.getContext("2d")!;
+  const r = g.createRadialGradient(64, 64, 0, 64, 64, 64);
+  r.addColorStop(0, "rgba(0,0,0,1)");
+  r.addColorStop(0.55, "rgba(0,0,0,.55)");
+  r.addColorStop(1, "rgba(0,0,0,0)");
+  g.fillStyle = r;
+  g.fillRect(0, 0, 128, 128);
+  texSombra = new THREE.CanvasTexture(c);
+  return texSombra;
+}
+
+/**
+ * Sombra de contato no chão (coordenadas locais do aparelho, chão em y = 0): aparelho e instrutora
+ * param de flutuar sobre a grade. Mais barata que sombra de luz de verdade, que pesaria no celular.
+ */
+export function sombra(raiz: THREE.Object3D, x: number, z: number, largura: number, fundo: number, forca = 0.6) {
+  const m = new THREE.Mesh(
+    new THREE.PlaneGeometry(largura, fundo),
+    new THREE.MeshBasicMaterial({ map: texturaSombra(), transparent: true, opacity: forca, depthWrite: false, fog: false }),
+  );
+  m.rotation.x = -Math.PI / 2;
+  m.position.set(x, 0.004, z);
+  m.renderOrder = -1;
+  raiz.add(m);
+  return m;
 }
 
 /** Materiais dos aparelhos e do manequim de reserva. */

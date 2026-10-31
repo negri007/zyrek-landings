@@ -9,6 +9,14 @@ const TOQUES_POR_ANILHA = 10;
 /** medidor em forma de barra: eixo com recartilhado e anilhas na ponta */
 const haltere = (w: number, cls = "") => `<div class="haltere ${cls}" data-w="${Math.max(0.06, w).toFixed(3)}" aria-hidden="true"><i class="h-eixo"></i><i class="h-fill"></i><span class="h-run"><span class="h-pl"><i></i><i></i><i></i></span></span></div>`;
 
+/** Treino registrado hoje no celular dos alunos: séries marcadas e vídeos vistos até o fim. */
+function hoje(slug: string) {
+  const se = S.series[slug] || 0, fi = S.fins[slug] || 0;
+  if (!se && !fi) return `<span class="hoje vazio">Sem registro</span>`;
+  const partes = [se ? `${se} ${se > 1 ? "séries" : "série"}` : "", fi ? `${fi} ${fi > 1 ? "vídeos completos" : "vídeo completo"}` : ""].filter(Boolean);
+  return `<span class="hoje">${partes.join("<br>")}</span>`;
+}
+
 export function renderPainel(animar: boolean) {
   const today = DAILY[13] + S.extra;
   const week = DAILY.slice(7, 13).reduce((a, b) => a + b, 0) + today;
@@ -35,6 +43,7 @@ export function renderPainel(animar: boolean) {
     <td><span class="tg">${esc(m.tag)}</span></td>
     <td>${!m.video ? `<span class="pill no">Sem vídeo</span>` : m.roteiro ? `<span class="pill neon">Instrutora 3D</span>` : `<span class="pill ok">Com vídeo</span>`}</td>
     <td><div class="cell-n"><span class="num">${fmt(m.t7)}</span>${haltere(m.t7 / max, "mini-h")}</div></td>
+    <td>${hoje(m.slug)}</td>
     <td><div class="row-acts"><a href="#m-${m.slug}">Ver página</a><button type="button" data-edit="${m.slug}">${m.video ? "Editar" : "Enviar vídeo"}</button></div></td></tr>`).join("");
   // halteres: o eixo acende até o valor e as anilhas deslizam até lá
   const halteres = document.querySelectorAll<HTMLElement>(".haltere");

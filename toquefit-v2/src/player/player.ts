@@ -15,7 +15,7 @@ export interface OpcoesPlayer {
   /** roteiro gravado: abre a cena 3D da instrutora; sem ele, a pilha de anilhas */
   roteiro?: string;
   /** cartão no fim do vídeo: o que o aluno faz agora */
-  fim?: { titulo: string; texto: string };
+  fim?: { titulo: string; texto: string; proximo?: { texto: string; ir: () => void } };
   /** só para testes: usa a imagem estática no lugar da cena 3D */
   sem3d?: boolean;
   onTrecho?(tr: Trecho): void;
@@ -43,7 +43,7 @@ export function criarPlayer(host: HTMLElement, o: OpcoesPlayer) {
         <span class="c-t">${info.carregando}</span><span class="c-p num">0%</span>
       </div>
       <div class="replay" hidden>${icone("lento")} Replay em câmera lenta · 0,5×</div>
-      ${o.fim ? `<div class="fim" hidden><b>${esc(o.fim.titulo)}</b><span>${esc(o.fim.texto)}</span><button class="btn sm" type="button" data-a="denovo">${icone("repetir")} Ver de novo</button></div>` : ""}
+      ${o.fim ? `<div class="fim" hidden><b>${esc(o.fim.titulo)}</b><span>${esc(o.fim.texto)}</span><div class="fim-acts"><button class="btn sm" type="button" data-a="denovo">${icone("repetir")} Ver de novo</button>${o.fim.proximo ? `<button class="btn sm primary" type="button" data-a="proximo">${esc(o.fim.proximo.texto)}</button>` : ""}</div></div>` : ""}
     </div>
     <div class="ctl">
       <div class="bar" role="slider" tabindex="0" aria-label="Posição do vídeo" aria-valuemin="0" aria-valuemax="${Math.round(L.dur)}" aria-valuenow="0">
@@ -223,6 +223,7 @@ export function criarPlayer(host: HTMLElement, o: OpcoesPlayer) {
   bOuvir.onclick = ligarSom;
   // tocar no vídeo também libera a voz
   host.querySelector<HTMLElement>("[data-a=denovo]")?.addEventListener("click", play);
+  host.querySelector<HTMLElement>("[data-a=proximo]")?.addEventListener("click", () => o.fim?.proximo?.ir());
   stage.addEventListener("pointerup", (e) => {
     if ((e.target as HTMLElement).closest("button")) return;
     if (!som && temVoz) ligarSom();
@@ -240,6 +241,8 @@ export function criarPlayer(host: HTMLElement, o: OpcoesPlayer) {
     bar.addEventListener("pointerup", up);
   });
   bar.addEventListener("keydown", (e) => {
+    // espaço e K tocam/pausam, como nos players de vídeo
+    if (e.key === " " || e.key === "k" || e.key === "K") { tocando ? pause() : play(); e.preventDefault(); return; }
     const passo = e.shiftKey ? 10 : 3;
     if (e.key === "ArrowRight") { seek(t + passo); e.preventDefault(); }
     else if (e.key === "ArrowLeft") { seek(t - passo); e.preventDefault(); }

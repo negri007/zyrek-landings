@@ -3,7 +3,7 @@
 // com o joelho exatamente no eixo, e as pernas seguem a alavanca.
 // Coordenadas locais: x para a frente, y para cima, z para os lados; 1 unidade ≈ 85 cm.
 import * as THREE from "three";
-import { materiais } from "./estudio";
+import { materiais, sombra } from "./estudio";
 import { criarPecas, criarPilhaPesos } from "./pecas";
 import { carregarModelo, criarPessoa, type Pessoa } from "./pessoa";
 import { V, suave, type V3 } from "./util3d";
@@ -26,6 +26,8 @@ export function criarCadeira(maq: THREE.Group, o: OpcoesCadeira) {
   const { metal, estofado, neon } = mats;
   const { peca, tubo, ligar } = criarPecas(maq);
 
+  sombra(maq, 0.15, 0, 1.7, 1.0);
+  sombra(maq, -0.72, -0.5, 0.8, 0.55, 0.5);
   // ---- banco e estrutura ----
   peca(1.9, 0.05, 0.6, metal, V(-0.15, 0.025, 0));
   peca(0.54, 0.07, 0.44, estofado, V(0.14, 0.485, 0));

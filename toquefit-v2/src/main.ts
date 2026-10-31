@@ -67,7 +67,7 @@ $("app").innerHTML = `
       <div class="card"><div class="card-h"><h2>Mais acessados</h2><span>7 dias</span></div><ul class="top" id="top"></ul></div>
       <div class="card"><div class="card-h"><h2>Aparelhos</h2><span id="mcount"></span></div>
         <div class="tbl-wrap"><table>
-          <thead><tr><th scope="col">Aparelho</th><th scope="col">Tag</th><th scope="col">Vídeo</th><th scope="col">Toques 7 dias</th><th scope="col"><span class="sr">Ações</span></th></tr></thead>
+          <thead><tr><th scope="col">Aparelho</th><th scope="col">Tag</th><th scope="col">Vídeo</th><th scope="col">Toques 7 dias</th><th scope="col">Hoje</th><th scope="col"><span class="sr">Ações</span></th></tr></thead>
           <tbody id="tbody"></tbody>
         </table></div>
       </div>

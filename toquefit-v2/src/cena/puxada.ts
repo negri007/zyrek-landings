@@ -4,7 +4,7 @@
 import * as THREE from "three";
 import type { CenaRoteiro, OpcoesCena } from "./motor";
 import type { Enquadramento } from "./camera";
-import { materiais, montarEstudio } from "./estudio";
+import { materiais, montarEstudio, sombra } from "./estudio";
 import { criarPecas, criarPilhaPesos } from "./pecas";
 import { carregarModelo, criarPessoa, type Pessoa } from "./pessoa";
 import { cenaComRoteiro, type PoseBase } from "./roteiro3d";
@@ -44,6 +44,7 @@ export function criarPuxada(o: OpcoesCena): CenaRoteiro {
   maq.scale.setScalar(1.7);
   maq.position.y = -1.62;
   scene.add(maq);
+  sombra(maq, -0.25, 0, 1.9, 1.1);
   const { peca, tubo, ligar } = criarPecas(maq);
 
   // ---- banco, rolo das coxas, torre com polia ----

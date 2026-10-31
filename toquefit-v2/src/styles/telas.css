@@ -268,6 +268,8 @@ td .tg { font: 500 12px var(--mono); color: var(--muted); white-space: nowrap }
 .pill.ok { background: var(--good-bg); color: var(--good) }
 .pill.no { background: var(--warn-bg); color: var(--warn) }
 .pill.neon { background: var(--neon-soft); color: var(--neon) }
+.hoje { font-size: 12.5px; line-height: 1.35; color: var(--ink-2); white-space: nowrap }
+.hoje.vazio { color: var(--dim) }
 .cell-n { display: flex; align-items: center; gap: 10px }
 .cell-n .num { min-width: 2.5em }
 
@@ -296,7 +298,8 @@ td .tg { font: 500 12px var(--mono); color: var(--muted); white-space: nowrap }
   td:nth-child(2) { text-align: right }
   td:nth-child(4) { align-self: center }
   td:nth-child(4) .num::after { content: " toques"; color: var(--muted); font-size: 12.5px }
-  td:nth-child(5) { grid-column: 1 / -1 }
+  td:nth-child(5) { align-self: center; text-align: right }
+  td:nth-child(6) { grid-column: 1 / -1 }
   .row-acts { justify-content: flex-start }
   .row-acts a, .row-acts button { min-height: 40px; flex: 1; justify-content: center }
 }

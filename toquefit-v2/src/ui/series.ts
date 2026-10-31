@@ -14,7 +14,7 @@ const mmss = (s: number) => Math.floor(s / 60) + ":" + String(s % 60).padStart(2
 const ordinal = (i: number) => `${i}ª`;
 
 /** Liga o cartão de séries: `card` contém a .barra-series e o .serie-ctl. */
-export function ligarSeries(card: HTMLElement, n: number, descanso: number) {
+export function ligarSeries(card: HTMLElement, n: number, descanso: number, aoMarcar?: () => void) {
   const ctl = card.querySelector<HTMLElement>(".serie-ctl");
   const pls = [...card.querySelectorAll<SVGRectElement>(".barra-series .pl")];
   if (!ctl || !pls.length) return;
@@ -31,6 +31,7 @@ export function ligarSeries(card: HTMLElement, n: number, descanso: number) {
   function marcar() {
     const pl = pls[pls.length - 1 - feitas];
     feitas++;
+    aoMarcar?.();
     // a anilha da série feita sai da barra, de fora para dentro, como no aparelho
     pl.classList.add("feita");
     if (!RM) animate(pl, { transform: ["translateX(0)", "translateX(14px)"], opacity: [1, 0.16] }, { type: "spring", bounce: 0.2, visualDuration: 0.4 });

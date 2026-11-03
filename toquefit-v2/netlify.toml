@@ -1,0 +1,29 @@
+# Demonstração do ToqueFit no Netlify (esta pasta é o diretório base do site).
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# arquivos com hash no nome (JS, CSS, fontes) nunca mudam: cache longo
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# modelo 3D e áudios: cache de um dia (podem ser regerados com o mesmo nome)
+[[headers]]
+  for = "/models/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+[[headers]]
+  for = "/audio/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+# demonstração: não aparecer em buscadores
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"

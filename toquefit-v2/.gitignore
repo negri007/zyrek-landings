@@ -5,3 +5,6 @@ dist
 !.env.example
 test-results
 tests/prints
+
+# Netlify (estado local do link do site)
+.netlify

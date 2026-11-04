@@ -8,6 +8,7 @@ import { icone } from "./ui/icones";
 import { $, RM, ago, esc, toast } from "./ui/util";
 import { anilha, animarSeletor, animarSeries, barraSeries, cronometro, girarAnilha, lerAjuste, lerSeries, seletor } from "./ui/academia";
 import { lerDescanso, ligarSeries } from "./ui/series";
+import { cancelarChamado, criarChamado, salaAtual } from "./sala";
 
 type Player = ReturnType<typeof criarPlayer>;
 let player: Player | null = null;
@@ -46,7 +47,7 @@ export async function renderAluno(slug: string, contarToque: boolean) {
   const temRoteiro = !!m.roteiro && m.video && !blob;
   const sc = $("p-scroll");
   sc.innerHTML = `
-    <div class="p-head"><span class="gym">${esc(DADOS.academia)}</span><span class="tagcode">${esc(m.tag)}</span></div>
+    <div class="p-head"><span class="gym">${esc(DADOS.academia)}</span><span class="p-head-r">${salaAtual() ? `<span class="ao-vivo-chip" title="Ligado ao painel da sala ${esc(salaAtual()!)}"><i aria-hidden="true"></i><span class="av-wait">Conectando</span><span class="av-ok">Ao vivo</span><span class="av-off">Sem conexão</span></span>` : ""}<span class="tagcode">${esc(m.tag)}</span></span></div>
     ${!m.video
       ? `<div class="player vazio"><div>${icone("nfc", "vazio-ic")}<b>Vídeo em gravação</b><p>A academia ainda está gravando este aparelho. Siga o passo a passo ou chame um instrutor.</p></div></div>`
       : blob
@@ -166,6 +167,7 @@ const MOTIVOS = ["O ajuste não ficou claro", "Rápido demais", "Meu aparelho é
 
 /** chamado do aluno neste aparelho; "sync" quando quem mudou foi o painel em outra aba */
 let tinhaChamado = false;
+const cancelados = new Set<string>();
 export function desenharCta(origem: "local" | "sync" = "local") {
   const slug = atual;
   if (!slug) return;
@@ -179,23 +181,47 @@ export function desenharCta(origem: "local" | "sync" = "local") {
   const entrar = () => { if (mudou && !RM) animate(cta.firstElementChild!, { opacity: [0, 1], transform: ["scale(.96)", "scale(1)"] }, { type: "spring", bounce: 0.3, visualDuration: 0.35 }); };
   if (c) {
     cta.innerHTML = `<div class="cta-espera" role="status">${icone("check", "ce-ic")}<span><b>Instrutor avisado</b><small>Aguarde no aparelho · chamou ${ago(c.at)}</small></span><button class="btn sm" type="button" id="cancelar">Cancelar</button></div>`;
-    $("cancelar").onclick = () => {
-      S.calls = S.calls.filter((x) => x !== c);
+    $("cancelar").onclick = async () => {
+      // pelo id: a consulta da sala (ou outra aba) troca os objetos da lista a cada poucos segundos
+      S.calls = S.calls.filter((x) => x.id !== c.id);
       save();
       desenharCta();
-      toast("Chamado cancelado");
-      $("call").focus();
+      document.getElementById("call")?.focus();
+      if (typeof c.id === "string" && c.id.startsWith("tmp-")) cancelados.add(c.id); // o servidor ainda vai responder
+      if (!salaAtual() || typeof c.id !== "string" || c.id.startsWith("tmp-")) { toast("Chamado cancelado"); return; }
+      try { await cancelarChamado(c.id); toast("Chamado cancelado"); }
+      catch { toast("Sem conexão: o instrutor ainda vê o chamado"); }
     };
     cta.classList.toggle("tracar", mudou && !RM);
     entrar();
   } else {
     cta.innerHTML = `<button class="btn primary" type="button" id="call">${icone("chamar")} Chamar instrutor</button>`;
-    $("call").onclick = () => {
-      S.calls.unshift({ id: S.nextCall++, slug, at: Date.now(), done: false });
+    $("call").onclick = async () => {
+      // aparece na hora; com sala ao vivo, o servidor confirma em seguida
+      const novo = { id: salaAtual() ? "tmp-" + Date.now() : S.nextCall++, slug, at: Date.now(), done: false };
+      const tmp = novo.id;
+      S.calls.unshift(novo);
       save();
       desenharCta();
-      toast("Instrutor avisado");
-      $("cancelar").focus();
+      document.getElementById("cancelar")?.focus();
+      if (!salaAtual()) { toast("Instrutor avisado"); return; }
+      try {
+        const doServidor = await criarChamado(slug);
+        // o aluno cancelou enquanto o pedido estava no ar: apaga também no servidor
+        if (cancelados.delete(String(tmp))) { void cancelarChamado(String(doServidor.id)).catch(() => {}); return; }
+        // a consulta da sala pode ter trazido este mesmo chamado antes da resposta: não duplica
+        if (S.calls.some((x) => x.id === doServidor.id)) S.calls = S.calls.filter((x) => x !== novo);
+        else Object.assign(novo, doServidor);
+        save();
+        toast("Instrutor avisado");
+      } catch {
+        // não deixa o aluno esperando um instrutor que não foi avisado
+        cancelados.delete(String(tmp));
+        S.calls = S.calls.filter((x) => x.id !== tmp);
+        save();
+        desenharCta();
+        toast("Sem conexão: o instrutor não foi avisado. Tente de novo");
+      }
     };
     entrar();
   }

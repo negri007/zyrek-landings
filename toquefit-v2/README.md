@@ -24,6 +24,15 @@ npm run build    # site estático em dist/
   - Peças comuns: `roteiro3d.ts` (laço de quadro: trecho, câmera, replay, rótulos, suavização da pose e cabeça acompanhando a fala), `pessoa.ts` (instrutora: IK de braços e pernas, `segurar` para fechar a mão em qualquer barra, giro do corpo, coluna e respiração), `cadeira.ts` (extensora e flexora), `pecas.ts` (caixas, tubos e pilha de anilhas), `estudio.ts` (luz, névoa e sombras de contato), `motor.ts` (renderizador único; `descartarCena` libera a placa de vídeo ao trocar de aparelho), `camera.ts`, `rotulos.ts` e `pilha.ts` (aparelhos sem roteiro).
 - `src/ui/series.ts`: contador de séries com descanso no celular do aluno.
 
+## Sala ao vivo (chamados entre aparelhos)
+
+No painel, "Conectar celular" cria uma sala de 6 letras e mostra um QR Code. O celular que abre esse link (`?sala=CODIGO`) manda o "Chamar instrutor" para o servidor, e o painel, em outro aparelho, vê o chamado em até 4 segundos e pode atender. O aluno é avisado quando o chamado é atendido.
+
+- Servidor: `netlify/functions/chamados.mjs` (Netlify Functions + Netlify Blobs). Um registro por chamado, que some depois de 12 h; até 40 chamados por sala; 120 pedidos por minuto por IP. Fica em JavaScript porque o empacotador da Netlify não lê `.mts` com o TypeScript 7 do projeto.
+- No `npm run dev` a mesma função roda pelo `vite.config.ts`, com um Blobs local em `.netlify/blobs-dev`. Não precisa da Netlify CLI.
+- `npm run testar:api` testa a função (criar, listar, atender, cancelar, entradas inválidas e sala cheia).
+- Sem sala, ou sem internet, tudo continua funcionando só no navegador. Sem conexão, o aluno vê que o instrutor não foi avisado.
+
 ## Novo aparelho com instrutora
 
 1. Escreva `src/data/roteiros/<aparelho>.json` e registre em `src/data/carregar.ts`.

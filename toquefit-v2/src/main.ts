@@ -4,7 +4,8 @@ import "@fontsource-variable/jetbrains-mono";
 import "./styles/app.css";
 import "./styles/telas.css";
 import { DADOS } from "./data/carregar";
-import { CHAVE, S, bySlug, recarregar } from "./estado";
+import { CHAVE, S, bySlug, fresh, recarregar, save } from "./estado";
+import { atendendo, salaAtual, sincronizarSala } from "./sala";
 import { desenharCta, pararAluno, renderAluno, slugAtual } from "./aluno";
 import { ligarGaveta, renderPainel, fecharGaveta } from "./painel";
 import { icone } from "./ui/icones";
@@ -67,6 +68,7 @@ $("app").innerHTML = `
         <button class="btn primary" type="button" id="add">Cadastrar aparelho</button>
       </div>
     </div>
+    <section class="card ao-vivo" id="ao-vivo" aria-label="Teste com um celular de verdade"></section>
     <section class="card agora" aria-label="Precisa de atenção agora">
       <div class="ag-col">
         <div class="card-h"><h2>Alunos esperando instrutor</h2><span id="ccount"></span></div>
@@ -160,12 +162,10 @@ function trocarTela() {
 }
 window.addEventListener("hashchange", rota);
 
-/* celular do aluno e painel abertos em abas diferentes: o que um salva aparece no outro na hora */
-window.addEventListener("storage", (e) => {
-  if (e.key !== CHAVE) return;
-  const antes = S.calls.filter((c) => !c.done).length;
-  recarregar();
-  const pend = S.calls.filter((c) => !c.done).length;
+/* os chamados mudaram fora desta página (outra aba ou a sala ao vivo): redesenha e avisa */
+const pendentes = () => S.calls.filter((c) => !c.done).length;
+function chamadosMudaram(antes: number) {
+  const pend = pendentes();
   if (visao === "painel") {
     if (!document.getElementById("drawer")!.hidden) return; // não mexe no painel com a gaveta aberta
     renderPainel(false);
@@ -175,7 +175,48 @@ window.addEventListener("storage", (e) => {
       if (li && !RM) animate(li, { backgroundColor: ["rgba(255, 181, 71, .22)", "rgba(255, 181, 71, 0)"] }, { duration: 1.6 });
     }
   } else desenharCta("sync");
+}
+
+/* celular do aluno e painel abertos em abas diferentes: o que um salva aparece no outro na hora */
+window.addEventListener("storage", (e) => {
+  if (e.key !== CHAVE) return;
+  const antes = pendentes();
+  recarregar();
+  chamadosMudaram(antes);
 });
+
+/* sala ao vivo: celular e painel em aparelhos diferentes, pelo servidor (netlify/functions/chamados.mjs) */
+let sincronia: ReturnType<typeof sincronizarSala> | null = null;
+function ligarSala() {
+  sincronia?.parar();
+  sincronia = null;
+  delete document.documentElement.dataset.conexao;
+  if (!salaAtual()) return;
+  sincronia = sincronizarSala((lista) => {
+    const antes = pendentes();
+    // o que o servidor manda vale, com duas exceções do que esta página fez e ainda não foi confirmado:
+    // o atendimento em andamento (não pode voltar a "esperando") e o chamado recém-feito pelo aluno
+    // (fica, a menos que a lista já traga o mesmo chamado do servidor)
+    const doServidor = lista.map((c) => (atendendo.has(String(c.id)) ? { ...c, done: true } : c));
+    const novos = S.calls.filter((c) => typeof c.id === "string" && c.id.startsWith("tmp-")
+      && !doServidor.some((x) => !x.done && x.slug === c.slug && x.at >= c.at - 10e3));
+    S.calls = [...novos, ...doServidor];
+    save();
+    chamadosMudaram(antes);
+  }, (estado) => {
+    document.documentElement.dataset.conexao = estado;
+    if (visao === "painel" && document.getElementById("drawer")!.hidden) renderPainel(false);
+    else if (visao === "aluno") desenharCta();
+  });
+}
+window.addEventListener("tf-sala", () => {
+  // saiu da sala: volta para os chamados de exemplo
+  if (!salaAtual()) { S.calls = fresh().calls; save(); }
+  ligarSala();
+  if (visao === "painel") renderPainel(false);
+  else desenharCta();
+});
+ligarSala();
 
 /* depois da primeira visita, a página e a instrutora abrem mesmo com o Wi-Fi da academia fraco */
 if (import.meta.env.PROD && "serviceWorker" in navigator) {

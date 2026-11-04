@@ -434,3 +434,35 @@ body.travado { overflow: hidden }
 .mbtn:active { transform: translateY(-1px) scale(.98) }
 .row-acts a:active, .row-acts button:active { transform: scale(.96) }
 @media (prefers-reduced-motion: reduce) { .ib:active, .chapters button:active, .mbtn:active, .row-acts a:active, .row-acts button:active { transform: none } .cta-espera .ce-ic path { animation: none !important; stroke-dashoffset: 0 } }
+
+/* sala ao vivo: painel mostra o QR do celular de teste; o celular mostra que está ligado */
+.ao-vivo { flex-direction: row; align-items: center; gap: 18px; padding: 16px 20px }
+.ao-vivo .av-t { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px }
+.ao-vivo .av-t b { font: 700 16px/1.25 var(--display); font-stretch: 92% }
+.ao-vivo .av-t span { font-size: 13.5px; color: var(--muted); line-height: 1.45 }
+.ao-vivo .btn { flex: none }
+.ao-vivo.on { border-color: rgba(243, 255, 44, .35) }
+.av-qr .qr { display: block; width: 112px; height: 112px; border-radius: 10px }
+.av-cod { font: 600 14px/1 var(--mono); letter-spacing: .12em; color: var(--neon); background: var(--neon-soft); padding: 4px 8px; border-radius: 7px; margin-left: 6px }
+.av-st { display: inline-flex; align-items: center; gap: 7px; color: var(--ink-2) !important }
+.av-st::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--dim) }
+html[data-conexao="ok"] .av-st::before { background: var(--good); box-shadow: 0 0 8px var(--good) }
+html[data-conexao="falhou"] .av-st::before { background: var(--crit) }
+.p-head-r { display: flex; align-items: center; gap: 8px }
+.ao-vivo-chip { display: inline-flex; align-items: center; gap: 6px; font: 600 11.5px/1 var(--body); color: var(--good); padding: 5px 9px; border-radius: 999px; background: var(--good-bg) }
+.ao-vivo-chip i { width: 6px; height: 6px; border-radius: 50%; background: currentColor; animation: pisca 1.6s ease-in-out infinite }
+/* três estados: conectando (neutro) até a primeira resposta, ao vivo, sem conexão */
+.ao-vivo-chip { color: var(--muted); background: rgba(255, 255, 255, .06) }
+.ao-vivo-chip .av-ok, .ao-vivo-chip .av-off { display: none }
+html[data-conexao="ok"] .ao-vivo-chip { color: var(--good); background: var(--good-bg) }
+html[data-conexao="ok"] .ao-vivo-chip .av-wait, html[data-conexao="falhou"] .ao-vivo-chip .av-wait { display: none }
+html[data-conexao="ok"] .ao-vivo-chip .av-ok { display: inline }
+html[data-conexao="falhou"] .ao-vivo-chip { color: var(--crit); background: var(--crit-bg) }
+html[data-conexao="falhou"] .ao-vivo-chip .av-off { display: inline }
+@media (max-width: 640px) {
+  .ao-vivo { flex-wrap: wrap }
+  .ao-vivo:not(.on) .btn { width: 100% }
+  .ao-vivo.on .av-t { flex-basis: calc(100% - 130px) }
+  .ao-vivo.on .btn { width: 100% }
+}
+@media (prefers-reduced-motion: reduce) { .ao-vivo-chip i { animation: none } }

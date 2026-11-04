@@ -7,6 +7,7 @@ import { $, RM, ago, contar, esc, fmt, toast } from "./ui/util";
 import { animarBarraCarregada, barraCarregada } from "./ui/academia";
 import { icone } from "./ui/icones";
 import { linkDaTag, qrSvg } from "./ui/qr";
+import { atendendo, atenderChamado, atualizarSalaJa, criarSala, linkDaSala, sairDaSala, salaAtual } from "./sala";
 
 const TOQUES_POR_ANILHA = 10;
 /** medidor em forma de barra: eixo com recartilhado e anilhas na ponta */
@@ -20,7 +21,38 @@ function hoje(slug: string) {
   return `<span class="hoje">${partes.join("<br>")}</span>`;
 }
 
+/** Cartão da sala ao vivo: QR Code para o celular de teste entrar, e o estado da conexão. */
+const textoConexao = () => {
+  const c = document.documentElement.dataset.conexao;
+  return c === "falhou" ? "Sem conexão com o servidor. Tentando de novo…" : c === "ok" ? "Conectado · atualiza a cada 4 segundos" : "Conectando…";
+};
+function renderAoVivo() {
+  const el = $("ao-vivo"), sala = salaAtual();
+  // a cada consulta só o estado muda: o QR e os botões só são refeitos quando a sala muda
+  if (el.dataset.sala === (sala || "")) {
+    const st = el.querySelector(".av-st");
+    if (st && st.textContent !== textoConexao()) st.textContent = textoConexao();
+    return;
+  }
+  el.dataset.sala = sala || "";
+  el.classList.toggle("on", !!sala);
+  if (!sala) {
+    el.innerHTML = `<div class="av-t"><b>Teste com um celular de verdade</b><span>Conecte um celular e toque em "Chamar instrutor": o chamado aparece aqui na hora.</span></div>
+      <button class="btn sm primary" type="button" id="av-ligar">${icone("nfc")} Conectar celular</button>`;
+    $("av-ligar").onclick = () => { criarSala(); S.calls = []; save(); window.dispatchEvent(new Event("tf-sala")); };
+    return;
+  }
+  const link = linkDaSala(sala, S.machines[0].slug);
+  el.innerHTML = `<div class="av-qr">${qrSvg(link, "QR Code da sala " + sala)}</div>
+    <div class="av-t"><b>Sala ao vivo <code class="av-cod">${sala}</code></b>
+      <span>Aponte a câmera do celular para o QR Code e toque em "Chamar instrutor" em qualquer aparelho.</span>
+      <span class="av-st" aria-live="polite">${textoConexao()}</span></div>
+    <button class="btn sm" type="button" id="av-sair">Encerrar sala</button>`;
+  $("av-sair").onclick = () => { sairDaSala(); window.dispatchEvent(new Event("tf-sala")); };
+}
+
 export function renderPainel(animar: boolean) {
+  renderAoVivo();
   const today = DAILY[13] + S.extra;
   const week = DAILY.slice(7, 13).reduce((a, b) => a + b, 0) + today;
   const prevWeek = DAILY.slice(0, 7).reduce((a, b) => a + b, 0);
@@ -81,10 +113,20 @@ export function renderPainel(animar: boolean) {
     : `<li class="empty-s">${icone("check", "ok-ic")}Todos os aparelhos têm vídeo.</li>`;
   document.querySelectorAll<HTMLButtonElement>("#pend [data-edit]").forEach((b) => (b.onclick = () => abrirGaveta(b.dataset.edit!, b)));
   document.querySelectorAll<HTMLButtonElement>("[data-done]").forEach((b) => (b.onclick = async () => {
-    const c = S.calls.find((x) => x.id === +b.dataset.done!);
+    const c = S.calls.find((x) => String(x.id) === b.dataset.done);
     if (c) c.done = true;
     save();
-    toast("Chamado marcado como atendido");
+    if (salaAtual() && c && typeof c.id === "string" && !c.id.startsWith("tmp-")) {
+      // o celular do aluno fica sabendo pelo servidor; se falhar, o chamado volta para a lista
+      const id = c.id;
+      atendendo.add(id); // até o servidor confirmar, a consulta da sala não traz o chamado de volta
+      atenderChamado(id).then(() => { atendendo.delete(id); toast("Chamado atendido. O aluno já foi avisado"); atualizarSalaJa(); }, () => {
+        atendendo.delete(id);
+        const ainda = S.calls.find((x) => x.id === id);
+        if (ainda) ainda.done = false;
+        save(); renderPainel(false); toast("Sem conexão: o chamado continua aberto");
+      });
+    } else toast("Chamado marcado como atendido");
     // o chamado sai da lista encolhendo, e só então o painel é redesenhado
     const li = b.closest("li");
     if (li && !RM) {

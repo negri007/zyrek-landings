@@ -13,6 +13,7 @@ const P: Record<string, string> = {
   fechar: '<path d="M6 6l12 12M18 6 6 18"/>',
   tela: '<path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/>',
   sairTela: '<path d="M9 4v5H4M20 9h-5V4M15 20v-5h5M4 15h5v5"/>',
+  girar: '<path d="M3.5 12c0 2.5 3.8 4.5 8.5 4.5s8.5-2 8.5-4.5-3.8-4.5-8.5-4.5"/><path d="m9.5 14.5 2.5 2-2.5 2.2"/><path d="M12 3.5v4"/>',
   enviar: '<path d="M12 16V4"/><path d="m7 9 5-5 5 5"/><path d="M5 20h14"/>',
 };
 

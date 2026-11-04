@@ -358,7 +358,7 @@ export function criarSupino(o: OpcoesCena) {
     }
   }
 
-  const rig = criarRig(camera, CAMS, o.reduzido, ["top"]);
+  const rig = criarRig(camera, CAMS, o.reduzido, ["top"], benchG);
   // rótulos não cobrem braços, rosto nem a barra
   const rotulos = criarRotulos({
     overlay: o.overlay, camera, raiz: benchG, evitar: o.evitar,
@@ -379,7 +379,7 @@ export function criarSupino(o: OpcoesCena) {
   const suavizar = criarSuavizador(o.reduzido);
   const fala = criarFala();
   const cena: CenaRoteiro & { medida: number[]; cams: typeof CAMS; dbg: () => unknown } = {
-    scene, camera, pronto: false,
+    scene, camera, pronto: false, orbita: rig.orbita,
     resize(w, h) { rotulos.resize(w, h); },
     frame(now, dt) {
       const L = o.linha();

@@ -169,6 +169,16 @@ export function criarPessoa(model: THREE.Object3D, raiz: THREE.Group, ancora: An
     Hd.hand.updateMatrixWorld(true);
   }
 
+  /** só em desenvolvimento: guarda o quanto cada mão ficou longe da barra (window.__pegada) */
+  function medirPegada(s: Lado, G: V3, eixo: V3, alvoPunho: V3) {
+    const w = window as unknown as { __pegada?: { lado: number; alcance: number; eixo: number; t?: number }[] };
+    if (!w.__pegada) return;
+    const pulso = loc(s.hand.hand);
+    const meio = loc(B[s.P + "HandMiddle1"]);
+    const d = meio.clone().sub(G);
+    const foraDoEixo = d.addScaledVector(eixo, -d.dot(eixo)).length();
+    w.__pegada.push({ lado: s.sd, alcance: pulso.distanceTo(alvoPunho), eixo: foraDoEixo });
+  }
   const _sh = V(), _sn = V(), _sd = V();
   /**
    * Segura uma barra ou pegador. G = ponto da barra no meio da mão; eixo = direção da barra;
@@ -192,10 +202,12 @@ export function criarPessoa(model: THREE.Object3D, raiz: THREE.Group, ancora: An
     // primeira estimativa dos dedos: do ombro para a barra, sem a parte ao longo dela
     _sh.copy(G).sub(S).addScaledVector(eixo, -G.clone().sub(S).dot(eixo)).normalize();
     let E = V(), W = V();
+    const alvoW = V();
     for (let i = 0; i < 2; i++) {
       _sn.crossVectors(eixo, _sh).normalize();
       if (_sn.dot(o.palma) < 0) _sn.negate();
       W = G.clone().addScaledVector(_sh, -s.hand.palmLen * 0.62).addScaledVector(_sn, -0.028);
+      alvoW.copy(W);
       const r = ik2(S, W, s.L1, s.L2, o.bend, i ? s.braco : undefined);
       E = r.M; W = r.P;
       // punho reto: os dedos seguem o antebraço, contornando a barra
@@ -208,6 +220,7 @@ export function criarPessoa(model: THREE.Object3D, raiz: THREE.Group, ancora: An
     aim(s.A, E); aim(s.F, W);
     orientHand(s, _sh.clone(), _sn.clone(), 1);
     setGrip(s, o.aperto ?? 1);
+    if (import.meta.env.DEV) medirPegada(s, G, eixo, alvoW);
     return { E, W, S };
   }
   /** Perna inteira: quadril → joelho → tornozelo, com o pé apontando para `ponta`. */

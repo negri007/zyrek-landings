@@ -155,6 +155,11 @@ export function criarRemada(o: OpcoesCena): CenaRoteiro {
       // com o tronco inclinado, o triângulo vai junto (as mãos ficam na frente do corpo)
       const S0 = h.ombro(h.side[0]).add(h.ombro(h.side[1])).multiplyScalar(0.5);
       H.x += S0.x;
+      // o triângulo nunca vai além do braço esticado: com a lombar curvada, quem avança é o ombro
+      for (const s of h.side) {
+        const Si = h.ombro(s), L = (s.L1 + s.L2) * 0.97, dy = Si.y - H.y, dz = Si.z - 0.065 * s.sd;
+        H.x = Math.min(H.x, Si.x + Math.sqrt(Math.max(0.01, L * L - dy * dy - dz * dz)) - 0.02);
+      }
       for (let i = 0; i < 2; i++) {
         const s = h.side[i], sd = s.sd;
         const ankle = PE.clone().setZ(0.11 * sd);

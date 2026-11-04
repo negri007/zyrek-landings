@@ -35,13 +35,13 @@ export interface DefCena<P extends PoseBase> {
 }
 
 export function cenaComRoteiro<P extends PoseBase>(o: OpcoesCena, d: DefCena<P>): CenaRoteiro {
-  const rig = criarRig(d.camera, d.cams, o.reduzido, d.fixas);
+  const rig = criarRig(d.camera, d.cams, o.reduzido, d.fixas, d.raiz);
   const rotulos = criarRotulos({ overlay: o.overlay, camera: d.camera, raiz: d.raiz, evitar: o.evitar, obstaculos: d.obstaculos });
   let ultimo = "";
   const suavizar = criarSuavizador(o.reduzido);
   const fala = criarFala();
   const cena: CenaRoteiro = {
-    scene: d.scene, camera: d.camera, pronto: false,
+    scene: d.scene, camera: d.camera, pronto: false, orbita: rig.orbita,
     resize(w, h) { rotulos.resize(w, h); },
     livre: rotulos.livre,
     frame(now, dt) {

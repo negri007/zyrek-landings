@@ -2,6 +2,7 @@
 import * as THREE from "three";
 import type { Linha } from "../player/timeline";
 import type { Caixa } from "./rotulos";
+import type { Orbita } from "./camera";
 
 export interface Cena {
   scene: THREE.Scene;
@@ -25,6 +26,8 @@ export interface CenaRoteiro extends Cena {
   pronto: boolean;
   /** "manequim" quando o modelo não carregou e a cena usa o boneco de reserva; rejeita quando não há reserva */
   carregar(onProg: (p: number) => void): Promise<"modelo" | "manequim">;
+  /** giro 360° com o dedo ou o mouse */
+  orbita?: Orbita;
   livre(cands: { x: number; y: number }[], w: number, h: number, margem?: number, topo?: number, evitar?: Caixa[], folga?: number): { x: number; y: number };
 }
 

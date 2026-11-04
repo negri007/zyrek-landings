@@ -44,6 +44,8 @@ export function criarPlayer(host: HTMLElement, o: OpcoesPlayer) {
         <svg viewBox="0 0 160 70" aria-hidden="true">${info.desenho}</svg>
         <span class="c-t">${info.carregando}</span><span class="c-p num">0%</span>
       </div>
+      <button class="volta" type="button" hidden>${icone("repetir")}<span>Voltar à câmera da aula</span></button>
+      <span class="dica-giro" aria-hidden="true" hidden>${icone("girar")}<span>Arraste para girar 360°</span></span>
       <div class="replay" hidden>${icone("lento")} Replay em câmera lenta · 0,5×</div>
       ${o.fim ? `<div class="fim" role="status" hidden><b>${esc(o.fim.titulo)}</b><span>${esc(o.fim.texto)}</span><div class="fim-acts"><button class="btn sm" type="button" data-a="denovo">${icone("repetir")} Ver de novo</button>${o.fim.proximo ? `<button class="btn sm primary" type="button" data-a="proximo">${esc(o.fim.proximo.texto)}</button>` : ""}</div></div>` : ""}
     </div>
@@ -101,6 +103,12 @@ export function criarPlayer(host: HTMLElement, o: OpcoesPlayer) {
     pronto = true;
     stage.removeAttribute("data-loading");
     stage.dataset.modo = modo;
+    let viu = false;
+    try { viu = !!localStorage.getItem("tf-giro"); } catch { /* sem armazenamento */ }
+    if (cena?.orbita && !viu) {
+      dica.hidden = false;
+      setTimeout(() => { if (!destruido) dica.hidden = true; }, 5000);
+    }
     if (o.reduzido) carreg.remove();
     else animate(carreg, { opacity: 0 }, { duration: 0.35 }).finished.then(() => carreg.remove());
     play();
@@ -123,7 +131,7 @@ export function criarPlayer(host: HTMLElement, o: OpcoesPlayer) {
         if (!m) { estatica(); return; }
         const criar = o.roteiro ? mod.CENAS[o.roteiro] : undefined;
         if (criar) {
-          cena = criar({ linha: () => L, tempo: () => t, overlay: ov, reduzido: o.reduzido, evitar: () => caixas([".ouvir", ".selo", ".replay", ".who b", ".big.on"]) });
+          cena = criar({ linha: () => L, tempo: () => t, overlay: ov, reduzido: o.reduzido, evitar: () => caixas([".ouvir", ".selo", ".replay", ".who b", ".big.on", ".volta", ".dica-giro"]) });
           if (import.meta.env.DEV) (window as unknown as { __cena: typeof cena }).__cena = cena;
           const minha = cena;
           liberar = () => mod.descartarCena(minha.scene);
@@ -264,11 +272,66 @@ export function criarPlayer(host: HTMLElement, o: OpcoesPlayer) {
   // tocar no vídeo também libera a voz
   host.querySelector<HTMLElement>("[data-a=denovo]")?.addEventListener("click", play);
   host.querySelector<HTMLElement>("[data-a=proximo]")?.addEventListener("click", () => o.fim?.proximo?.ir());
-  stage.addEventListener("pointerup", (e) => {
+  // ---- giro 360°: arrastar gira a câmera em volta da instrutora; toque simples continua pausando ----
+  const bVolta = $(".volta"), dica = $(".dica-giro");
+  const toques = new Map<number, { x: number; y: number }>();
+  let arrastou = false, x0 = 0, y0 = 0, pinca = 0, ultimoGiro = 0;
+  const orb = () => cena?.orbita;
+  function mostrarVolta(v: boolean) {
+    if (bVolta.hidden === !v) return;
+    bVolta.hidden = !v;
+    if (v && !o.reduzido) animate(bVolta, { opacity: [0, 1], transform: ["translate(-50%,6px)", "translate(-50%,0px)"] }, { duration: 0.25 });
+  }
+  function voltarCamera() { orb()?.voltar(); mostrarVolta(false); }
+  function esconderDica() {
+    if (dica.hidden) return;
+    try { localStorage.setItem("tf-giro", "1"); } catch { /* sem armazenamento: a dica só volta na próxima página */ }
+    dica.hidden = true;
+  }
+  stage.addEventListener("pointerdown", (e) => {
     if ((e.target as HTMLElement).closest("button")) return;
+    toques.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (toques.size === 1) { arrastou = false; x0 = e.clientX; y0 = e.clientY; }
+    if (toques.size === 2) { const [a, b] = [...toques.values()]; pinca = Math.hypot(a.x - b.x, a.y - b.y); arrastou = true; }
+  });
+  stage.addEventListener("pointermove", (e) => {
+    const ant = toques.get(e.pointerId);
+    if (!ant || !orb() || !pronto) return;
+    const dx = e.clientX - ant.x, dy = e.clientY - ant.y;
+    ant.x = e.clientX; ant.y = e.clientY;
+    if (toques.size === 2) {
+      const [a, b] = [...toques.values()], d = Math.hypot(a.x - b.x, a.y - b.y);
+      if (pinca > 0 && d > 0) orb()!.zoom(pinca / d);
+      pinca = d;
+    } else {
+      if (!arrastou && Math.hypot(e.clientX - x0, e.clientY - y0) < 7) return;
+      if (!arrastou) { arrastou = true; stage.setPointerCapture(e.pointerId); }
+      orb()!.girar(dx, dy);
+    }
+    ultimoGiro = performance.now();
+    esconderDica();
+    mostrarVolta(true);
+    if (!tocando) m?.desenhar();
+  });
+  const soltar = (e: PointerEvent) => { toques.delete(e.pointerId); if (toques.size < 2) pinca = 0; };
+  stage.addEventListener("pointercancel", soltar);
+  stage.addEventListener("pointerup", (e) => {
+    const tinha = toques.has(e.pointerId);
+    soltar(e);
+    if (!tinha || arrastou || (e.target as HTMLElement).closest("button")) return;
     if (!som && temVoz) ligarSom();
     else tocando ? pause() : play();
   });
+  // roda do mouse só aproxima em tela cheia: fora dela continua rolando a página
+  stage.addEventListener("wheel", (e) => {
+    if (!host.classList.contains("em-tela") || !orb() || !pronto) return;
+    e.preventDefault();
+    orb()!.zoom(Math.exp(e.deltaY * 0.0015));
+    ultimoGiro = performance.now();
+    mostrarVolta(true);
+    if (!tocando) m?.desenhar();
+  }, { passive: false });
+  bVolta.onclick = voltarCamera;
 
   // barra de progresso arrastável
   const tDe = (x: number) => { const r = bar.getBoundingClientRect(); return ((x - r.left) / r.width) * L.dur; };
@@ -358,6 +421,8 @@ export function criarPlayer(host: HTMLElement, o: OpcoesPlayer) {
   const loop = (now: number) => {
     const dt = Math.min(0.25, (now - last) / 1000);
     last = now;
+    // girou e largou com o vídeo andando: depois de um tempo a aula retoma a câmera dela
+    if (tocando && orb()?.livre && toques.size === 0 && now - ultimoGiro > 9000) voltarCamera();
     if (tocando && pronto) {
       // voz carregando: o vídeo espera (até 1,5 s), como um player de vídeo faz no buffer
       const trA = trechoEm(L, t);
@@ -413,7 +478,8 @@ export function criarPlayer(host: HTMLElement, o: OpcoesPlayer) {
   document.addEventListener("visibilitychange", vis);
 
   return {
-    seek: (nt: number) => { seek(nt); if (!tocando) play(); },
+    /** capítulo escolhido: volta para a câmera da aula, que é quem mostra aquele trecho */
+    seek: (nt: number) => { voltarCamera(); seek(nt); if (!tocando) play(); },
     pausar: pause,
     linha: L,
     posicionar: (nt: number) => seek(nt),

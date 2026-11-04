@@ -156,3 +156,20 @@ html.trava-rolagem, html.trava-rolagem body { overflow: hidden; overscroll-behav
 html.trava-rolagem .phone-wrap { perspective: none }
 html.trava-rolagem .phone, html.trava-rolagem .float, html.trava-rolagem .palco { transform: none !important; transform-style: flat; animation: none }
 html.trava-rolagem .wrap { z-index: 80 }
+
+/* ---------- Giro 360° ----------
+   arrastar para os lados gira; para cima e para baixo continua rolando a página (no celular) */
+.stage { touch-action: pan-y }
+.player.em-tela .stage { touch-action: none }
+.stage[data-modo="modelo"] { cursor: grab }
+.stage[data-modo="modelo"]:active { cursor: grabbing }
+.volta, .dica-giro { position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 5; display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; font: 600 13px/1 var(--body); border-radius: 999px; padding: 0 14px; min-height: 40px }
+.volta { border: 1px solid rgba(243, 255, 44, .5); background: rgba(20, 23, 27, .86); color: var(--neon); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); box-shadow: 0 0 20px -6px var(--neon-glow) }
+.volta .ic { width: 16px; height: 16px }
+.volta:hover { background: rgba(32, 36, 42, .92) }
+.dica-giro { pointer-events: none; background: rgba(20, 23, 27, .72); color: var(--ink-2); border: 1px solid var(--edge-2); animation: dica 5s var(--ease) both }
+.dica-giro .ic { width: 18px; height: 18px; color: var(--neon); animation: dica-g 1.6s ease-in-out infinite }
+@keyframes dica { 0% { opacity: 0 } 8%, 85% { opacity: 1 } 100% { opacity: 0 } }
+@keyframes dica-g { 0%, 100% { transform: translateX(-3px) } 50% { transform: translateX(3px) } }
+@media (prefers-reduced-motion: reduce) { .dica-giro, .dica-giro .ic { animation: none } }
+.ouvir:not([hidden]) ~ .volta, .ouvir:not([hidden]) ~ .dica-giro { bottom: 60px }

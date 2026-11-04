@@ -2,6 +2,7 @@
 // Fica só na página aberta (é a sessão de treino daquele aparelho, não vai para o painel).
 import { animate } from "motion";
 import { RM, toast } from "./util";
+import { bipe, prepararBipe, telaAcesa } from "./tela";
 
 /** "60 a 90 s" → 60; "2 min" → 120. Sem número, 60 s. */
 export function lerDescanso(s: string) {
@@ -29,6 +30,7 @@ export function ligarSeries(card: HTMLElement, n: number, descanso: number, aoMa
   }
 
   function marcar() {
+    prepararBipe(); // o toque em "Fiz a série" libera o som do fim do descanso
     const pl = pls[pls.length - 1 - feitas];
     feitas++;
     aoMarcar?.();
@@ -46,13 +48,14 @@ export function ligarSeries(card: HTMLElement, n: number, descanso: number, aoMa
       <button class="btn sm" type="button" data-pular>Pular descanso</button>`;
     const t = ctl!.querySelector<HTMLElement>(".desc-t b")!, barra = ctl!.querySelector<HTMLElement>(".desc-barra i")!;
     ctl!.querySelector<HTMLButtonElement>("[data-pular]")!.addEventListener("click", acabou);
+    telaAcesa("descanso", true);
     const passo = () => {
       // a página trocou de aparelho: para o relógio
-      if (!ctl!.isConnected) { clearInterval(timer); return; }
+      if (!ctl!.isConnected) { clearInterval(timer); telaAcesa("descanso", false); return; }
       const resta = Math.max(0, Math.ceil((fim - Date.now()) / 1000));
       t.textContent = mmss(resta);
       barra.style.transform = `scaleX(${(resta / descanso).toFixed(3)})`;
-      if (resta <= 0) { acabou(); navigator.vibrate?.([120, 80, 120]); toast(`Bora para a ${ordinal(feitas + 1)} série`); }
+      if (resta <= 0) { acabou(); navigator.vibrate?.([120, 80, 120]); bipe(); toast(`Bora para a ${ordinal(feitas + 1)} série`); }
     };
     clearInterval(timer);
     timer = window.setInterval(passo, 250);
@@ -61,6 +64,7 @@ export function ligarSeries(card: HTMLElement, n: number, descanso: number, aoMa
 
   function acabou() {
     clearInterval(timer);
+    telaAcesa("descanso", false);
     pronto();
   }
 

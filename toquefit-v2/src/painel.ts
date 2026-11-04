@@ -1,10 +1,12 @@
 // Painel da academia: tudo o que o aluno faz no celular aparece aqui.
 import { animate, stagger } from "motion";
 import { DAILY, S, blobs, bySlug, restaurar, save } from "./estado";
+import { DADOS } from "./data/carregar";
 import { esquecerAtual } from "./aluno";
 import { $, RM, ago, contar, esc, fmt, toast } from "./ui/util";
 import { animarBarraCarregada, barraCarregada } from "./ui/academia";
 import { icone } from "./ui/icones";
+import { linkDaTag, qrSvg } from "./ui/qr";
 
 const TOQUES_POR_ANILHA = 10;
 /** medidor em forma de barra: eixo com recartilhado e anilhas na ponta */
@@ -127,6 +129,38 @@ function renderGrafico(today: number, animar: boolean) {
   if (animar && !RM) animate("#chart g.col", { transform: ["scaleY(0)", "scaleY(1)"] }, { duration: 0.7, delay: stagger(0.035), ease: [0.2, 0.7, 0.2, 1] });
 }
 
+/* ---------- Etiquetas e planilha ---------- */
+
+/** Folha A4 com as etiquetas: QR Code e aviso de NFC, para colar no aparelho junto com a tag. */
+export function imprimirEtiquetas(slugs: string[]) {
+  const ms = slugs.map(bySlug).filter((m): m is NonNullable<typeof m> => !!m);
+  $("folha").innerHTML = ms.map((m) => `<div class="etq">
+      <div class="etq-h"><span class="etq-logo">${icone("nfc")}</span><span>Toque<b>Fit</b></span><span class="etq-tag">${esc(m.tag)}</span></div>
+      <b class="etq-n">${esc(m.name)}</b>
+      ${qrSvg(linkDaTag(m.slug), "QR Code do " + esc(m.name))}
+      <p class="etq-p">Encoste o celular aqui ou aponte a câmera para ver como usar o aparelho</p>
+      <small class="etq-a">${esc(DADOS.academia)}</small></div>`).join("");
+  document.body.classList.add("imprimindo");
+  const fim = () => { document.body.classList.remove("imprimindo"); window.removeEventListener("afterprint", fim); };
+  window.addEventListener("afterprint", fim);
+  window.print();
+}
+
+/** Planilha com os números de cada aparelho (abre no Excel e no Google Planilhas). */
+function baixarPlanilha() {
+  const cel = (v: string | number) => { const t = String(v); return /[;"\n]/.test(t) ? `"${t.replace(/"/g, `""`)}"` : t; };
+  const linhas = [["Aparelho", "Grupo", "Tag", "Vídeo", "Toques 7 dias", "Séries hoje", "Vídeos completos hoje", "Link"]]
+    .concat(S.machines.map((m) => [m.name, m.group, m.tag, !m.video ? "Sem vídeo" : m.roteiro ? "Instrutora 3D" : "Com vídeo", String(m.t7), String(S.series[m.slug] || 0), String(S.fins[m.slug] || 0), linkDaTag(m.slug)]));
+  // ponto e vírgula e BOM: é o que o Excel em português abre direto, com acentos
+  const csv = "﻿" + linhas.map((l) => l.map(cel).join(";")).join("\r\n");
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
+  a.download = `toquefit-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  toast("Planilha baixada");
+}
+
 /* ---------- Gaveta ---------- */
 let editando: string | null = null, arquivo: File | null = null, abridor: HTMLElement | null = null, aberta = false;
 
@@ -147,7 +181,11 @@ export function abrirGaveta(slug: string | null, de?: HTMLElement) {
   $<HTMLInputElement>("f-video").value = "";
   $("f-video-cur").textContent = m && m.video ? "Vídeo atual: " + (m.videoName || "vídeo.mp4") : "Nenhum vídeo enviado";
   $("f-link-wrap").hidden = !m;
-  if (m) $("f-link").textContent = "#m-" + m.slug;
+  if (m) {
+    $("f-link").textContent = linkDaTag(m.slug);
+    $("f-qr").innerHTML = qrSvg(linkDaTag(m.slug), "QR Code do " + esc(m.name));
+    $("f-print").onclick = () => imprimirEtiquetas([m.slug]);
+  }
   $("f-name-err").hidden = true;
   $<HTMLInputElement>("f-name").removeAttribute("aria-invalid");
   const d = $("drawer"), sc = $("scrim");
@@ -239,6 +277,8 @@ export function ligarGaveta() {
     }
   });
   $("add").onclick = (e) => abrirGaveta(null, e.currentTarget as HTMLElement);
+  $("etiquetas").onclick = () => imprimirEtiquetas(S.machines.map((m) => m.slug));
+  $("planilha").onclick = baixarPlanilha;
   let confirmar = false, tReset = 0;
   const bReset = $("reset");
   bReset.onclick = () => {

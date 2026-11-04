@@ -66,7 +66,7 @@ export async function renderAluno(slug: string, contarToque: boolean) {
   animarSeries(sc);
   animarSeletor(sc);
   const se = lerSeries(m.sets || "");
-  if (se) ligarSeries(sc.querySelector<HTMLElement>(".peca.series")!, se.n, lerDescanso(m.rest || ""), () => contarTreino("series", slug));
+  if (se) ligarSeries(sc.querySelector<HTMLElement>(".peca.series")!, se.n, lerDescanso(m.rest || ""), () => { contarTreino("series", slug); renderLista(slug); });
 
   const fb = $("fbsec");
   const obrigado = () => {
@@ -118,14 +118,14 @@ export async function renderAluno(slug: string, contarToque: boolean) {
           b.setAttribute("aria-current", String(on));
         });
       },
-      onFim() { steps.forEach((li) => li.classList.remove("on")); $("steps").classList.remove("live"); contarTreino("fins", slug); },
+      onFim() { steps.forEach((li) => li.classList.remove("on")); $("steps").classList.remove("live"); contarTreino("fins", slug); renderLista(slug); },
     });
     chs.querySelectorAll<HTMLButtonElement>("button").forEach((b) => (b.onclick = () => player?.seek(+b.dataset.t!)));
   } else {
     player = criarPlayer(host, {
       linha: linhaDePassos(m), instrutora: DADOS.instrutorPadrao, reduzido: RM, sem3d, fim: proximoPasso(m),
       onTrecho(tr) { marcarPasso(tr.step); },
-      onFim() { steps.forEach((li) => li.classList.remove("on")); $("steps").classList.remove("live"); contarTreino("fins", slug); },
+      onFim() { steps.forEach((li) => li.classList.remove("on")); $("steps").classList.remove("live"); contarTreino("fins", slug); renderLista(slug); },
     });
   }
   if (import.meta.env.DEV) {
@@ -209,10 +209,21 @@ function cartoes(m: Maquina) {
   return `<div class="pecas">${series}${ajuste}</div>`;
 }
 
+/** o que o aluno já fez hoje: aparelho com série marcada ou vídeo visto até o fim */
+const feitoHoje = (slug: string) => (S.series[slug] || 0) + (S.fins[slug] || 0) > 0;
+function resumoHoje() {
+  const feitos = S.machines.filter((m) => feitoHoje(m.slug)).length;
+  const series = Object.values(S.series).reduce((a, b) => a + b, 0);
+  const el = $("treino-hoje");
+  el.hidden = !feitos;
+  if (feitos) el.innerHTML = `${icone("check")}<span>Treino de hoje: <b>${feitos} ${feitos > 1 ? "aparelhos" : "aparelho"}</b>${series ? ` · ${series} ${series > 1 ? "séries" : "série"}` : ""}</span>`;
+}
+
 function renderLista(slug: string) {
+  resumoHoje();
   const ml = $("mlist");
-  ml.innerHTML = S.machines.map((m) => `<button class="mbtn" type="button" data-go="${m.slug}" aria-current="${m.slug === slug}">
-      ${anilha("mb-an")}<span class="mb-t"><b>${esc(m.name)}</b><small><span class="tg">${esc(m.tag)}</span> · ${esc(m.group)}${!m.video ? " · sem vídeo" : m.roteiro ? " · instrutora 3D" : ""}</small></span></button>`).join("");
+  ml.innerHTML = S.machines.map((m) => `<button class="mbtn${feitoHoje(m.slug) ? " feito" : ""}" type="button" data-go="${m.slug}" aria-current="${m.slug === slug}">
+      ${anilha("mb-an")}<span class="mb-t"><b>${esc(m.name)}</b><small><span class="tg">${esc(m.tag)}</span> · ${esc(m.group)}${!m.video ? " · sem vídeo" : m.roteiro ? " · instrutora 3D" : ""}</small></span>${feitoHoje(m.slug) ? `<span class="mb-ok" title="Feito hoje">${icone("check")}<span class="sr">Feito hoje</span></span>` : ""}</button>`).join("");
   ml.querySelectorAll<HTMLButtonElement>("[data-go]").forEach((b) => (b.onclick = () => { girarAnilha(b.querySelector(".mb-an")); tocarTag(b.dataset.go!); }));
 }
 

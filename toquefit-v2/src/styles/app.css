@@ -173,3 +173,4 @@ html.trava-rolagem .wrap { z-index: 80 }
 @keyframes dica-g { 0%, 100% { transform: translateX(-3px) } 50% { transform: translateX(3px) } }
 @media (prefers-reduced-motion: reduce) { .dica-giro, .dica-giro .ic { animation: none } }
 .ouvir:not([hidden]) ~ .volta, .ouvir:not([hidden]) ~ .dica-giro { bottom: 60px }
+.stage:focus-visible { outline: 2px solid var(--neon); outline-offset: -2px }

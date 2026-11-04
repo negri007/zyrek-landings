@@ -48,6 +48,7 @@ $("app").innerHTML = `
         <a class="btn sm so-m" href="#painel">Ver o painel da academia</a>
         <p class="hide-m">O aluno aproxima o celular da tag NFC do aparelho e o vídeo abre tocando, sem app e sem precisar rolar a tela. Escolha um aparelho para simular.</p>
       </div>
+      <p class="treino-hoje" id="treino-hoje" aria-live="polite" hidden></p>
       <div class="mlist" id="mlist" role="group" aria-label="Aparelhos com tag"></div>
       <div class="linkbox hide-m"><span>Link gravado nesta tag termina em</span><code id="taglink">#m-supino-reto</code></div>
     </aside>
@@ -61,6 +62,8 @@ $("app").innerHTML = `
       </div>
       <div class="acts">
         <button class="btn" type="button" id="reset">Restaurar exemplo</button>
+        <button class="btn" type="button" id="planilha">Baixar planilha</button>
+        <button class="btn" type="button" id="etiquetas">Imprimir etiquetas</button>
         <button class="btn primary" type="button" id="add">Cadastrar aparelho</button>
       </div>
     </div>
@@ -98,10 +101,13 @@ $("app").innerHTML = `
     <div class="f"><label for="f-adjust">Ajuste antes de começar</label><input type="text" id="f-adjust" autocomplete="off" aria-describedby="h-adj"><span class="hint" id="h-adj">Ex.: Banco na posição 4</span></div>
     <div class="f"><label for="f-sets">Séries sugeridas</label><input type="text" id="f-sets" autocomplete="off" aria-describedby="h-sets"><span class="hint" id="h-sets">Ex.: 3 × 10–12</span></div>
     <div class="f"><label for="f-steps">Passo a passo</label><textarea id="f-steps" aria-describedby="h-steps"></textarea><span class="hint" id="h-steps">Um passo por linha.</span></div>
-    <div class="f" id="f-link-wrap"><span class="lab">Link da tag</span><div class="linkbox"><code id="f-link"></code><button type="button" class="btn sm" id="f-copy">Copiar</button></div><span class="hint">Grave esse final junto com o link da demonstração na tag NFC.</span></div>
+    <div class="f" id="f-link-wrap"><span class="lab">Tag e QR Code</span>
+      <div class="tagqr"><div id="f-qr"></div><div class="tagqr-t"><div class="linkbox"><code id="f-link"></code></div><div class="tagqr-a"><button type="button" class="btn sm" id="f-copy">Copiar link</button><button type="button" class="btn sm" id="f-print">Imprimir etiqueta</button></div></div></div>
+      <span class="hint">Grave esse link na tag NFC. O QR Code da etiqueta abre o mesmo vídeo em celulares sem NFC.</span></div>
   </form>
   <div class="dr-f"><button class="btn" id="dr-cancel" type="button">Cancelar</button><button class="btn primary" id="dr-save" type="button">Salvar aparelho</button></div>
 </aside>
+<div class="folha-etiquetas" id="folha" aria-hidden="true"></div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>`;
 
 ligarGaveta();

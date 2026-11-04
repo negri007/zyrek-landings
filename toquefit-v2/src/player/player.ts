@@ -6,6 +6,7 @@ import { Legenda } from "./legenda";
 import { trechoEm, type Destaque, type Linha, type Trecho } from "./timeline";
 import { icone } from "../ui/icones";
 import { esc } from "../ui/util";
+import { telaAcesa } from "../ui/tela";
 
 export interface OpcoesPlayer {
   linha: Linha;
@@ -25,6 +26,16 @@ export interface OpcoesPlayer {
 const mmss = (s: number) => { s = Math.max(0, Math.floor(s)); return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); };
 
 let somLiberado = false; // depois do primeiro toque, a voz fica ligada nas próximas páginas
+
+/** velocidade e legenda que o aluno escolheu valem para os próximos aparelhos */
+const PREF = "tf-pref";
+function lerPref(): { vel: number; cc: boolean } {
+  try { const p = JSON.parse(localStorage.getItem(PREF) || "{}"); return { vel: p.vel === 0.5 ? 0.5 : 1, cc: p.cc !== false }; }
+  catch { return { vel: 1, cc: true }; }
+}
+function salvarPref(vel: number, cc: boolean) {
+  try { localStorage.setItem(PREF, JSON.stringify({ vel, cc })); } catch { /* sem armazenamento: vale só nesta página */ }
+}
 
 export function criarPlayer(host: HTMLElement, o: OpcoesPlayer) {
   const L = o.linha;
@@ -179,12 +190,14 @@ export function criarPlayer(host: HTMLElement, o: OpcoesPlayer) {
     mostrarFim(false);
     tocando = true;
     host.classList.add("tocando");
+    telaAcesa("video", true);
     setPlayIcon();
     syncVoz(true);
   }
   function pause() {
     tocando = false;
     host.classList.remove("tocando");
+    telaAcesa("video", false);
     voz.pause();
     setPlayIcon();
   }
@@ -218,18 +231,23 @@ export function criarPlayer(host: HTMLElement, o: OpcoesPlayer) {
   }
 
   bPlay.onclick = () => (tocando ? pause() : play());
-  bVel.onclick = () => {
-    vel = vel === 1 ? 0.5 : 1;
+  function aplicarVel(v: number) {
+    vel = v;
     bVel.textContent = vel === 1 ? "1×" : "0,5×";
     bVel.setAttribute("aria-pressed", String(vel !== 1));
     bVel.setAttribute("aria-label", "Velocidade " + bVel.textContent);
     voz.playbackRate = vel;
-  };
-  bCc.onclick = () => {
-    cc = !cc;
+  }
+  function aplicarCc(v: boolean) {
+    cc = v;
     bCc.setAttribute("aria-pressed", String(cc));
     host.classList.toggle("sem-cc", !cc);
-  };
+  }
+  const pref = lerPref();
+  aplicarVel(pref.vel);
+  aplicarCc(pref.cc);
+  bVel.onclick = () => { aplicarVel(vel === 1 ? 0.5 : 1); salvarPref(vel, cc); };
+  bCc.onclick = () => { aplicarCc(!cc); salvarPref(vel, cc); };
   bSom.onclick = () => {
     if (som) { som = false; voz.pause(); bSom.setAttribute("aria-pressed", "false"); bSom.innerHTML = icone("mudo"); }
     else ligarSom();
@@ -332,6 +350,25 @@ export function criarPlayer(host: HTMLElement, o: OpcoesPlayer) {
     if (!tocando) m?.desenhar();
   }, { passive: false });
   bVolta.onclick = voltarCamera;
+  // teclado: o vídeo recebe foco; setas giram, + e − aproximam, Esc volta à câmera da aula
+  stage.tabIndex = 0;
+  stage.setAttribute("aria-label", "Vídeo da instrutora. Espaço pausa; setas giram a câmera; mais e menos aproximam; Esc volta à câmera da aula");
+  stage.addEventListener("keydown", (e) => {
+    const k = e.key, giro = orb() && pronto;
+    if (k === " " || k === "k" || k === "K") { tocando ? pause() : play(); e.preventDefault(); return; }
+    if (!giro) return;
+    const passos: Record<string, [number, number]> = { ArrowLeft: [-40, 0], ArrowRight: [40, 0], ArrowUp: [0, -28], ArrowDown: [0, 28] };
+    if (passos[k]) orb()!.girar(...passos[k]);
+    else if (k === "+" || k === "=") orb()!.zoom(0.85);
+    else if (k === "-" || k === "_") orb()!.zoom(1.18);
+    else if (k === "Escape" && orb()!.livre) { voltarCamera(); e.stopPropagation(); e.preventDefault(); return; }
+    else return;
+    e.preventDefault();
+    ultimoGiro = performance.now();
+    esconderDica();
+    mostrarVolta(true);
+    if (!tocando) m?.desenhar();
+  });
 
   // barra de progresso arrastável
   const tDe = (x: number) => { const r = bar.getBoundingClientRect(); return ((x - r.left) / r.width) * L.dur; };
@@ -441,7 +478,7 @@ export function criarPlayer(host: HTMLElement, o: OpcoesPlayer) {
         if (Math.abs(dif) > 0.8) { voz.currentTime = t - tr.t0 - tr.ini; seekEm = now; }
         else if (dif > 0 || dif < -0.08) t = alvo;
       }
-      if (t >= L.dur) { t = L.dur - 0.01; tocando = false; fim = true; host.classList.remove("tocando"); voz.pause(); setPlayIcon(); mostrarFim(true); o.onFim?.(); }
+      if (t >= L.dur) { t = L.dur - 0.01; tocando = false; fim = true; host.classList.remove("tocando"); telaAcesa("video", false); voz.pause(); setPlayIcon(); mostrarFim(true); o.onFim?.(); }
       syncVoz();
     }
     const tr = trechoEm(L, t);
@@ -489,6 +526,7 @@ export function criarPlayer(host: HTMLElement, o: OpcoesPlayer) {
     destruir() {
       destruido = true;
       cancelAnimationFrame(raf);
+      telaAcesa("video", false);
       for (const a of vozes.values()) { a.pause(); a.removeAttribute("src"); a.load(); }
       document.removeEventListener("visibilitychange", vis);
       document.removeEventListener("fullscreenchange", aoTela);

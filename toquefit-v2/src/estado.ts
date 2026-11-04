@@ -18,12 +18,15 @@ export interface Estado {
   fins: Record<string, number>;
   /** séries marcadas pelos alunos hoje, por aparelho */
   series: Record<string, number>;
+  /** dia (aaaa-mm-dd) a que se referem os números de hoje */
+  dia: string;
   /** por que o vídeo não ajudou, contado por motivo */
   motivos: Record<string, number>;
 }
 
 export const CHAVE = "toquefit-demo-v2";
 export const DAILY = DADOS.toquesPorDia;
+const hojeISO = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; };
 
 export function fresh(): Estado {
   const ms: Maquina[] = DADOS.aparelhos.map((m) => ({ ...m, steps: m.steps.slice(), errs: m.errs.slice(), t7: 0, videoName: m.video ? m.slug + ".mp4" : "" }));
@@ -39,7 +42,7 @@ export function fresh(): Estado {
     help: { yes: DADOS.avaliacoes.ajudou, no: DADOS.avaliacoes.naoAjudou },
     calls: DADOS.chamados.map((c) => ({ id: c.id, slug: c.slug, at: now - c.minutosAtras * 60e3, done: c.atendido })),
     nextTag: ms.length + 1, nextCall: Math.max(...DADOS.chamados.map((c) => c.id)) + 1,
-    fins: {}, series: {}, motivos: { ...DADOS.avaliacoes.motivos },
+    dia: hojeISO(), fins: {}, series: {}, motivos: { ...DADOS.avaliacoes.motivos },
   };
 }
 
@@ -54,6 +57,8 @@ function load(): Estado | null {
     e.fins ||= {};
     e.series ||= {};
     e.motivos ||= { ...DADOS.avaliacoes.motivos };
+    // virou o dia: séries, vídeos completos e toques de hoje começam do zero
+    if (e.dia !== hojeISO()) { e.dia = hojeISO(); e.fins = {}; e.series = {}; e.extra = 0; }
     return e;
   } catch { return null; }
 }

@@ -37,12 +37,19 @@ npm run build    # site estático em dist/
 npm run voz                                   # todos os trechos do supino (edge-tts)
 npm run voz -- --roteiro leg-press-45         # um roteiro inteiro (troque pelo slug de cada aparelho)
 python ferramentas/gerar_voz.py descida       # só um trecho do supino
+npm run voz:windows -- --roteiro remada-baixa   # voz do próprio Windows, sem internet nem Python
+npm run voz:windows -- --todos                   # todos os roteiros com a voz do Windows
 npm run modelo                    # recomprime assets/michelle.glb
 ```
 
 Para trocar um texto, edite o roteiro e rode `npm run voz`. A duração dos trechos se ajusta sozinha ao áudio.
 
-Só o supino tem voz gravada. Os outros seis roteiros tocam sem voz até rodar o comando acima para cada um: `leg-press-45`, `cadeira-extensora`, `cadeira-flexora`, `desenvolvimento`, `remada-baixa` e `puxada-frontal`.
+Há dois geradores com a mesma saída (MP3 + tempos de cada palavra):
+
+- `npm run voz` usa o edge-tts (voz Francisca, neural). Precisa de Python, `pip install edge-tts` e ffmpeg. É a voz do supino.
+- `npm run voz:windows` usa a voz Maria que já vem no Windows 10/11 (`ferramentas/voz-windows.ps1`). Não precisa de internet nem de instalar nada. A voz é menos natural que a Francisca. `--voz Daniel` troca para a voz masculina e `--taxa 1.1` acelera.
+
+Hoje o supino está com a Francisca e os outros seis roteiros com a Maria do Windows. Para deixar tudo com a mesma voz, rode `npm run voz -- --roteiro <slug>` em cada um (Francisca) ou `npm run voz:windows -- --roteiro supino-reto` (Maria).
 
 Antes de publicar, rode `npm run checar`: confere se cada palavra que a coreografia espera está na fala da instrutora, se todo trecho tem coreografia e se o roteiro está registrado em todos os lugares, e roda a checagem de tipos.
 

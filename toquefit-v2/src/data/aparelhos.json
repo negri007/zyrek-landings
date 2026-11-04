@@ -224,6 +224,7 @@
   ],
   "avaliacoes": {
     "ajudou": 41,
-    "naoAjudou": 6
+    "naoAjudou": 6,
+    "motivos": { "O ajuste não ficou claro": 3, "Rápido demais": 2, "Meu aparelho é diferente": 1 }
   }
 }

@@ -196,12 +196,17 @@
 }
 
 /* ---------- Painel ---------- */
-.ph { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; margin-bottom: 28px }
+.ph { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; margin-bottom: 24px }
+.ph-sub { margin: 10px 0 0; color: var(--muted); font-size: 14.5px }
+/* seções do painel: o que pede ação, os números, a tendência e o cadastro, nessa ordem */
+.painel { display: flex; flex-direction: column; gap: 14px }
+.painel > .ph { margin-bottom: 10px }
+.painel > .demo-note { margin-top: 6px }
 .ph h1 { font: 800 52px/1 var(--display); font-stretch: 80%; letter-spacing: -.015em }
 .ph .acts { display: flex; gap: 8px; flex-wrap: wrap }
 .card { position: relative; background: linear-gradient(180deg, var(--surface), var(--bg-2)); border: 1px solid var(--edge); border-radius: 18px; padding: 20px; min-width: 0; display: flex; flex-direction: column; gap: 16px;
   box-shadow: 0 1px 0 rgba(255, 255, 255, .05) inset, 0 24px 50px -30px rgba(0, 0, 0, .9) }
-.kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-bottom: 14px }
+.kpis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px }
 .kpi { gap: 6px; overflow: hidden }
 /* faixa recartilhada (a textura da pegada da barra) no topo de cada indicador */
 .kpi::before { content: ""; position: absolute; top: 0; left: 18px; right: 18px; height: 4px;
@@ -218,8 +223,6 @@
 .kpi .s { font-size: 13px; color: var(--muted) }
 .kpi .s .up { color: var(--good); font-weight: 600 }
 .kpi .s .down { color: var(--crit); font-weight: 600 }
-.kpi.alert .v { color: var(--warn) }
-.grid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 14px }
 .card-h { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap }
 .card-h h2 { font: 700 18px/1.2 var(--display); font-stretch: 92% }
 .card-h span { font-size: 13px; color: var(--muted) }
@@ -234,10 +237,6 @@
 .chart .corte { stroke: var(--surface); stroke-width: 1.4 }
 .chart .today .corte { stroke: rgba(20, 23, 27, .4) }
 .chart .vl { fill: var(--neon); font: 700 13px var(--display) }
-.top { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px }
-.top li { display: flex; flex-direction: column; gap: 7px }
-.top .r { display: flex; justify-content: space-between; gap: 8px; font-size: 14px }
-.top .r b { font-weight: 600 }
 /* medidor em forma de barra: o eixo acende até o valor e as anilhas param na ponta */
 .haltere { position: relative; height: 16px; overflow: clip }
 .haltere i { display: block }
@@ -303,7 +302,7 @@ td .tg { font: 500 12px var(--mono); color: var(--muted); white-space: nowrap }
   .row-acts { justify-content: flex-start }
   .row-acts a, .row-acts button { min-height: 40px; flex: 1; justify-content: center }
 }
-@media (max-width: 960px) { .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)) } .grid { grid-template-columns: minmax(0, 1fr) } }
+@media (max-width: 760px) { .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)) } .kpi.hero { grid-column: 1 / -1 } }
 @media (max-width: 420px) { .kpi .v { font-size: 36px } .ph h1 { font-size: 40px } .card { padding: 16px } .tbl-wrap { margin: 0 -16px } th, td { padding-inline: 16px } .ph .acts { width: 100% } .ph .acts .btn { flex: 1 } }
 
 /* gaveta */
@@ -349,3 +348,40 @@ body.travado { overflow: hidden }
   .app-aluno .so-m { display: inline-flex }
   .aside-h .so-m { align-self: flex-start }
 }
+
+/* faixa "agora": chamados e aparelhos sem vídeo lado a lado, no topo do painel */
+.agora { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px 28px }
+.ag-col { display: flex; flex-direction: column; gap: 14px; min-width: 0 }
+.ag-col + .ag-col { border-left: 1px solid var(--edge); padding-left: 28px }
+.card-h span:empty { display: none }
+.calls .hist { font-size: 13px; color: var(--dim); border-top: 1px solid var(--edge) }
+.calls .wait { gap: 14px }
+.calls .wait b { color: var(--ink) }
+.pend small { display: block; max-width: 44ch; line-height: 1.4; margin-top: 2px }
+.pend li { gap: 14px }
+.empty-s { display: flex; align-items: flex-start; gap: 10px; line-height: 1.45 }
+.empty-s .ok-ic { width: 18px; height: 18px; color: var(--good); margin-top: 1px }
+.calls li.empty-s { justify-content: flex-start }
+.agora:has(.wait) { border-color: rgba(255, 181, 71, .38); background: radial-gradient(90% 160% at 0% 0%, rgba(255, 181, 71, .08), transparent 60%), linear-gradient(180deg, var(--surface), var(--bg-2)) }
+.calls .btn { flex: none; white-space: nowrap }
+@media (max-width: 760px) {
+  .agora { grid-template-columns: minmax(0, 1fr) }
+  .ag-col + .ag-col { border-left: 0; padding-left: 0; border-top: 1px solid var(--edge); padding-top: 18px }
+}
+
+/* chamado do aluno: avisado, com tempo de espera e como desfazer */
+.cta-espera { display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 8px 8px 8px 14px; border-radius: 14px; background: var(--good-bg); box-shadow: 0 0 0 1px rgba(123, 224, 160, .35) inset }
+.cta-espera > span { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px }
+.cta-espera b { font-weight: 650; font-size: 15px; color: var(--good) }
+.cta-espera small { font-size: 12.5px; color: var(--ink-2) }
+.cta-espera .ce-ic { width: 22px; height: 22px; color: var(--good) }
+.cta-espera .btn { flex: none; background: transparent }
+/* motivo do "não ajudou": um toque e pronto */
+.motivos { display: flex; flex-wrap: wrap; gap: 8px }
+.motivos .btn { min-height: 44px }
+/* painel: chamado esperando há mais de 5 minutos */
+.calls .atraso small { color: var(--crit) }
+.calls .atraso small::before { background: var(--crit); box-shadow: 0 0 8px var(--crit) }
+.kpi .motivo { margin-top: 4px; line-height: 1.4 }
+.kpi .motivo b { color: var(--ink); font-weight: 600 }
+.p-cta .cta-espera .btn { width: auto; min-height: 40px; font-size: 14px; border-radius: 10px }

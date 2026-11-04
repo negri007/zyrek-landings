@@ -4,11 +4,12 @@ import "@fontsource-variable/jetbrains-mono";
 import "./styles/app.css";
 import "./styles/telas.css";
 import { DADOS } from "./data/carregar";
-import { S, bySlug } from "./estado";
-import { pararAluno, renderAluno, slugAtual } from "./aluno";
+import { CHAVE, S, bySlug, recarregar } from "./estado";
+import { desenharCta, pararAluno, renderAluno, slugAtual } from "./aluno";
 import { ligarGaveta, renderPainel, fecharGaveta } from "./painel";
 import { icone } from "./ui/icones";
-import { $, RM, entrar, esc } from "./ui/util";
+import { animate } from "motion";
+import { $, RM, entrar, esc, toast } from "./ui/util";
 
 const GRUPOS = ["Peito", "Costas", "Pernas", "Ombros", "Braços", "Glúteos", "Abdômen", "Cardio"];
 
@@ -56,23 +57,30 @@ $("app").innerHTML = `
     <div class="ph">
       <div>
         <h1 id="painel-t">${esc(DADOS.academia)}</h1>
+        <p class="ph-sub" id="ph-sub"></p>
       </div>
       <div class="acts">
         <button class="btn" type="button" id="reset">Restaurar exemplo</button>
         <button class="btn primary" type="button" id="add">Cadastrar aparelho</button>
       </div>
     </div>
-    <div class="kpis" id="kpis"></div>
-    <div class="grid">
-      <div class="card chart"><div class="card-h"><h2>Toques por dia</h2><span>Últimos 14 dias</span></div><div id="chart"></div></div>
-      <div class="card"><div class="card-h"><h2>Mais acessados</h2><span>7 dias</span></div><ul class="top" id="top"></ul></div>
-      <div class="card"><div class="card-h"><h2>Aparelhos</h2><span id="mcount"></span></div>
-        <div class="tbl-wrap"><table>
-          <thead><tr><th scope="col">Aparelho</th><th scope="col">Tag</th><th scope="col">Vídeo</th><th scope="col">Toques 7 dias</th><th scope="col">Hoje</th><th scope="col"><span class="sr">Ações</span></th></tr></thead>
-          <tbody id="tbody"></tbody>
-        </table></div>
+    <section class="card agora" aria-label="Precisa de atenção agora">
+      <div class="ag-col">
+        <div class="card-h"><h2>Alunos esperando instrutor</h2><span id="ccount"></span></div>
+        <ul class="calls" id="calls" aria-live="polite"></ul>
       </div>
-      <div class="card"><div class="card-h"><h2>Chamados</h2><span id="ccount"></span></div><ul class="calls" id="calls" aria-live="polite"></ul></div>
+      <div class="ag-col">
+        <div class="card-h"><h2>Aparelhos sem vídeo</h2><span id="vcount"></span></div>
+        <ul class="calls pend" id="pend"></ul>
+      </div>
+    </section>
+    <div class="kpis" id="kpis"></div>
+    <div class="card chart"><div class="card-h"><h2>Toques por dia</h2><span>Últimos 14 dias</span></div><div id="chart"></div></div>
+    <div class="card aparelhos"><div class="card-h"><h2>Aparelhos</h2><span id="mcount"></span></div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th scope="col">Aparelho</th><th scope="col">Tag</th><th scope="col">Vídeo</th><th scope="col">Toques 7 dias</th><th scope="col">Treino hoje</th><th scope="col"><span class="sr">Ações</span></th></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table></div>
     </div>
     <p class="demo-note">Números de exemplo. Na versão real, cada academia entra com login próprio e vê só os dados dela.</p>
   </section>
@@ -118,7 +126,6 @@ function rota() {
     pararAluno();
     mostrar("painel");
     renderPainel(true);
-    document.title = "Painel · ToqueFit";
     return;
   }
   let slug = h.startsWith("m-") ? h.slice(2) : null;
@@ -130,6 +137,28 @@ function rota() {
   $<HTMLAnchorElement>("tab-aluno").href = "#m-" + slug;
 }
 window.addEventListener("hashchange", rota);
+
+/* celular do aluno e painel abertos em abas diferentes: o que um salva aparece no outro na hora */
+window.addEventListener("storage", (e) => {
+  if (e.key !== CHAVE) return;
+  const antes = S.calls.filter((c) => !c.done).length;
+  recarregar();
+  const pend = S.calls.filter((c) => !c.done).length;
+  if (visao === "painel") {
+    if (!document.getElementById("drawer")!.hidden) return; // não mexe no painel com a gaveta aberta
+    renderPainel(false);
+    if (pend > antes) {
+      toast("Novo chamado: aluno esperando instrutor");
+      const li = document.querySelector<HTMLElement>("#calls .wait");
+      if (li && !RM) animate(li, { backgroundColor: ["rgba(255, 181, 71, .22)", "rgba(255, 181, 71, 0)"] }, { duration: 1.6 });
+    }
+  } else desenharCta("sync");
+});
+
+/* depois da primeira visita, a página e a instrutora abrem mesmo com o Wi-Fi da academia fraco */
+if (import.meta.env.PROD && "serviceWorker" in navigator) {
+  window.addEventListener("load", () => { navigator.serviceWorker.register(import.meta.env.BASE_URL + "sw.js").catch(() => {}); });
+}
 
 /* inclinação 3D do celular no computador */
 (() => {

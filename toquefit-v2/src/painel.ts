@@ -4,6 +4,7 @@ import { DAILY, S, blobs, bySlug, restaurar, save } from "./estado";
 import { esquecerAtual } from "./aluno";
 import { $, RM, ago, contar, esc, fmt, toast } from "./ui/util";
 import { animarBarraCarregada, barraCarregada } from "./ui/academia";
+import { icone } from "./ui/icones";
 
 const TOQUES_POR_ANILHA = 10;
 /** medidor em forma de barra: eixo com recartilhado e anilhas na ponta */
@@ -24,20 +25,22 @@ export function renderPainel(animar: boolean) {
   const diff = Math.round(((week - prevWeek) / prevWeek) * 100);
   const help = Math.round((S.help.yes / (S.help.yes + S.help.no)) * 100);
   const pend = S.calls.filter((c) => !c.done).length;
-  const noVid = S.machines.filter((m) => !m.video).length;
+  const motivo = Object.entries(S.motivos).sort((a, b) => b[1] - a[1])[0]?.[0];
+  // aba do navegador mostra quantos alunos estão esperando, como um contador de mensagens
+  document.title = (pend ? `(${pend}) ` : "") + "Painel · ToqueFit";
   $("kpis").innerHTML = `
     <div class="card kpi hero"><span class="l">Toques hoje</span><span class="v num" data-n="${today}">${fmt(today)}</span><span class="s">Alunos que encostaram numa tag</span>
       <div class="kpi-barra">${barraCarregada(Math.round(today / (TOQUES_POR_ANILHA * 2)))}<span class="kb-leg">cada anilha = ${TOQUES_POR_ANILHA} toques</span></div></div>
     <div class="card kpi"><span class="l">Últimos 7 dias</span><span class="v num" data-n="${week}">${fmt(week)}</span><span class="s"><span class="${diff >= 0 ? "up" : "down"}">${diff >= 0 ? "+" : ""}${diff}%</span> sobre a semana anterior</span></div>
-    <div class="card kpi"><span class="l">Vídeos que ajudaram</span><span class="v num" data-n="${help}" data-s="%">${help}%</span><span class="s">${fmt(S.help.yes + S.help.no)} respostas de alunos</span></div>
-    <div class="card kpi ${pend ? "alert" : ""}"><span class="l">Chamados abertos</span><span class="v num" data-n="${pend}">${pend}</span><span class="s">${noVid ? noVid + (noVid > 1 ? " aparelhos" : " aparelho") + " sem vídeo" : "Todos com vídeo"}</span></div>`;
+    <div class="card kpi"><span class="l">Vídeos que ajudaram</span><span class="v num" data-n="${help}" data-s="%">${help}%</span><span class="s">${fmt(S.help.yes + S.help.no)} respostas de alunos</span>${motivo ? `<span class="s motivo">Mais citado quando não ajuda: <b>${esc(motivo)}</b></span>` : ""}</div>`;
   if (animar) document.querySelectorAll<HTMLElement>("#kpis [data-n]").forEach((el) => contar(el, +el.dataset.n!, el.dataset.s));
   renderGrafico(today, animar);
 
   const sorted = S.machines.slice().sort((a, b) => b.t7 - a.t7);
   const max = sorted[0] ? sorted[0].t7 || 1 : 1;
-  $("top").innerHTML = sorted.slice(0, 5).map((m) => `<li><div class="r"><b>${esc(m.name)}</b><span class="num">${fmt(m.t7)}</span></div>${haltere(m.t7 / max)}</li>`).join("");
   $("mcount").textContent = S.machines.length + " com tag NFC";
+  const dia = new Date().toLocaleDateString("pt-BR", { weekday: "long", day: "numeric", month: "long" });
+  $("ph-sub").textContent = dia.charAt(0).toUpperCase() + dia.slice(1) + " · " + S.machines.length + " aparelhos com tag";
   $("tbody").innerHTML = S.machines.map((m) => `<tr>
     <td><b>${esc(m.name)}</b><small>${esc(m.group)}</small></td>
     <td><span class="tg">${esc(m.tag)}</span></td>
@@ -58,13 +61,23 @@ export function renderPainel(animar: boolean) {
   if (animar) animarBarraCarregada($("kpis"));
   document.querySelectorAll<HTMLButtonElement>("[data-edit]").forEach((b) => (b.onclick = () => abrirGaveta(b.dataset.edit!, b)));
 
-  $("ccount").textContent = pend ? pend + " aguardando" : "Nenhum aguardando";
-  $("calls").innerHTML = S.calls.length
-    ? S.calls.slice(0, 6).map((c) => {
+  // faixa "agora": o que a equipe resolve primeiro (aluno parado esperando, aparelho que a tag abre sem vídeo)
+  const espera = S.calls.filter((c) => !c.done), atendidos = S.calls.filter((c) => c.done);
+  $("ccount").textContent = pend ? pend + " aguardando" : "";
+  $("calls").innerHTML = (espera.length
+    ? espera.map((c) => {
       const m = bySlug(c.slug);
-      return `<li class="${c.done ? "done" : "wait"}" data-id="${c.id}"><div><b>${esc(m ? m.name : "Aparelho removido")}</b><small>${ago(c.at)} · ${c.done ? "Atendido" : "Aguardando"}</small></div>${c.done ? "" : `<button class="btn sm" type="button" data-done="${c.id}" aria-label="Marcar chamado do ${esc(m ? m.name : "aparelho")} como atendido">Atendido</button>`}</li>`;
+      const atraso = Date.now() - c.at > 5 * 60e3;
+      return `<li class="wait${atraso ? " atraso" : ""}" data-id="${c.id}"><div><b>${esc(m ? m.name : "Aparelho removido")}</b><small>${m ? esc(m.tag) + " · " : ""}chamou ${ago(c.at)}${atraso ? " · esperando faz tempo" : ""}</small></div><button class="btn sm primary" type="button" data-done="${c.id}" aria-label="Marcar chamado do ${esc(m ? m.name : "aparelho")} como atendido">Atendido</button></li>`;
     }).join("")
-    : `<li class="empty-s">Quando um aluno tocar em "Chamar instrutor", o chamado aparece aqui.</li>`;
+    : `<li class="empty-s">${icone("check", "ok-ic")}Ninguém esperando agora. Quando um aluno tocar em "Chamar instrutor", ele aparece aqui.</li>`)
+    + (atendidos.length ? `<li class="hist">${atendidos.length} ${atendidos.length > 1 ? "chamados atendidos" : "chamado atendido"} · último ${ago(Math.max(...atendidos.map((c) => c.at)))}</li>` : "");
+  const semVideo = S.machines.filter((m) => !m.video);
+  $("vcount").textContent = semVideo.length ? String(semVideo.length) : "";
+  $("pend").innerHTML = semVideo.length
+    ? semVideo.map((m) => `<li><div><b>${esc(m.name)}</b><small>${fmt(m.t7)} ${m.t7 === 1 ? "aluno tocou" : "alunos tocaram"} na tag esta semana e não viram vídeo</small></div><button class="btn sm" type="button" data-edit="${m.slug}" aria-label="Enviar vídeo do ${esc(m.name)}">Enviar vídeo</button></li>`).join("")
+    : `<li class="empty-s">${icone("check", "ok-ic")}Todos os aparelhos têm vídeo.</li>`;
+  document.querySelectorAll<HTMLButtonElement>("#pend [data-edit]").forEach((b) => (b.onclick = () => abrirGaveta(b.dataset.edit!, b)));
   document.querySelectorAll<HTMLButtonElement>("[data-done]").forEach((b) => (b.onclick = () => {
     const c = S.calls.find((x) => x.id === +b.dataset.done!);
     if (c) c.done = true;
@@ -72,7 +85,7 @@ export function renderPainel(animar: boolean) {
     renderPainel(false);
     toast("Chamado marcado como atendido");
   }));
-  if (animar && !RM) animate(".painel .card", { opacity: [0, 1], transform: ["translateY(12px)", "none"] }, { duration: 0.45, delay: stagger(0.04), ease: [0.2, 0.7, 0.2, 1] });
+  if (animar && !RM) animate(".painel .card", { opacity: [0, 1], transform: ["translateY(12px)", "none"] }, { duration: 0.3, delay: stagger(0.03), ease: [0.2, 0.7, 0.2, 1] });
 }
 
 let ultimoHoje = 0, larguraGrafico = 0;
@@ -86,7 +99,7 @@ function renderGrafico(today: number, animar: boolean) {
   const box = $("chart");
   roGrafico.observe(box);
   // o SVG usa a largura real do cartão: texto do eixo fica sempre com 11 px, inclusive no celular
-  const W = Math.max(280, Math.round(box.clientWidth || 640)), H = W < 480 ? 200 : 240, L = 30, R = 6, T = 22, B = 28;
+  const W = Math.max(280, Math.round(box.clientWidth || 640)), H = W < 480 ? 200 : 220, L = 30, R = 6, T = 22, B = 28;
   larguraGrafico = W;
   const data = DAILY.slice(0, 13).concat([today]);
   const max = Math.max(...data), step = 50, top = Math.ceil(max / step) * step;
@@ -98,7 +111,8 @@ function renderGrafico(today: number, animar: boolean) {
   <filter id="glow" x="-50%" y="-20%" width="200%" height="140%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>`;
   for (let v = 0; v <= top; v += step) g += `<line class="grid-l" x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}"/><text class="ax" x="${L - 6}" y="${y(v) + 3.5}" text-anchor="end">${v}</text>`;
   data.forEach((v, i) => {
-    const x = L + i * bw + bw * 0.2, w = bw * 0.6, isT = i === data.length - 1;
+    // com o gráfico na largura toda, as colunas não engordam: ficam no máximo com 34 px
+    const w = Math.min(bw * 0.6, 34), x = L + i * bw + (bw - w) / 2, isT = i === data.length - 1;
     const d = new Date(d0); d.setDate(d0.getDate() - (data.length - 1 - i));
     const dia = `${String(d.getDate()).padStart(2, "0")}/${String(d.getMonth() + 1).padStart(2, "0")}`;
     // cada coluna é uma pilha de placas, como a torre de pesos de uma máquina (uma placa a cada 10 toques)

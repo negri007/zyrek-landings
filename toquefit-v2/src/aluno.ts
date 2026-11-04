@@ -5,7 +5,7 @@ import { S, blobs, bySlug, contarTreino, save, type Maquina } from "./estado";
 import { criarPlayer } from "./player/player";
 import { montarLinha } from "./player/timeline";
 import { icone } from "./ui/icones";
-import { $, RM, esc, toast } from "./ui/util";
+import { $, RM, ago, esc, toast } from "./ui/util";
 import { anilha, animarSeletor, animarSeries, barraSeries, cronometro, girarAnilha, lerAjuste, lerSeries, seletor } from "./ui/academia";
 import { lerDescanso, ligarSeries } from "./ui/series";
 
@@ -42,7 +42,6 @@ export async function renderAluno(slug: string, contarToque: boolean) {
   if (contarToque && slug !== atual) { m.t7++; S.extra++; save(); }
   atual = slug;
   pararAluno();
-  const pendente = S.calls.find((c) => c.slug === slug && !c.done);
   const blob = blobs[slug];
   const temRoteiro = !!m.roteiro && m.video && !blob;
   const sc = $("p-scroll");
@@ -61,29 +60,33 @@ export async function renderAluno(slug: string, contarToque: boolean) {
     ${m.errs?.length ? `<section class="sec"><h2>Evite</h2><ul class="errs">${m.errs.map((e) => `<li>${esc(e)}</li>`).join("")}</ul></section>` : ""}
     <section class="sec" id="fbsec"><h2>Esse vídeo te ajudou?</h2><div class="fb"><button class="btn" type="button" data-fb="yes">Ajudou</button><button class="btn" type="button" data-fb="no">Não ajudou</button></div></section>
     <p class="p-foot">${esc(DADOS.academia)} · com tecnologia ToqueFit</p>`;
-  $("p-cta").innerHTML = pendente
-    ? `<button class="btn primary" type="button" disabled>${icone("check")} Instrutor avisado · aguarde no aparelho</button>`
-    : `<button class="btn primary" type="button" id="call">${icone("chamar")} Chamar instrutor</button>`;
+  tinhaChamado = false;
+  desenharCta();
   sc.scrollTop = 0;
   animarSeries(sc);
   animarSeletor(sc);
   const se = lerSeries(m.sets || "");
   if (se) ligarSeries(sc.querySelector<HTMLElement>(".peca.series")!, se.n, lerDescanso(m.rest || ""), () => contarTreino("series", slug));
 
-  sc.querySelectorAll<HTMLButtonElement>("[data-fb]").forEach((b) => (b.onclick = () => {
-    S.help[b.dataset.fb as "yes" | "no"]++;
-    save();
-    const fb = $("fbsec");
+  const fb = $("fbsec");
+  const obrigado = () => {
     fb.innerHTML = `<h2>Esse vídeo te ajudou?</h2><p class="thanks">${icone("check")} Obrigado! Sua resposta vai para a academia.</p>`;
     if (!RM) animate(fb.querySelector(".thanks")!, { opacity: [0, 1], transform: ["translateY(4px)", "none"] }, { duration: 0.3 });
-  }));
-  const cb = document.getElementById("call");
-  if (cb) cb.onclick = () => {
-    S.calls.unshift({ id: S.nextCall++, slug, at: Date.now(), done: false });
-    save();
-    $("p-cta").innerHTML = `<button class="btn primary" type="button" disabled>${icone("check")} Instrutor avisado · aguarde no aparelho</button>`;
-    toast("Instrutor avisado");
   };
+  sc.querySelectorAll<HTMLButtonElement>("[data-fb]").forEach((b) => (b.onclick = () => {
+    const sim = b.dataset.fb === "yes";
+    S.help[sim ? "yes" : "no"]++;
+    save();
+    if (sim) return obrigado();
+    // não ajudou: um toque diz o porquê, e a academia sabe o que regravar
+    fb.innerHTML = `<h2>O que faltou?</h2><div class="motivos" role="group" aria-label="Motivo">${MOTIVOS.map((m) => `<button class="btn sm" type="button" data-mot="${esc(m)}">${esc(m)}</button>`).join("")}</div>`;
+    fb.querySelectorAll<HTMLButtonElement>("[data-mot]").forEach((x) => (x.onclick = () => {
+      S.motivos[x.dataset.mot!] = (S.motivos[x.dataset.mot!] || 0) + 1;
+      save();
+      obrigado();
+    }));
+    (fb.querySelector("[data-mot]") as HTMLElement).focus();
+  }));
   $("taglink").textContent = "#m-" + slug;
   renderLista(slug);
 
@@ -136,6 +139,38 @@ export async function renderAluno(slug: string, contarToque: boolean) {
       p.posicionar(tr.t0 + (typeof k === "string" ? tr.cue(k) : k));
       window.scrollTo({ top: 0, behavior: "instant" });
       return "ok";
+    };
+  }
+}
+
+const MOTIVOS = ["O ajuste não ficou claro", "Rápido demais", "Meu aparelho é diferente", "Outro motivo"];
+
+/** chamado do aluno neste aparelho; "sync" quando quem mudou foi o painel em outra aba */
+let tinhaChamado = false;
+export function desenharCta(origem: "local" | "sync" = "local") {
+  const slug = atual;
+  if (!slug) return;
+  const c = S.calls.find((x) => x.slug === slug && !x.done);
+  if (origem === "sync" && tinhaChamado && !c) toast("Seu chamado foi atendido");
+  tinhaChamado = !!c;
+  const cta = $("p-cta");
+  if (c) {
+    cta.innerHTML = `<div class="cta-espera" role="status">${icone("check", "ce-ic")}<span><b>Instrutor avisado</b><small>Aguarde no aparelho · chamou ${ago(c.at)}</small></span><button class="btn sm" type="button" id="cancelar">Cancelar</button></div>`;
+    $("cancelar").onclick = () => {
+      S.calls = S.calls.filter((x) => x !== c);
+      save();
+      desenharCta();
+      toast("Chamado cancelado");
+      $("call").focus();
+    };
+  } else {
+    cta.innerHTML = `<button class="btn primary" type="button" id="call">${icone("chamar")} Chamar instrutor</button>`;
+    $("call").onclick = () => {
+      S.calls.unshift({ id: S.nextCall++, slug, at: Date.now(), done: false });
+      save();
+      desenharCta();
+      toast("Instrutor avisado");
+      $("cancelar").focus();
     };
   }
 }

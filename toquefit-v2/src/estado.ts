@@ -18,9 +18,11 @@ export interface Estado {
   fins: Record<string, number>;
   /** séries marcadas pelos alunos hoje, por aparelho */
   series: Record<string, number>;
+  /** por que o vídeo não ajudou, contado por motivo */
+  motivos: Record<string, number>;
 }
 
-const KEY = "toquefit-demo-v2";
+export const CHAVE = "toquefit-demo-v2";
 export const DAILY = DADOS.toquesPorDia;
 
 export function fresh(): Estado {
@@ -37,13 +39,13 @@ export function fresh(): Estado {
     help: { yes: DADOS.avaliacoes.ajudou, no: DADOS.avaliacoes.naoAjudou },
     calls: DADOS.chamados.map((c) => ({ id: c.id, slug: c.slug, at: now - c.minutosAtras * 60e3, done: c.atendido })),
     nextTag: ms.length + 1, nextCall: Math.max(...DADOS.chamados.map((c) => c.id)) + 1,
-    fins: {}, series: {},
+    fins: {}, series: {}, motivos: { ...DADOS.avaliacoes.motivos },
   };
 }
 
 function load(): Estado | null {
   try {
-    const r = localStorage.getItem(KEY);
+    const r = localStorage.getItem(CHAVE);
     if (!r) return null;
     const e = JSON.parse(r) as Estado;
     // roteiros gravados depois que o estado foi salvo passam a valer para os aparelhos de exemplo
@@ -51,15 +53,18 @@ function load(): Estado | null {
     // estados salvos antes de existir o registro de treino
     e.fins ||= {};
     e.series ||= {};
+    e.motivos ||= { ...DADOS.avaliacoes.motivos };
     return e;
   } catch { return null; }
 }
 export function save() {
-  try { localStorage.setItem(KEY, JSON.stringify(S)); } catch { /* modo privado: segue só na memória */ }
+  try { localStorage.setItem(CHAVE, JSON.stringify(S)); } catch { /* modo privado: segue só na memória */ }
 }
 
 export let S: Estado = load() || fresh();
 export function restaurar() { S = fresh(); save(); }
+/** outra aba (o celular do aluno ou o painel) salvou: lê o estado de novo */
+export function recarregar() { const e = load(); if (e) S = e; }
 
 export const bySlug = (s: string) => S.machines.find((m) => m.slug === s);
 /** soma 1 num contador por aparelho e salva */

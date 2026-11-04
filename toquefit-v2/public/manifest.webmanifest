@@ -1,0 +1,17 @@
+{
+  "name": "ToqueFit",
+  "short_name": "ToqueFit",
+  "description": "Encostou o celular na tag do aparelho, o vídeo de como usar já começa.",
+  "lang": "pt-BR",
+  "start_url": "./#m-supino-reto",
+  "scope": "./",
+  "display": "fullscreen",
+  "display_override": ["fullscreen", "standalone"],
+  "orientation": "portrait",
+  "background_color": "#14171B",
+  "theme_color": "#14171B",
+  "icons": [
+    { "src": "icone-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icone-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

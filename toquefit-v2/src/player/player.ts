@@ -61,6 +61,7 @@ export function criarPlayer(host: HTMLElement, o: OpcoesPlayer) {
         <button class="ib txt" data-a="vel" type="button" aria-label="Velocidade 1×" aria-pressed="false">1×</button>
         <button class="ib txt" data-a="cc" type="button" aria-label="Legenda" aria-pressed="true">CC</button>
         ${temVoz ? `<button class="ib" data-a="som" type="button" aria-label="Voz da instrutora" aria-pressed="${somLiberado}">${icone(somLiberado ? "som" : "mudo")}</button>` : ""}
+        <button class="ib" data-a="tela" type="button" aria-label="Tela cheia" aria-pressed="false">${icone("tela")}</button>
       </div>
     </div>`;
   const $ = <T extends HTMLElement = HTMLElement>(s: string) => host.querySelector(s) as T;
@@ -231,6 +232,35 @@ export function criarPlayer(host: HTMLElement, o: OpcoesPlayer) {
     if (!tocando) play();
   };
   bOuvir.onclick = ligarSom;
+  const bTela = $("[data-a=tela]");
+  const cheia = () => document.fullscreenElement === host || host.classList.contains("cheia");
+  function marcarTela() {
+    const on = cheia();
+    host.classList.toggle("em-tela", on);
+    bTela.setAttribute("aria-pressed", String(on));
+    bTela.setAttribute("aria-label", on ? "Sair da tela cheia" : "Tela cheia");
+    bTela.innerHTML = icone(on ? "sairTela" : "tela");
+  }
+  // iPhone (ou navegador que recusa): o player cobre a página em vez de entrar em tela cheia
+  function cobrir() {
+    host.classList.add("cheia");
+    document.documentElement.classList.add("trava-rolagem");
+    marcarTela();
+  }
+  bTela.onclick = () => {
+    if (cheia()) {
+      if (document.fullscreenElement === host) void document.exitFullscreen();
+      host.classList.remove("cheia");
+      document.documentElement.classList.remove("trava-rolagem");
+    } else if (host.requestFullscreen && document.fullscreenEnabled) {
+      host.requestFullscreen({ navigationUI: "hide" }).catch(cobrir);
+    } else cobrir();
+    marcarTela();
+  };
+  const aoTela = () => marcarTela();
+  document.addEventListener("fullscreenchange", aoTela);
+  const escTela = (e: KeyboardEvent) => { if (e.key === "Escape" && host.classList.contains("cheia")) bTela.click(); };
+  document.addEventListener("keydown", escTela);
   // tocar no vídeo também libera a voz
   host.querySelector<HTMLElement>("[data-a=denovo]")?.addEventListener("click", play);
   host.querySelector<HTMLElement>("[data-a=proximo]")?.addEventListener("click", () => o.fim?.proximo?.ir());
@@ -253,6 +283,7 @@ export function criarPlayer(host: HTMLElement, o: OpcoesPlayer) {
   bar.addEventListener("keydown", (e) => {
     // espaço e K tocam/pausam, como nos players de vídeo
     if (e.key === " " || e.key === "k" || e.key === "K") { tocando ? pause() : play(); e.preventDefault(); return; }
+    if (e.key === "f" || e.key === "F") { bTela.click(); e.preventDefault(); return; }
     const passo = e.shiftKey ? 10 : 3;
     if (e.key === "ArrowRight") { seek(t + passo); e.preventDefault(); }
     else if (e.key === "ArrowLeft") { seek(t - passo); e.preventDefault(); }
@@ -394,6 +425,10 @@ export function criarPlayer(host: HTMLElement, o: OpcoesPlayer) {
       cancelAnimationFrame(raf);
       for (const a of vozes.values()) { a.pause(); a.removeAttribute("src"); a.load(); }
       document.removeEventListener("visibilitychange", vis);
+      document.removeEventListener("fullscreenchange", aoTela);
+      document.removeEventListener("keydown", escTela);
+      document.documentElement.classList.remove("trava-rolagem");
+      if (document.fullscreenElement === host) void document.exitFullscreen();
       m?.desmontar();
       liberar?.();
     },

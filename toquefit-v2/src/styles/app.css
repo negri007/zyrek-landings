@@ -142,3 +142,17 @@ p { text-wrap: pretty }
   .steps li, .mbtn, .btn, .bar-k, .phone, .lbl { transition-property: opacity, color, background-color, border-color, box-shadow !important }
   .steps.live li.on { transform: none }
 }
+
+/* ---------- Tela cheia do player ----------
+   :fullscreen no computador e no Android; .cheia no iPhone, que não deixa o site entrar em tela cheia */
+.player.em-tela { display: flex; flex-direction: column; border-radius: 0; box-shadow: none; background: var(--player);
+  padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px) }
+.player.cheia { position: fixed; top: 0; left: 0; right: 0; height: 100dvh; z-index: 70 }
+.player.em-tela .stage { flex: 1; min-height: 0; aspect-ratio: auto }
+.player.em-tela .cap, .player.em-tela .ctl { flex: none; width: 100%; max-width: 920px; margin-inline: auto }
+@media (min-width: 821px) { .player.em-tela .cap { font-size: 22px; text-align: center } }
+html.trava-rolagem, html.trava-rolagem body { overflow: hidden; overscroll-behavior: none }
+/* a inclinação 3D da moldura prenderia o player fixo dentro dela */
+html.trava-rolagem .phone-wrap { perspective: none }
+html.trava-rolagem .phone, html.trava-rolagem .float, html.trava-rolagem .palco { transform: none !important; transform-style: flat; animation: none }
+html.trava-rolagem .wrap { z-index: 80 }

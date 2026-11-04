@@ -84,6 +84,12 @@ export class Motor {
     const w = h.clientWidth, ht = h.clientHeight;
     if (!w || !ht) return;
     this.renderer.setSize(w, ht, false);
+    // as cenas foram enquadradas num quadro quase quadrado; em tela cheia de celular em pé
+    // abre o ângulo vertical para manter a largura e não cortar braços e aparelho
+    const cam = c.camera, base = 1 / 0.96;
+    cam.userData.fov0 ??= cam.fov;
+    const a = w / ht;
+    cam.fov = a >= base ? cam.userData.fov0 : (2 * Math.atan(Math.tan((cam.userData.fov0 * Math.PI) / 360) * (base / a)) * 180) / Math.PI;
     c.camera.aspect = w / ht;
     c.camera.updateProjectionMatrix();
     c.resize?.(w, ht);

@@ -338,3 +338,14 @@ body.travado { overflow: hidden }
 .stage::before { top: 0; transform-origin: 50% 0 }
 .stage::after { bottom: 0; transform-origin: 50% 100% }
 .stage.em-replay::before, .stage.em-replay::after { transform: scaleY(1) }
+
+/* ---------- Celular de verdade: o aluno abre como app ----------
+   sem a barra da demonstração; o vídeo vai de borda a borda e a página ocupa a tela toda */
+.so-m { display: none }
+@media (max-width: 820px) {
+  .app-aluno .demobar, .app-aluno .rodape { display: none }
+  .app-aluno .wrap { padding-top: max(12px, env(safe-area-inset-top, 0px)); min-height: 100dvh }
+  .app-aluno #player:not(.em-tela), .app-aluno .player.vazio, .app-aluno .p-scroll > .player { margin-inline: -16px; border-radius: 0; box-shadow: none }
+  .app-aluno .so-m { display: inline-flex }
+  .aside-h .so-m { align-self: flex-start }
+}

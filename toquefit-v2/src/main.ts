@@ -44,6 +44,7 @@ $("app").innerHTML = `
     <aside class="aside">
       <div class="aside-h">
         <h2>Encostou o celular, o vídeo já começa</h2>
+        <a class="btn sm so-m" href="#painel">Ver o painel da academia</a>
         <p class="hide-m">O aluno aproxima o celular da tag NFC do aparelho e o vídeo abre tocando, sem app e sem precisar rolar a tela. Escolha um aparelho para simular.</p>
       </div>
       <div class="mlist" id="mlist" role="group" aria-label="Aparelhos com tag"></div>
@@ -102,6 +103,7 @@ let visao: "aluno" | "painel" | null = null;
 function mostrar(v: "aluno" | "painel") {
   const a = $("view-aluno"), p = $("view-painel");
   a.hidden = v !== "aluno";
+  document.documentElement.classList.toggle("app-aluno", v === "aluno");
   p.hidden = v !== "painel";
   if (visao !== v) { entrar(v === "aluno" ? a : p.querySelector(".ph")!); visao = v; }
   $("tab-aluno").setAttribute("aria-current", v === "aluno" ? "page" : "false");
@@ -141,6 +143,18 @@ window.addEventListener("hashchange", rota);
     raf = requestAnimationFrame(() => { ph.style.setProperty("--ry", (-8 + cx * 10).toFixed(2) + "deg"); ph.style.setProperty("--rx", (3 - cy * 6).toFixed(2) + "deg"); });
   });
   palco.addEventListener("pointerleave", () => { ph.style.setProperty("--ry", "-8deg"); ph.style.setProperty("--rx", "3deg"); });
+})();
+
+/* no celular, o primeiro toque na tela do aluno esconde as barras do navegador (Android; o iPhone não deixa) */
+(() => {
+  const celular = matchMedia("(max-width: 820px) and (pointer: coarse)");
+  const doc = document.documentElement;
+  const imersivo = () => {
+    if (!celular.matches || visao !== "aluno" || document.fullscreenElement || !document.fullscreenEnabled || !doc.requestFullscreen) return;
+    document.removeEventListener("click", imersivo, true);
+    doc.requestFullscreen({ navigationUI: "hide" }).catch(() => {});
+  };
+  document.addEventListener("click", imersivo, true);
 })();
 
 rota();

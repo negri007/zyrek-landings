@@ -80,12 +80,20 @@ export function renderPainel(animar: boolean) {
     ? semVideo.map((m) => `<li><div><b>${esc(m.name)}</b><small>${fmt(m.t7)} ${m.t7 === 1 ? "aluno tocou" : "alunos tocaram"} na tag esta semana e não viram vídeo</small></div><button class="btn sm" type="button" data-edit="${m.slug}" aria-label="Enviar vídeo do ${esc(m.name)}">Enviar vídeo</button></li>`).join("")
     : `<li class="empty-s">${icone("check", "ok-ic")}Todos os aparelhos têm vídeo.</li>`;
   document.querySelectorAll<HTMLButtonElement>("#pend [data-edit]").forEach((b) => (b.onclick = () => abrirGaveta(b.dataset.edit!, b)));
-  document.querySelectorAll<HTMLButtonElement>("[data-done]").forEach((b) => (b.onclick = () => {
+  document.querySelectorAll<HTMLButtonElement>("[data-done]").forEach((b) => (b.onclick = async () => {
     const c = S.calls.find((x) => x.id === +b.dataset.done!);
     if (c) c.done = true;
     save();
-    renderPainel(false);
     toast("Chamado marcado como atendido");
+    // o chamado sai da lista encolhendo, e só então o painel é redesenhado
+    const li = b.closest("li");
+    if (li && !RM) {
+      b.disabled = true;
+      li.style.overflow = "hidden";
+      await animate(li, { opacity: 0, transform: "translateX(16px)" }, { duration: 0.18, ease: "easeIn" }).finished;
+      await animate(li, { height: [li.offsetHeight + "px", "0px"], paddingTop: "0px", paddingBottom: "0px" }, { duration: 0.22, ease: [0.4, 0, 0.2, 1] }).finished;
+    }
+    renderPainel(false);
   }));
   if (animar && !RM) animate(".painel .card", { opacity: [0, 1], transform: ["translateY(12px)", "none"] }, { duration: 0.3, delay: stagger(0.03), ease: [0.2, 0.7, 0.2, 1] });
 }

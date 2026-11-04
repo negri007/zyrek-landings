@@ -423,3 +423,14 @@ body.travado { overflow: hidden }
   .ph .acts #add { grid-column: 1 / -1; order: -1 }
   .ph .acts #reset { grid-column: 1 / -1; order: 1 }
 }
+
+/* ✓ do chamado se desenha quando o instrutor é avisado */
+.p-cta.tracar .ce-ic path { stroke-dasharray: 24; stroke-dashoffset: 24; animation: tracar .5s .12s cubic-bezier(.3, .8, .3, 1) forwards }
+@keyframes tracar { to { stroke-dashoffset: 0 } }
+/* resposta ao toque: o que é botão afunda um pouco ao pressionar */
+.ib { transition: background .2s, color .2s, transform .15s var(--ease) }
+.ib:active, .chapters button:active { transform: scale(.92) }
+.chapters button { transition: color .25s, background .25s, border-color .25s, transform .15s var(--ease) }
+.mbtn:active { transform: translateY(-1px) scale(.98) }
+.row-acts a:active, .row-acts button:active { transform: scale(.96) }
+@media (prefers-reduced-motion: reduce) { .ib:active, .chapters button:active, .mbtn:active, .row-acts a:active, .row-acts button:active { transform: none } .cta-espera .ce-ic path { animation: none !important; stroke-dashoffset: 0 } }

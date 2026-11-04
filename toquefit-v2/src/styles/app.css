@@ -174,3 +174,21 @@ html.trava-rolagem .wrap { z-index: 80 }
 @media (prefers-reduced-motion: reduce) { .dica-giro, .dica-giro .ic { animation: none } }
 .ouvir:not([hidden]) ~ .volta, .ouvir:not([hidden]) ~ .dica-giro { bottom: 60px }
 .stage:focus-visible { outline: 2px solid var(--neon); outline-offset: -2px }
+
+/* ---------- Troca de tela (View Transitions) ----------
+   a pílula amarela da aba desliza até a outra; a tela sai subindo um pouco e a nova entra de baixo */
+.tab[aria-current="page"] { view-transition-name: aba-ativa }
+/* nomes diferentes: uma tela só sai e a outra só entra, sem esticar uma na forma da outra */
+.palco { view-transition-name: tela-aluno }
+.painel { view-transition-name: tela-painel }
+.p-scroll { view-transition-name: celular }
+::view-transition-group(aba-ativa) { animation-duration: .42s; animation-timing-function: cubic-bezier(.3, .9, .3, 1) }
+::view-transition-old(tela-aluno), ::view-transition-old(tela-painel) { animation: .22s cubic-bezier(.4, 0, 1, 1) both sai-tela }
+::view-transition-new(tela-aluno), ::view-transition-new(tela-painel) { animation: .38s cubic-bezier(.2, .8, .2, 1) .06s both entra-tela }
+::view-transition-old(celular) { animation: .2s ease-in both sai-tela }
+::view-transition-new(celular) { animation: .36s cubic-bezier(.2, .8, .2, 1) .05s both entra-tela }
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: .25s }
+@keyframes sai-tela { to { opacity: 0; transform: translateY(-8px) } }
+@keyframes entra-tela { from { opacity: 0; transform: translateY(12px) } }
+@media (prefers-reduced-motion: reduce) { ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important } }
+.vt-aparelho .palco { view-transition-name: none }

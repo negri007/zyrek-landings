@@ -114,18 +114,34 @@ ligarGaveta();
 
 /* ---------- Rotas por hash: #m-<aparelho> e #painel ---------- */
 let visao: "aluno" | "painel" | null = null;
+/** troca de tela com View Transitions (a pílula da aba desliza, o conteúdo cruza); sem suporte, troca na hora */
+let primeira = true, emTransicao = false;
+function comTransicao(fn: () => void) {
+  const doc = document as Document & { startViewTransition?: (cb: () => void) => unknown };
+  const usar = !primeira && !RM && !!doc.startViewTransition;
+  primeira = false;
+  emTransicao = usar; // com transição, a entrada própria da tela não roda (seriam duas animações)
+  if (usar) doc.startViewTransition!(fn);
+  else fn();
+}
 function mostrar(v: "aluno" | "painel") {
   const a = $("view-aluno"), p = $("view-painel");
   a.hidden = v !== "aluno";
   document.documentElement.classList.toggle("app-aluno", v === "aluno");
   p.hidden = v !== "painel";
-  if (visao !== v) { entrar(v === "aluno" ? a : p.querySelector(".ph")!); visao = v; }
+  if (visao !== v) { if (!emTransicao) entrar(v === "aluno" ? a : p.querySelector(".ph")!); visao = v; }
   $("tab-aluno").setAttribute("aria-current", v === "aluno" ? "page" : "false");
   $("tab-painel").setAttribute("aria-current", v === "painel" ? "page" : "false");
   $<HTMLAnchorElement>("tab-aluno").href = "#m-" + (slugAtual() || S.machines[0].slug);
 }
 
 function rota() {
+  // trocar de aparelho só mexe no conteúdo do celular; trocar de visão mexe na tela toda
+  const vai = location.hash === "#painel" ? "painel" : "aluno";
+  document.documentElement.classList.toggle("vt-aparelho", vai === visao);
+  comTransicao(trocarTela);
+}
+function trocarTela() {
   const h = location.hash.replace("#", "");
   fecharGaveta();
   if (h === "painel") {

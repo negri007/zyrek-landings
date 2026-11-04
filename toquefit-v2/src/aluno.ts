@@ -1,5 +1,5 @@
 // Visão do aluno: o celular que abre ao encostar na tag NFC do aparelho.
-import { animate } from "motion";
+import { animate, inView } from "motion";
 import { DADOS, carregarRoteiro } from "./data/carregar";
 import { S, blobs, bySlug, contarTreino, save, type Maquina } from "./estado";
 import { criarPlayer } from "./player/player";
@@ -63,6 +63,7 @@ export async function renderAluno(slug: string, contarToque: boolean) {
   tinhaChamado = false;
   desenharCta();
   sc.scrollTop = 0;
+  revelar(sc);
   animarSeries(sc);
   animarSeletor(sc);
   const se = lerSeries(m.sets || "");
@@ -143,6 +144,24 @@ export async function renderAluno(slug: string, contarToque: boolean) {
   }
 }
 
+/**
+ * Blocos abaixo da dobra aparecem subindo quando o aluno rola até eles (uma vez só).
+ * No computador quem rola é a tela do celular; no celular, a própria página.
+ */
+function revelar(sc: HTMLElement) {
+  if (RM) return;
+  const raiz = window.innerWidth > 820 ? sc : undefined;
+  const limite = raiz ? sc.getBoundingClientRect().bottom : window.innerHeight;
+  sc.querySelectorAll<HTMLElement>(":scope > .pecas, :scope > .sec, :scope > .p-foot").forEach((el) => {
+    if (el.getBoundingClientRect().top < limite - 24) return; // já está à vista: fica como está
+    el.style.opacity = "0";
+    const parar = inView(el, () => {
+      parar();
+      animate(el, { opacity: [0, 1], transform: ["translateY(16px)", "none"] }, { duration: 0.5, ease: [0.2, 0.8, 0.2, 1] });
+    }, { root: raiz, amount: 0.2 });
+  });
+}
+
 const MOTIVOS = ["O ajuste não ficou claro", "Rápido demais", "Meu aparelho é diferente", "Outro motivo"];
 
 /** chamado do aluno neste aparelho; "sync" quando quem mudou foi o painel em outra aba */
@@ -154,6 +173,10 @@ export function desenharCta(origem: "local" | "sync" = "local") {
   if (origem === "sync" && tinhaChamado && !c) toast("Seu chamado foi atendido");
   tinhaChamado = !!c;
   const cta = $("p-cta");
+  // só anima quando o estado muda (não a cada troca de aparelho)
+  const mudou = cta.dataset.estado !== undefined && cta.dataset.estado !== (c ? "espera" : "livre");
+  cta.dataset.estado = c ? "espera" : "livre";
+  const entrar = () => { if (mudou && !RM) animate(cta.firstElementChild!, { opacity: [0, 1], transform: ["scale(.96)", "scale(1)"] }, { type: "spring", bounce: 0.3, visualDuration: 0.35 }); };
   if (c) {
     cta.innerHTML = `<div class="cta-espera" role="status">${icone("check", "ce-ic")}<span><b>Instrutor avisado</b><small>Aguarde no aparelho · chamou ${ago(c.at)}</small></span><button class="btn sm" type="button" id="cancelar">Cancelar</button></div>`;
     $("cancelar").onclick = () => {
@@ -163,6 +186,8 @@ export function desenharCta(origem: "local" | "sync" = "local") {
       toast("Chamado cancelado");
       $("call").focus();
     };
+    cta.classList.toggle("tracar", mudou && !RM);
+    entrar();
   } else {
     cta.innerHTML = `<button class="btn primary" type="button" id="call">${icone("chamar")} Chamar instrutor</button>`;
     $("call").onclick = () => {
@@ -172,6 +197,7 @@ export function desenharCta(origem: "local" | "sync" = "local") {
       toast("Instrutor avisado");
       $("cancelar").focus();
     };
+    entrar();
   }
 }
 
@@ -219,11 +245,21 @@ function resumoHoje() {
   if (feitos) el.innerHTML = `${icone("check")}<span>Treino de hoje: <b>${feitos} ${feitos > 1 ? "aparelhos" : "aparelho"}</b>${series ? ` · ${series} ${series > 1 ? "séries" : "série"}` : ""}</span>`;
 }
 
+const jaFeitos = new Set<string>();
+let listaPronta = false;
 function renderLista(slug: string) {
   resumoHoje();
   const ml = $("mlist");
   ml.innerHTML = S.machines.map((m) => `<button class="mbtn${feitoHoje(m.slug) ? " feito" : ""}" type="button" data-go="${m.slug}" aria-current="${m.slug === slug}">
       ${anilha("mb-an")}<span class="mb-t"><b>${esc(m.name)}</b><small><span class="tg">${esc(m.tag)}</span> · ${esc(m.group)}${!m.video ? " · sem vídeo" : m.roteiro ? " · instrutora 3D" : ""}</small></span>${feitoHoje(m.slug) ? `<span class="mb-ok" title="Feito hoje">${icone("check")}<span class="sr">Feito hoje</span></span>` : ""}</button>`).join("");
+  // aparelho que acabou de ser concluído: o ✓ entra com uma mola
+  for (const m of S.machines) {
+    if (!feitoHoje(m.slug) || jaFeitos.has(m.slug)) continue;
+    jaFeitos.add(m.slug);
+    const ok = ml.querySelector(`[data-go="${m.slug}"] .mb-ok`);
+    if (listaPronta && ok && !RM) animate(ok, { transform: ["scale(0) rotate(-40deg)", "scale(1) rotate(0deg)"] }, { type: "spring", bounce: 0.45, visualDuration: 0.45 });
+  }
+  listaPronta = true;
   ml.querySelectorAll<HTMLButtonElement>("[data-go]").forEach((b) => (b.onclick = () => { girarAnilha(b.querySelector(".mb-an")); tocarTag(b.dataset.go!); }));
 }
 

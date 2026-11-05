@@ -202,7 +202,8 @@ export function imprimirEtiquetas(slugs: string[]) {
 
 /** Planilha com os números de cada aparelho (abre no Excel e no Google Planilhas). */
 function baixarPlanilha() {
-  const cel = (v: string | number) => { const t = String(v); return /[;"\n]/.test(t) ? `"${t.replace(/"/g, `""`)}"` : t; };
+  // texto que começa com = + - @ vira fórmula no Excel: o apóstrofo faz ficar só texto
+  const cel = (v: string | number) => { let t = String(v); if (/^[=+\-@\t\r]/.test(t)) t = "'" + t; return /[;"\n]/.test(t) ? `"${t.replace(/"/g, `""`)}"` : t; };
   const linhas = [["Aparelho", "Grupo", "Tag", "Vídeo", "Toques 7 dias", "Séries hoje", "Vídeos completos hoje", "Link"]]
     .concat(S.machines.map((m) => [m.name, m.group, m.tag, !m.video ? "Sem vídeo" : m.roteiro ? "Instrutora 3D" : "Com vídeo", String(m.t7), String(S.series[m.slug] || 0), String(S.fins[m.slug] || 0), linkDaTag(m.slug)]));
   // ponto e vírgula e BOM: é o que o Excel em português abre direto, com acentos

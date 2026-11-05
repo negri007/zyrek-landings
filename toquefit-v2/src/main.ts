@@ -100,7 +100,7 @@ $("app").innerHTML = `
 <div class="scrim" id="scrim" hidden></div>
 <aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="dr-title" hidden>
   <div class="dr-h"><h2 id="dr-title">Editar aparelho</h2><button class="x" type="button" id="dr-x" aria-label="Fechar">${icone("fechar")}</button></div>
-  <form class="dr-b" id="form" novalidate onsubmit="return false">
+  <form class="dr-b" id="form" novalidate>
     <div class="f"><label for="f-name">Nome do aparelho</label><input type="text" id="f-name" autocomplete="off" aria-describedby="f-name-err"><span class="err" id="f-name-err" hidden>Digite o nome do aparelho.</span></div>
     <div class="f"><label for="f-group">Grupo muscular</label><select id="f-group">${GRUPOS.map((g) => `<option>${g}</option>`).join("")}</select></div>
     <div class="f"><label for="f-video">Vídeo explicativo</label>
@@ -119,6 +119,8 @@ $("app").innerHTML = `
 
 ligarGaveta();
 montarEditor();
+// sem handler inline (a política de segurança da página bloqueia): Enter num campo da gaveta não recarrega a página
+$("form").addEventListener("submit", (e) => e.preventDefault());
 
 /* ---------- Rotas por hash: #m-<aparelho> e #painel ---------- */
 let visao: "aluno" | "painel" | null = null;
@@ -175,6 +177,8 @@ function trocarTela() {
     renderLista(""); // no computador, a lista ao lado simula encostar na tag de um aparelho
     return;
   }
+  // app instalado (ou endereço sem #): aluno conectado abre direto na ficha dele
+  if (!h && aluno()) { location.replace("#treino"); return; }
   let slug = h.startsWith("m-") ? h.slice(2) : null;
   if (!slug || !bySlug(slug)) slug = slugAtual() && bySlug(slugAtual()!) ? slugAtual()! : S.machines[0].slug;
   mostrar("aluno");

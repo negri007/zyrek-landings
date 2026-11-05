@@ -2,7 +2,7 @@
 import { animate, inView } from "motion";
 import { DADOS, carregarRoteiro } from "./data/carregar";
 import { aluno, meuTreinoSalvo, nomeAcademia } from "./conta";
-import { cartaoDaFicha, ligarCartaoDaFicha, prescricao } from "./meutreino";
+import { cartaoDaFicha, ligarCartaoDaFicha, prescricao, slugsDeHoje } from "./meutreino";
 import { S, blobs, bySlug, contarTreino, save, type Maquina } from "./estado";
 import { criarPlayer } from "./player/player";
 import { montarLinha } from "./player/timeline";
@@ -284,8 +284,8 @@ const jaFeitos = new Set<string>();
 let listaPronta = false;
 export function renderLista(slug: string) {
   resumoHoje();
-  const ml = $("mlist");
-  ml.innerHTML = S.machines.map((m) => `<button class="mbtn${feitoHoje(m.slug) ? " feito" : ""}" type="button" data-go="${m.slug}" aria-current="${m.slug === slug}">
+  const ml = $("mlist"), hoje = slugsDeHoje();
+  ml.innerHTML = S.machines.map((m) => `<button class="mbtn${feitoHoje(m.slug) ? " feito" : ""}" type="button" data-go="${m.slug}" aria-current="${m.slug === slug}">${hoje.has(m.slug) ? `<span class="mb-hoje">Hoje</span>` : ""}
       ${anilha("mb-an")}<span class="mb-t"><b>${esc(m.name)}</b><small><span class="tg">${esc(m.tag)}</span> · ${esc(m.group)}${!m.video ? " · sem vídeo" : m.roteiro ? " · instrutora 3D" : ""}</small></span>${feitoHoje(m.slug) ? `<span class="mb-ok" title="Feito hoje">${icone("check")}<span class="sr">Feito hoje</span></span>` : ""}</button>`).join("");
   // aparelho que acabou de ser concluído: o ✓ entra com uma mola
   for (const m of S.machines) {

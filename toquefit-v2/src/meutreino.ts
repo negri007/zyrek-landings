@@ -114,6 +114,7 @@ export function renderMeuTreino(primeira = true) {
     };
     progresso(t);
   }
+  mostrarInstalar();
   $("mt-sair").onclick = () => { sairAluno(); escolhido = null; toast("Celular desconectado"); window.dispatchEvent(new Event("tf-aluno")); renderMeuTreino(); };
   if (primeira) {
     sc.scrollTop = 0;
@@ -251,4 +252,34 @@ export function prescricao(slug: string) {
   if (!f?.t) return null;
   const it = f.t.itens[f.i];
   return { sets: `${it.series} × ${it.reps}`, rest: it.descanso };
+}
+
+/** aparelhos do treino de hoje (a lista ao lado marca "Hoje") */
+export function slugsDeHoje() {
+  const m = aluno() ? meuTreinoSalvo() : null;
+  const t = m ? treinoDeHoje(m.aluno.ficha, m.treinos) : null;
+  return new Set((t?.itens || []).map((i) => i.slug).filter(Boolean) as string[]);
+}
+
+/* ---------- instalar como app (Android/Chrome): o aluno abre a ficha pelo ícone na tela inicial ---------- */
+type PedidoInstalar = Event & { prompt: () => Promise<void>; userChoice: Promise<{ outcome: string }> };
+let pedido: PedidoInstalar | null = null;
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  pedido = e as PedidoInstalar;
+  if (location.hash === "#treino") mostrarInstalar();
+});
+window.addEventListener("appinstalled", () => { pedido = null; document.getElementById("mt-instalar")?.remove(); });
+function mostrarInstalar() {
+  if (!pedido || document.getElementById("mt-instalar") || matchMedia("(display-mode: standalone), (display-mode: fullscreen)").matches) return;
+  const priv = document.querySelector(".mt-priv");
+  if (!priv) return;
+  priv.insertAdjacentHTML("beforebegin", `<div class="mt-instalar" id="mt-instalar"><span>Coloque o ToqueFit na tela inicial e abra a ficha com um toque.</span><button class="btn sm primary" type="button">Instalar</button></div>`);
+  document.querySelector<HTMLButtonElement>("#mt-instalar button")!.onclick = async () => {
+    const p = pedido;
+    if (!p) return;
+    pedido = null;
+    await p.prompt();
+    document.getElementById("mt-instalar")?.remove();
+  };
 }

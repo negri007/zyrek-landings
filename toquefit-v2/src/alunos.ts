@@ -3,7 +3,7 @@
 import { animate, stagger } from "motion";
 import {
   DIAS, apagarAluno, cadastrarAluno, criarAcademia, dataCurta, entrarAcademia, instrutor, lerAluno, linkDoAluno, listarAlunos,
-  novoLink, quando, sairAcademia, salvarAluno, situacaoFicha, chaveItem,
+  apagarExemplos, criarExemplos, novoLink, quando, sairAcademia, salvarAluno, situacaoFicha, chaveItem,
   type Ficha, type Item, type Registro, type ResumoAluno, type Treino,
 } from "./conta";
 import { LIVRES, MODELOS, fichaVazia } from "./data/modelos";
@@ -15,45 +15,92 @@ import { $, RM, esc, toast } from "./ui/util";
 let lista: ResumoAluno[] | null = null, erroLista = "", carregando = false;
 
 /* ---------- cartão no painel ---------- */
+let chaveAberta = false, filtro = "", ocupado = false;
 export function renderAlunos(buscar = true) {
   const el = $("alunos");
   const s = instrutor();
   // o painel redesenha a cada consulta da sala ao vivo: este cartão só muda quando os dados mudam
-  // (senão apagaria o que o instrutor está digitando e fecharia a caixa da chave)
+  // (senão apagaria o que o instrutor está digitando)
   if (!s) {
     if (el.dataset.modo !== "ativar") { el.dataset.modo = "ativar"; semAcademia(el); }
     return;
   }
   if (buscar) void recarregar();
   const alertas = lista ? contarAlertas(lista) : null;
+  const temExemplo = !!lista?.some((a) => a.exemplo);
   const html = `
     <div class="card-h al-h"><div><h2>Alunos e fichas</h2><span>${lista ? `${lista.length} ${lista.length === 1 ? "aluno" : "alunos"} · ` : ""}código da academia <code class="av-cod">${esc(s.cod)}</code></span></div>
-      <div class="acts"><button class="btn sm" type="button" id="al-chave">Abrir em outro computador</button><button class="btn sm primary" type="button" id="al-novo">Novo aluno</button></div></div>
-    ${alertas && (alertas.vence + alertas.sumido + alertas.dor) ? `<ul class="al-alertas">
+      <div class="acts">
+        ${lista?.length ? `<button class="btn sm" type="button" id="al-planilha">Baixar planilha</button>` : ""}
+        <button class="btn sm" type="button" id="al-chave" aria-expanded="${chaveAberta}">Chave do instrutor</button>
+        <button class="btn sm primary" type="button" id="al-novo">Novo aluno</button></div></div>
+    ${chaveAberta ? `<div class="al-chave" id="al-chave-box">
+      <p><b>Anote estes dois dados.</b> Com eles você abre este painel em outro computador ou no celular do instrutor (botão <b>Já tenho a chave</b>). Se o navegador for limpo sem eles, os alunos continuam no servidor, mas o painel não abre.</p>
+      <dl><dt>Código</dt><dd><code>${esc(s.cod)}</code></dd><dt>Chave do instrutor</dt><dd><code>${esc(s.chave)}</code></dd></dl>
+      <p class="hint">Quem tem a chave vê e edita todos os alunos. Não mande para alunos.</p>
+      <div class="acts"><button class="btn sm" type="button" id="al-copiar">Copiar código e chave</button><button class="btn sm perigo" type="button" id="al-sair">Desconectar este computador</button></div></div>` : ""}
+    ${alertas && (alertas.vence + alertas.sumido + alertas.dor) ? `<ul class="al-alertas" aria-label="Precisa de atenção">
       ${alertas.dor ? `<li class="crit"><b class="num">${alertas.dor}</b> ${alertas.dor > 1 ? "sentiram" : "sentiu"} dor no último treino</li>` : ""}
       ${alertas.sumido ? `<li class="warn"><b class="num">${alertas.sumido}</b> sem treinar há 7 dias ou mais</li>` : ""}
       ${alertas.vence ? `<li class="warn"><b class="num">${alertas.vence}</b> ${alertas.vence > 1 ? "fichas vencidas ou vencendo" : "ficha vencida ou vencendo"} em 7 dias</li>` : ""}
     </ul>` : ""}
+    ${(lista?.length || 0) > 5 ? `<div class="al-busca"><label class="sr" for="al-filtro">Buscar aluno</label><input type="search" id="al-filtro" placeholder="Buscar aluno pelo nome" autocomplete="off" value="${esc(filtro)}"></div>` : ""}
     <div id="al-lista" aria-live="polite">${listaHtml()}</div>
-    <div class="al-chave" id="al-chave-box" hidden></div>`;
+    ${lista ? `<div class="al-exemplo">${temExemplo
+      ? `<span>Os alunos marcados como <b>Exemplo</b> são de demonstração.</span><button class="btn sm" type="button" id="al-ex-tirar">Apagar alunos de exemplo</button>`
+      : `<span>Vai apresentar? Coloque 5 alunos de exemplo com 4 semanas de treino para mostrar os alertas e a evolução de carga.</span><button class="btn sm" type="button" id="al-ex-por">Colocar alunos de exemplo</button>`}</div>` : ""}`;
   const assinatura = s.cod + "|" + html;
   if (el.dataset.modo === "lista" && el.dataset.assin === assinatura) return;
+  // o campo de busca não perde o foco quando a lista se atualiza
+  const buscando = document.activeElement?.id === "al-filtro";
   el.dataset.modo = "lista";
   el.dataset.assin = assinatura;
   el.innerHTML = html;
+  if (buscando) { const f = $<HTMLInputElement>("al-filtro"); f.focus(); f.setSelectionRange(f.value.length, f.value.length); }
   $("al-novo").onclick = (e) => abrirEditor(null, e.currentTarget as HTMLElement);
-  $("al-chave").onclick = () => {
-    const box = $("al-chave-box");
-    box.hidden = !box.hidden;
-    box.innerHTML = `<p>Para abrir este painel em outro computador ou no celular do instrutor, use <b>Já tenho a chave</b> com:</p>
-      <dl><dt>Código</dt><dd><code>${esc(s.cod)}</code></dd><dt>Chave do instrutor</dt><dd><code>${esc(s.chave)}</code></dd></dl>
-      <p class="hint">Quem tem a chave vê e edita todos os alunos. Não mande para alunos.</p>
-      <div class="acts"><button class="btn sm" type="button" id="al-copiar">Copiar chave</button><button class="btn sm perigo" type="button" id="al-sair">Desconectar este computador</button></div>`;
-    $("al-copiar").onclick = () => copiar(s.chave, "Chave copiada");
-    $("al-sair").onclick = () => { sairAcademia(); lista = null; window.dispatchEvent(new Event("tf-academia")); toast("Painel desconectado. Os dados continuam no servidor"); };
-  };
+  $("al-chave").onclick = () => { chaveAberta = !chaveAberta; renderAlunos(false); $("al-chave").focus(); };
+  document.getElementById("al-copiar")?.addEventListener("click", () => copiar(`Código: ${s.cod}\nChave do instrutor: ${s.chave}`, "Código e chave copiados"));
+  document.getElementById("al-sair")?.addEventListener("click", () => { sairAcademia(); lista = null; chaveAberta = false; window.dispatchEvent(new Event("tf-academia")); toast("Painel desconectado. Os dados continuam no servidor"); });
+  document.getElementById("al-planilha")?.addEventListener("click", baixarPlanilhaAlunos);
+  document.getElementById("al-filtro")?.addEventListener("input", (e) => { filtro = (e.target as HTMLInputElement).value; $("al-lista").innerHTML = listaHtml(); ligarLista(el); });
+  document.getElementById("al-ex-por")?.addEventListener("click", (e) => void exemplos(true, e.currentTarget as HTMLButtonElement));
+  document.getElementById("al-ex-tirar")?.addEventListener("click", (e) => void exemplos(false, e.currentTarget as HTMLButtonElement));
+  ligarLista(el);
+}
+
+/** depois de ativar a academia: a chave aparece aberta, para o instrutor anotar */
+export const mostrarChave = () => { chaveAberta = true; };
+
+function ligarLista(el: HTMLElement) {
   el.querySelectorAll<HTMLButtonElement>("[data-al]").forEach((b) => (b.onclick = () => abrirEditor(b.dataset.al!, b)));
   el.querySelector<HTMLButtonElement>("#al-tentar")?.addEventListener("click", () => renderAlunos());
+}
+
+async function exemplos(por: boolean, bt: HTMLButtonElement) {
+  if (ocupado) return;
+  ocupado = true; bt.disabled = true; bt.textContent = por ? "Colocando…" : "Apagando…";
+  try {
+    if (por) {
+      const { alunosDeExemplo } = await import("./data/exemplos");
+      await criarExemplos(alunosDeExemplo());
+      toast("5 alunos de exemplo no painel. Abra a ficha de cada um");
+    } else {
+      const r = await apagarExemplos();
+      toast(`${r.apagados} alunos de exemplo apagados`);
+    }
+    await recarregar(true);
+  } catch (e) { toast((e as Error).message); bt.disabled = false; bt.textContent = por ? "Colocar alunos de exemplo" : "Apagar alunos de exemplo"; }
+  finally { ocupado = false; }
+}
+
+/** quem precisa de atenção primeiro: dor, ficha vencida, sumido, ficha vencendo; depois pelo nome */
+function prioridade(a: ResumoAluno) {
+  const sit = situacaoFicha(a.validade);
+  if (a.ultimoRetorno?.dor && a.ultimoRetorno.data === a.ultimo) return 0;
+  if (sit.tipo === "vencida") return 1;
+  if (diasSem(a) >= 7) return 2;
+  if (sit.tipo === "vence") return 3;
+  return 4;
 }
 
 function contarAlertas(l: ResumoAluno[]) {
@@ -72,31 +119,57 @@ function diasSem(a: ResumoAluno) {
   return Math.floor((Date.now() - ref) / 86400e3);
 }
 
+const semAcento = (s: string) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+
 function listaHtml() {
   if (!lista) return erroLista
     ? `<p class="al-vazio">${esc(erroLista)} <button class="btn sm" type="button" id="al-tentar">Tentar de novo</button></p>`
     : `<p class="al-vazio" role="status">Carregando alunos…</p>`;
   if (!lista.length) return `<div class="al-vazio"><b>Nenhum aluno ainda.</b> Cadastre o primeiro, escolha um modelo de ficha e mande o link pelo WhatsApp. Quando ele encostar o celular na tag, a ficha dele abre naquele aparelho.</div>`;
-  return `<ul class="al-lista">${lista.map((a) => {
-    const sit = situacaoFicha(a.validade), sem = diasSem(a);
+  const f = semAcento(filtro.trim());
+  const vistos = lista.filter((a) => !f || semAcento(a.nome).includes(f)).sort((a, b) => prioridade(a) - prioridade(b) || a.nome.localeCompare(b.nome, "pt-BR"));
+  if (!vistos.length) return `<p class="al-vazio">Nenhum aluno com "${esc(filtro)}".</p>`;
+  return `<ul class="al-lista">${vistos.map((a) => {
+    const sit = situacaoFicha(a.validade), parado = diasSem(a);
     const prev = Math.max(1, a.previstos || 3);
     const r = a.ultimoRetorno && a.ultimoRetorno.data === a.ultimo ? a.ultimoRetorno : null;
     return `<li><button type="button" class="al-it" data-al="${esc(a.id)}" aria-label="Abrir ficha de ${esc(a.nome)}">
       <span class="al-av" aria-hidden="true">${esc(iniciais(a.nome))}</span>
-      <span class="al-nome"><b>${esc(a.nome)}</b><small class="${sem >= 7 ? "warn" : ""}">${a.ultimo ? "Treinou: " + quando(a.ultimo).toLowerCase() : "Ainda não treinou"}</small></span>
+      <span class="al-nome"><b>${esc(a.nome)}</b><small class="${parado >= 7 ? "warn" : ""}">${a.ultimo ? "Treinou: " + quando(a.ultimo).toLowerCase() : "Ainda não treinou"}</small></span>
       <span class="al-sem"><span class="num"><b>${a.semana}</b> de ${prev}</span><small>treinos na semana</small><i class="al-barra" aria-hidden="true"><i style="transform:scaleX(${Math.min(1, a.semana / prev).toFixed(3)})"></i></i></span>
       <span class="al-tags">
         ${sit.tipo === "vencida" ? `<span class="pill crit">Ficha vencida</span>` : sit.tipo === "vence" ? `<span class="pill no">Vence ${sit.dias === 0 ? "hoje" : "em " + sit.dias + "d"}</span>` : sit.tipo === "ok" ? `<span class="pill ok">Até ${dataCurta(a.validade)}</span>` : ""}
         ${r?.dor ? `<span class="pill crit">Sentiu dor</span>` : r?.sensacao === "pesado" ? `<span class="pill no">Achou pesado</span>` : r?.sensacao === "leve" ? `<span class="pill neon">Achou leve</span>` : ""}
+        ${a.exemplo ? `<span class="pill ex">Exemplo</span>` : ""}
       </span>
       <span class="al-ir" aria-hidden="true">Ficha ›</span></button></li>`;
   }).join("")}</ul>`;
 }
 
+/** planilha dos alunos (abre no Excel e no Google Planilhas) */
+function baixarPlanilhaAlunos() {
+  if (!lista) return;
+  // texto que começa com = + - @ vira fórmula no Excel: o apóstrofo faz ficar só texto
+  const cel = (v: string | number) => { let t = String(v); if (/^[=+\-@\t\r]/.test(t)) t = "'" + t; return /[;"\n]/.test(t) ? `"${t.replace(/"/g, `""`)}"` : t; };
+  const linhas = [["Aluno", "Último treino", "Treinos na semana", "Dias previstos", "Ficha válida até", "Último retorno"]]
+    .concat(lista.map((a) => {
+      const r = a.ultimoRetorno && a.ultimoRetorno.data === a.ultimo ? a.ultimoRetorno : null;
+      return [a.nome, a.ultimo ? dataCurta(a.ultimo) : "Nunca", String(a.semana), String(a.previstos), a.validade ? dataCurta(a.validade) : "", r?.dor ? "Sentiu dor" : r?.sensacao || ""];
+    }));
+  // ponto e vírgula e BOM: é o que o Excel em português abre direto, com acentos
+  const csv = "﻿" + linhas.map((l) => l.map(cel).join(";")).join("\r\n");
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
+  link.download = `alunos-${new Date().toISOString().slice(0, 10)}.csv`;
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+  toast("Planilha de alunos baixada");
+}
+
 const iniciais = (n: string) => n.split(/\s+/).filter(Boolean).slice(0, 2).map((p) => p[0]).join("").toUpperCase();
 
-async function recarregar() {
-  if (carregando) return;
+async function recarregar(forcar = false) {
+  if (carregando && !forcar) return;
   carregando = true;
   try {
     const r = await listarAlunos();
@@ -153,6 +226,7 @@ function semAcademia(el: HTMLElement) {
     try {
       await criarAcademia(nome);
       lista = [];
+      mostrarChave();
       window.dispatchEvent(new Event("tf-academia"));
       toast("Área do aluno ativada. Cadastre o primeiro aluno");
     } catch (er) { toast((er as Error).message || "Sem conexão. Tente de novo"); b.disabled = false; b.textContent = "Ativar área do aluno"; }
@@ -319,12 +393,13 @@ const proximaLetra = (f: Ficha) => "ABCDEFG".split("").find((l) => !f.treinos.so
 function desenharEditor(foco?: string) {
   if (!ed) return;
   const novo = !ed.id;
+  const outros = (lista || []).filter((a) => a.id !== ed!.id && a.treinos > 0);
   $("ed-title").textContent = novo ? "Novo aluno" : ed.nome || "Aluno";
   $("ed-b").innerHTML = `
     <div class="f"><label for="ed-nome">Nome do aluno</label><input type="text" id="ed-nome" autocomplete="off" maxlength="60" value="${esc(ed.nome)}" placeholder="Nome e sobrenome"><span class="hint">Só o nome: a ficha não pede CPF, telefone nem dados de saúde.</span></div>
     ${novo ? "" : historicoHtml()}
     <div class="ed-linha">
-      <div class="f"><label for="ed-modelo">Começar de um modelo</label><select id="ed-modelo"><option value="">Escolha um modelo…</option>${MODELOS.map((m) => `<option value="${m.id}">${esc(m.nome)} · ${esc(m.desc)}</option>`).join("")}</select></div>
+      <div class="f"><label for="ed-modelo">Começar de um modelo</label><select id="ed-modelo"><option value="">Escolha um modelo…</option><optgroup label="Modelos">${MODELOS.map((m) => `<option value="${m.id}">${esc(m.nome)} · ${esc(m.desc)}</option>`).join("")}</optgroup>${outros.length ? `<optgroup label="Copiar a ficha de um aluno">${outros.map((a) => `<option value="a:${esc(a.id)}">${esc(a.nome)}</option>`).join("")}</optgroup>` : ""}</select></div>
       <div class="f"><label for="ed-val">Ficha válida até</label><input type="date" id="ed-val" value="${esc(ed.ficha.validade)}"></div>
     </div>
     <div class="f"><label for="ed-obs">Recado para o aluno</label><textarea id="ed-obs" maxlength="280" rows="2" placeholder="Ex.: Aqueça 5 min na esteira antes de começar">${esc(ed.ficha.obs)}</textarea></div>
@@ -341,8 +416,21 @@ function ligarEditor() {
   const b = $("ed-b");
   $("ed-cancel").onclick = fecharEditor;
   $("ed-salvar").onclick = salvar;
-  $<HTMLSelectElement>("ed-modelo").onchange = (e) => {
-    const m = MODELOS.find((x) => x.id === (e.target as HTMLSelectElement).value);
+  $<HTMLSelectElement>("ed-modelo").onchange = async (e) => {
+    const v = (e.target as HTMLSelectElement).value;
+    if (v.startsWith("a:") && ed) {
+      // ficha de outro aluno como ponto de partida (a validade e o recado continuam os deste)
+      try {
+        const r = await lerAluno(v.slice(2));
+        if (!editorAberto || !ed) return;
+        lerEditor();
+        ed.ficha.treinos = structuredClone(r.aluno.ficha.treinos);
+        desenharEditor("ed-modelo");
+        toast(`Ficha de ${r.aluno.nome} copiada. Ajuste o que precisar`);
+      } catch (er) { toast((er as Error).message); }
+      return;
+    }
+    const m = MODELOS.find((x) => x.id === v);
     if (!m || !ed) return;
     lerEditor();
     ed.ficha.treinos = m.ficha().treinos.map((t) => ({ ...t, itens: t.itens.filter((it) => !it.slug || S.machines.some((x) => x.slug === it.slug)) }));

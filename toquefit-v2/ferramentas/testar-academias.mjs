@@ -96,7 +96,21 @@ try {
   conf("chave de outra academia = 401", (await chamar("GET", `/api/academias/${cod}`, { cab: { "x-chave": outra.chave } })).s === 401);
   conf("id fora do formato = 400", (await chamar("GET", `/api/academias/${cod}/alunos/..%2F..`, { cab: I })).s === 400);
 
-  conf("apaga aluno", (await chamar("DELETE", `/api/academias/${cod}/alunos/${id}`, { cab: I })).s === 204);
+  const ontem = new Date(Date.now() - 3 * 3600e3 - 86400e3).toISOString().slice(0, 10);
+  r = await chamar("POST", `/api/academias/${cod}/exemplo`, { cab: I, body: { alunos: [
+    { nome: "Exemplo Um", ficha, treinos: [{ data: ontem, treino: "A", itens: { "A.0": { feito: true, cargas: ["20 kg"] } }, sensacao: "leve" }, { data: "2001-01-01", treino: "A", itens: {} }] },
+    { nome: "Exemplo Dois", ficha },
+  ] } });
+  conf("cria alunos de exemplo", r.s === 201 && r.b.criados === 2);
+  conf("exemplo de novo = 409", (await chamar("POST", `/api/academias/${cod}/exemplo`, { cab: I, body: { alunos: [{ nome: "X", ficha }] } })).s === 409);
+  conf("aluno não cria exemplo", (await chamar("POST", `/api/academias/${cod}/exemplo`, { cab: { "x-chave": "1".repeat(32) }, body: { alunos: [{ nome: "X" }] } })).s === 401);
+  r = await chamar("GET", `/api/academias/${cod}`, { cab: I });
+  const ex1 = r.b.alunos.find((a) => a.nome === "Exemplo Um");
+  conf("exemplo aparece marcado, com o treino de ontem e sem a data antiga", ex1?.exemplo === true && ex1.ultimo === ontem && ex1.semana === 1 && ex1.ultimoRetorno?.sensacao === "leve", JSON.stringify(ex1));
+  r = await chamar("DELETE", `/api/academias/${cod}/exemplo`, { cab: I });
+  conf("apaga só os exemplos", r.s === 200 && r.b.apagados === 2 && (await chamar("GET", `/api/academias/${cod}`, { cab: I })).b.alunos.length === 1);
+
+  conf("apaga aluno",(await chamar("DELETE", `/api/academias/${cod}/alunos/${id}`, { cab: I })).s === 204);
   r = await chamar("GET", `/api/academias/${cod}`, { cab: I });
   conf("aluno e treinos somem", r.b.alunos.length === 0 && (await chamar("GET", `/api/academias/${cod}/alunos/${id}`, { cab: I })).s === 404);
 } finally {

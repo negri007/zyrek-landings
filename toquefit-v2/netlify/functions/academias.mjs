@@ -15,6 +15,8 @@
 //   POST   /api/academias/:cod/alunos/:id/link       instr.  link novo; o antigo deixa de funcionar
 //   GET    /api/academias/:cod/eu                    aluno   academia, ficha e últimos treinos
 //   PUT    /api/academias/:cod/eu/treinos/:data      aluno   { treino, itens, sensacao, dor } registra o dia
+//   POST   /api/academias/:cod/exemplo               instr.  { alunos: [{ nome, ficha, treinos }] } alunos de exemplo com histórico
+//   DELETE /api/academias/:cod/exemplo               instr.  apaga só os alunos de exemplo
 import { getStore } from "@netlify/blobs";
 
 const COD = /^[A-Z0-9]{6}$/;
@@ -102,7 +104,7 @@ function resumo(aluno, datas, retorno) {
   const desde7 = diasAtras(6);
   const previstos = new Set(aluno.ficha.treinos.flatMap((t) => t.dias)).size;
   return {
-    id: aluno.id, nome: aluno.nome, criado: aluno.criado, atualizado: aluno.atualizado,
+    id: aluno.id, nome: aluno.nome, criado: aluno.criado, atualizado: aluno.atualizado, exemplo: !!aluno.exemplo,
     validade: aluno.ficha.validade, treinos: aluno.ficha.treinos.length,
     ultimo: datas[0] || null,
     semana: datas.filter((d) => d >= desde7).length,
@@ -185,6 +187,47 @@ export default async (req, context) => {
     return json({ academia: { cod, nome: meta.nome }, alunos: resumos, hoje: hojeBR() });
   }
 
+  /* ---------- alunos de exemplo: o painel não começa vazio na apresentação ---------- */
+  const apagarTudoDe = async (i) => {
+    const { blobs } = await store.list({ prefix: prefTreinos(i) });
+    await Promise.all(blobs.map((b) => store.delete(b.key)));
+    await store.delete(chaveRetorno(i));
+    await store.delete(chaveAluno(i));
+  };
+  if (partes[3] === "exemplo" && partes.length === 4) {
+    const { blobs } = await store.list({ prefix: cod + "/alunos/" });
+    const todos = (await Promise.all(blobs.map((b) => store.get(b.key, { type: "json" })))).filter(Boolean);
+    if (req.method === "DELETE") {
+      const ex = todos.filter((a) => a.exemplo);
+      await Promise.all(ex.map((a) => apagarTudoDe(a.id)));
+      return json({ apagados: ex.length });
+    }
+    if (req.method !== "POST") return erro("Método não suportado", 405);
+    if (todos.some((a) => a.exemplo)) return erro("Os alunos de exemplo já estão no painel", 409);
+    const b = await corpo();
+    const entrada = Array.isArray(b?.alunos) ? b.alunos.slice(0, 8) : [];
+    if (!entrada.length) return erro("Nenhum aluno de exemplo");
+    if (todos.length + entrada.length > MAX_ALUNOS) return erro("Limite de alunos da demonstração atingido", 429);
+    const limite = diasAtras(DIAS_HISTORICO), agora = Date.now();
+    for (const e of entrada) {
+      const nome = texto(e?.nome, 60);
+      if (!nome) continue;
+      // exemplo não tem link: ninguém entra como esse aluno (o token aleatório nem é devolvido)
+      const aluno = { id: hex(6), nome, token: await hash(hex(16)), criado: agora - 30 * 86400e3, atualizado: agora, ficha: limparFicha(e?.ficha), exemplo: true };
+      await store.setJSON(chaveAluno(aluno.id), aluno, { onlyIfNew: true });
+      const treinos = (Array.isArray(e?.treinos) ? e.treinos.slice(0, 30) : [])
+        .filter((t) => typeof t?.data === "string" && DATA.test(t.data) && t.data >= limite && t.data <= diasAtras(-1));
+      let ultimo = null;
+      for (const t of treinos) {
+        const reg = { ...limparTreino(t), data: t.data, at: agora };
+        await store.setJSON(prefTreinos(aluno.id) + t.data, reg);
+        if (!ultimo || t.data > ultimo.data) ultimo = reg;
+      }
+      if (ultimo && (ultimo.sensacao || ultimo.dor)) await store.setJSON(chaveRetorno(aluno.id), { data: ultimo.data, sensacao: ultimo.sensacao, dor: ultimo.dor });
+    }
+    return json({ criados: entrada.length }, 201);
+  }
+
   if (partes[3] !== "alunos") return erro("Endereço inválido", 404);
 
   if (!id) {
@@ -228,10 +271,7 @@ export default async (req, context) => {
     return json({ aluno: publico });
   }
   if (req.method === "DELETE") {
-    const { blobs } = await store.list({ prefix: prefTreinos(id) });
-    await Promise.all(blobs.map((b) => store.delete(b.key)));
-    await store.delete(chaveRetorno(id));
-    await store.delete(chaveAluno(id));
+    await apagarTudoDe(id);
     return vazio();
   }
   return erro("Método não suportado", 405);
@@ -246,6 +286,7 @@ export const config = {
     "/api/academias/:cod/alunos/:id",
     "/api/academias/:cod/alunos/:id/link",
     "/api/academias/:cod/eu",
+    "/api/academias/:cod/exemplo",
     "/api/academias/:cod/eu/treinos/:data",
   ],
   method: ["GET", "POST", "PUT", "DELETE"],

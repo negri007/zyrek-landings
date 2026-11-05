@@ -3,7 +3,7 @@
   "short_name": "ToqueFit",
   "description": "Encostou o celular na tag do aparelho, o vídeo de como usar já começa.",
   "lang": "pt-BR",
-  "start_url": "./#m-supino-reto",
+  "start_url": "./",
   "scope": "./",
   "display": "fullscreen",
   "display_override": ["fullscreen", "standalone"],

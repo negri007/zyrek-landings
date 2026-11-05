@@ -8,7 +8,7 @@ export interface Ficha { treinos: Treino[]; validade: string; obs: string }
 export interface RegItem { feito: boolean; cargas: string[] }
 export interface Registro { data: string; treino: string; itens: Record<string, RegItem>; sensacao: "leve" | "ok" | "pesado" | null; dor: boolean; at?: number }
 export interface ResumoAluno {
-  id: string; nome: string; criado: number; atualizado: number; validade: string; treinos: number;
+  id: string; nome: string; criado: number; atualizado: number; validade: string; treinos: number; exemplo: boolean;
   ultimo: string | null; semana: number; previstos: number;
   ultimoRetorno: { data: string; sensacao: Registro["sensacao"]; dor: boolean } | null;
 }
@@ -108,6 +108,15 @@ export async function salvarAluno(id: string, nome: string, ficha: Ficha) {
 export async function apagarAluno(id: string) {
   const { base, cab } = doInstrutor();
   return pedir<void>(`${base}/alunos/${id}`, { method: "DELETE" }, cab);
+}
+/** alunos de exemplo com histórico, para o painel não começar vazio na apresentação */
+export async function criarExemplos(alunos: { nome: string; ficha: Ficha; treinos: Registro[] }[]) {
+  const { base, cab } = doInstrutor();
+  return pedir<{ criados: number }>(`${base}/exemplo`, { method: "POST", body: corpo({ alunos }) }, cab);
+}
+export async function apagarExemplos() {
+  const { base, cab } = doInstrutor();
+  return pedir<{ apagados: number }>(`${base}/exemplo`, { method: "DELETE" }, cab);
 }
 export async function novoLink(id: string) {
   const { base, cab } = doInstrutor();

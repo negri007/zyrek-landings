@@ -216,3 +216,14 @@ a.btn:not(.primary) { color: var(--ink) }
 
 .ed-sec:first-of-type { padding-top: 14px }
 #ed-b > .ed-sec:not(:last-child) { padding-bottom: 4px }
+
+/* exemplo, busca e instalar */
+.pill.ex { background: rgba(255, 255, 255, .07); color: var(--muted) }
+.pill.ex::before { box-shadow: none }
+.al-busca input { width: 100%; max-width: 360px; min-height: 44px; border: 1px solid var(--edge-2); background: var(--bg); border-radius: 11px; padding: 9px 12px; font-size: 16px }
+.al-busca input:focus { outline: none; border-color: var(--neon); box-shadow: 0 0 0 3px var(--neon-soft) }
+.al-exemplo { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding-top: 14px; border-top: 1px dashed var(--edge-2); font-size: 13px; color: var(--dim) }
+.al-exemplo span { flex: 1 1 280px }
+.al-exemplo b { color: var(--muted) }
+.mt-instalar { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 14px; border-radius: var(--r-md); border: 1px dashed var(--edge-2); font-size: 13.5px; color: var(--ink-2) }
+.mbtn .mb-hoje { position: absolute; top: -8px; right: 10px; font: 700 10.5px/1 var(--body); letter-spacing: .04em; text-transform: uppercase; color: var(--neon-ink); background: var(--neon); padding: 4px 7px; border-radius: 999px }

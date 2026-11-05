@@ -183,7 +183,7 @@ export function criarSupino(o: OpcoesCena) {
         const c = tr.cue("olhos");
         P.mix = seg(u, c, Math.min(D - 0.4, c + 2.4));
         P.labels.push({ tx: "Pés firmes no chão", at: V(0.8, 0.14, 0.26) });
-        if (u > c) P.labels.push({ tx: "Olhos sob a barra", at: V(-1, 0.84, 0) });
+        if (u > c) P.labels.push({ tx: "Olhos sob a barra", at: V(-1, BOT - 0.03, 0) });
         break;
       }
       case "pegada": {
@@ -201,7 +201,7 @@ export function criarSupino(o: OpcoesCena) {
         const a = tr.cue("Desça"), p = rep(u - a, 2, 1.1, 1.4);
         Object.assign(P, atP(p));
         P.depth = p > 0.4;
-        if (p > 0.92) P.labels.push({ tx: "Até aqui: encosta de leve no peito", at: V(BX, 0.78, 0.2) });
+        if (p > 0.92) P.labels.push({ tx: "Até aqui: encosta de leve no peito", at: V(BX, BOT - 0.09, 0.2) });
         break;
       }
       case "cotovelos-errado": {
@@ -413,16 +413,22 @@ export function criarSupino(o: OpcoesCena) {
       try {
         const modelo = await carregarModelo(onProg);
         HUM = criarPessoa(modelo, benchG, {
-          inclinacao: 0,
-          // ombros na cabeceira do banco, peito na altura do estofado
+          // deitada de verdade: escápulas, quadril e cabeça no estofado (o tronco ficava ~12 cm acima do banco,
+          // só o quadril encostava e a cabeça caía). Os 9° compensam a curva da coluna do modelo, que é de quem
+          // está em pé; a lombar continua com o arco leve normal do supino.
+          inclinacao: -9,
+          // ombros na cabeceira do banco, escápulas apoiadas no estofado
           posicao(loc, B) {
             const la = loc(B.LeftArm), ra = loc(B.RightArm), s1 = loc(B.Spine1);
-            return V(-0.72 - (la.x + ra.x) / 2, 0.685 - s1.y, -(la.z + ra.z) / 2);
+            return V(-0.72 - (la.x + ra.x) / 2, 0.595 - s1.y, -(la.z + ra.z) / 2);
           },
         });
         pernasNoChao(HUM);
+        // queixo levemente para o peito: a nuca fica apoiada no banco em vez de afundar nele
+        const pc = HUM.loc(HUM.B.Neck);
+        HUM.aim(HUM.B.Neck, pc.clone().add(V(-0.2, 0.07, 0)));
         mostrarManequim(false);
-        SZ = Math.abs(HUM.side[0].S.z); GP = 0.3; GO = 0.4; GC = 0.15; TOP = 1.31; RY = 1.33; BOT = 0.87;
+        SZ = Math.abs(HUM.side[0].S.z); GP = 0.3; GO = 0.4; GC = 0.15; TOP = 1.195; RY = 1.215; BOT = 0.755; // ombros 11,5 cm mais baixos que antes
         hooks.forEach((h) => (h.position.y = RY - 0.035));
         cena.pronto = true;
         return "modelo";

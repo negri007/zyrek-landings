@@ -182,7 +182,7 @@ export function criarDesenvolvimento(o: OpcoesCena): CenaRoteiro {
       const s = h.side[i], sd = s.sd;
       // pegador horizontal: palmas para a frente, cotovelos para baixo e um pouco para fora; o ombro sobe junto
       const G = V(PEGA_X, y, (PEGA_Z + 0.03) * sd);
-      const { E, W, S } = h.segurar(s, G, { eixo: V(0, 0, 1), palma: V(1, 0, 0), bend: V(0.15, -1, 0.55 * sd), clavicula: 0.25 });
+      const { E, W, S } = h.segurar(s, G, { eixo: V(0, 0, 1), palma: V(1, 0, 0), bend: V(0.15, -1, 0.55 * sd), clavicula: 0.25, raio: 0.026 });
       cotovelos[i].copy(E); maos[i].copy(W); ombros[i].copy(S);
       antes[i].visible = anteOp > 0.02;
       if (antes[i].visible) ligar(antes[i], W.clone().add(V(0.03, 0.06, 0)), V(W.x + 0.03, W.y - 0.4, W.z));

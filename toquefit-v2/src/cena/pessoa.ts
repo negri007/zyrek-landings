@@ -143,6 +143,50 @@ export function criarPessoa(model: THREE.Object3D, raiz: THREE.Group, ancora: An
   function setGrip(sd: Lado, k: number) {
     for (const f of sd.fing) f.b.quaternion.copy(f.b.userData.rq).multiply(_q.setFromAxisAngle(f.axl, lerp(f.rel, f.amt, k)));
   }
+
+  // polegar: ossos da base até a ponta, com o comprimento de cada falange
+  const polegar = side.map((sd) => {
+    const os = [1, 2, 3, 4].map((k) => B[sd.P + "HandThumb" + k]);
+    if (os.some((b) => !b)) return null;
+    return { os: os.slice(0, 3), ponta: os[3], L: [0, 1, 2].map((k) => dist(os[k], os[k + 1])) };
+  });
+  const _pc = V(), _pj = V(), _pr = new THREE.Quaternion();
+  /**
+   * Pegada completa: o polegar passa por baixo da barra e fecha por cima das pontas dos dedos,
+   * do lado oposto a eles. Antes ele ficava espetado ao lado da barra (pegada "sem polegar",
+   * que deixa a barra escapar da mão: no supino é o erro mais perigoso).
+   * G = centro da barra na mão; h = direção dos dedos; n = normal da palma (da palma para a barra).
+   */
+  function envolverPolegar(s: Lado, G: V3, eixo: V3, h: V3, n: V3, raio: number, k: number) {
+    const pol = polegar[s.sd < 0 ? 0 : 1];
+    if (!pol || k <= 0.001) return;
+    // as falanges correm por fora da barra, na espessura de um dedo
+    const R = raio + 0.013;
+    const em = (p: V3) => p.clone().sub(G).dot(eixo);
+    // a ponta do polegar termina por cima do indicador e do médio, já do lado de fora da barra
+    const eFim = (em(loc(B[s.P + "HandIndex2"])) * 2 + em(loc(B[s.P + "HandMiddle2"]))) / 3;
+    const ponto = (fi: number, e: number) => _pc.copy(G).addScaledVector(h, -Math.cos(fi) * R).addScaledVector(n, Math.sin(fi) * R).addScaledVector(eixo, e);
+    // fi = 0: embaixo da barra (lado do punho); 90°: na frente (lado oposto à palma), onde os dedos chegam
+    let fi = -1.6;
+    const e0 = em(loc(pol.os[0]));
+    for (let i = 0; i < 3; i++) {
+      const b = pol.os[i], L = pol.L[i];
+      _pj.copy(loc(b));
+      const e = lerp(e0, eFim, (i + 1) / 3);
+      // a próxima junta: o primeiro ponto da volta em torno da barra a um comprimento de falange desta
+      let melhor = fi, erro = Infinity;
+      for (let f = fi; f <= fi + 3; f += 0.03) {
+        const d = Math.abs(ponto(f, e).distanceTo(_pj) - L);
+        if (d < erro - 1e-4) { erro = d; melhor = f; }
+        else if (erro < L * 0.15 && d > erro) break;
+      }
+      fi = Math.min(melhor, 1.8);
+      _pr.copy(b.quaternion);
+      aim(b, ponto(fi, e).clone());
+      b.quaternion.copy(_pr.slerp(b.quaternion, k));
+      b.updateMatrixWorld(true);
+    }
+  }
   const _m1 = new THREE.Matrix4(), _m2 = new THREE.Matrix4(), _qw = new THREE.Quaternion();
   const _tr = new THREE.Quaternion(), _ti = new THREE.Quaternion(), _tw = new THREE.Quaternion(), _meia = new THREE.Quaternion();
   /** h = direção dos dedos, nw = normal da palma (locais); k = 0: punho reto, 1: mão nessa orientação */
@@ -183,10 +227,11 @@ export function criarPessoa(model: THREE.Object3D, raiz: THREE.Group, ancora: An
   const _sh = V(), _sn = V(), _sd = V();
   /**
    * Segura uma barra ou pegador. G = ponto da barra no meio da mão; eixo = direção da barra;
-   * palma = para onde a palma olha; bend = para onde o cotovelo aponta; clavicula = quanto o ombro acompanha a mão.
-   * O punho fica alinhado com o antebraço e os dedos fecham em volta da barra.
+   * palma = para onde a palma olha; bend = para onde o cotovelo aponta; clavicula = quanto o ombro acompanha a mão;
+   * raio = raio da barra ou do pegador (o polegar fecha em volta dele).
+   * O punho fica alinhado com o antebraço, os dedos fecham em volta da barra e o polegar por baixo, do outro lado.
    */
-  function segurar(s: Lado, G: V3, o: { eixo: V3; palma: V3; bend: V3; clavicula?: number; aperto?: number }) {
+  function segurar(s: Lado, G: V3, o: { eixo: V3; palma: V3; bend: V3; clavicula?: number; aperto?: number; raio?: number }) {
     const eixo = o.eixo.clone().normalize();
     const C = s.C;
     if (C) {
@@ -221,6 +266,7 @@ export function criarPessoa(model: THREE.Object3D, raiz: THREE.Group, ancora: An
     aim(s.A, E); aim(s.F, W);
     orientHand(s, _sh.clone(), _sn.clone(), 1);
     setGrip(s, o.aperto ?? 1);
+    envolverPolegar(s, G, eixo, _sh, _sn, o.raio ?? 0.02, o.aperto ?? 1);
     if (import.meta.env.DEV) medirPegada(s, G, eixo, alvoW);
     return { E, W, S };
   }
@@ -282,7 +328,7 @@ export function criarPessoa(model: THREE.Object3D, raiz: THREE.Group, ancora: An
   }
 
   return {
-    B, grupo: hum, side, loc, aim, setGrip, orientHand, segurar, animarCabeca, setLeg, girarCorpo, curvarColuna,
+    B, grupo: hum, side, loc, aim, setGrip, envolverPolegar, orientHand, segurar, animarCabeca, setLeg, girarCorpo, curvarColuna,
     cabeca: () => loc(B.Head),
     /** ombro onde está agora (depois de girar o corpo ou curvar a coluna) */
     ombro: (s: { A: THREE.Bone }) => loc(s.A),

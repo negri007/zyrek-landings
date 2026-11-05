@@ -365,7 +365,7 @@ export function criarLegPress(o: OpcoesCena): CenaRoteiro {
       const eixoTrava = G.clone().sub(PIVO.clone().setZ(0.31 * sd));
       // perto do fundo (mais esforço) os braços firmam nas travas: cotovelos abrem e os ombros sobem
       const esf = Math.min(1, Math.max(0, 1 - P.ext) + P.quadril / 13);
-      h.segurar(s, G, { eixo: eixoTrava, palma: V(0, 0, -sd), bend: V(0.15, -0.55 - 0.2 * esf, (0.85 + 0.3 * esf) * sd), clavicula: 0.12 + 0.1 * esf });
+      h.segurar(s, G, { eixo: eixoTrava, palma: V(0, 0, -sd), bend: V(0.15, -0.55 - 0.2 * esf, (0.85 + 0.3 * esf) * sd), clavicula: 0.12 + 0.1 * esf, raio: 0.016 });
     }
     // cabeça olhando para os joelhos
     const pesc = h.loc(h.B.Neck);

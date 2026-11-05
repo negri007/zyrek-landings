@@ -11,6 +11,8 @@ import { cenaComRoteiro, type PoseBase } from "./roteiro3d";
 import { V, ciclo, lerp, seg, type V3 } from "./util3d";
 import type { Trecho } from "../player/timeline";
 
+const PEGA_MEIA = 0.07; // meia altura de cada pega do triângulo (12 cm cada, mais que a largura da mão)
+const GANCHO_X = 0.17; // gancho do cabo, à frente das pegas
 const QUADRIL = V(0, 0.36, 0);
 const PE = V(0.93, 0.3, 0); // tornozelos no apoio (x ajustado ao carregar: joelho a ~155°, levemente dobrado)
 const JOELHO = 155;
@@ -70,11 +72,15 @@ export function criarRemada(o: OpcoesCena): CenaRoteiro {
   const cabo = tubo(0.007, V(), V(0, 1, 0), metal);
   const tri = new THREE.Group();
   maq.add(tri);
-  // triângulo: duas pegas quase verticais, palmas viradas uma para a outra
+  // triângulo: duas pegas quase verticais, palmas viradas uma para a outra. As hastes saem das pontas
+  // de cada pega para a frente e só depois fecham no gancho do cabo: antes elas iam direto das pontas
+  // para um gancho a 8 cm da pega e atravessavam os dedos, que fecham justamente na frente dela.
   for (const sd of [-1, 1]) {
-    tubo(0.012, V(0.09, 0, 0), V(0, 0.055, 0.065 * sd), metal, tri);
-    tubo(0.012, V(0.09, 0, 0), V(0, -0.055, 0.065 * sd), metal, tri);
-    tubo(0.02, V(0, -0.055, 0.065 * sd), V(0, 0.055, 0.065 * sd), neon, tri);
+    for (const y of [PEGA_MEIA, -PEGA_MEIA]) {
+      tubo(0.012, V(0, y, 0.065 * sd), V(0.08, y, 0.065 * sd), metal, tri);
+      tubo(0.012, V(0.08, y, 0.065 * sd), V(GANCHO_X, 0, 0), metal, tri);
+    }
+    tubo(0.02, V(0, -PEGA_MEIA, 0.065 * sd), V(0, PEGA_MEIA, 0.065 * sd), neon, tri);
   }
 
   // ---- medidas (trocadas ao carregar o modelo) ----
@@ -173,8 +179,9 @@ export function criarRemada(o: OpcoesCena): CenaRoteiro {
         const ankle = PE.clone().setZ(0.11 * sd);
         h.setLeg(s, ankle, V(-0.2, 1, 0.12 * sd), ankle.clone().add(V(0.04, 0.17, 0.02 * sd)));
         // pegas do triângulo: palmas uma para a outra, cotovelos para trás rentes ao corpo; o ombro avança no alcance
-        const G = H.clone().add(V(0.02, 0, 0.065 * sd));
-        const { E, W, S } = h.segurar(s, G, { eixo: V(0, 1, 0), palma: V(0, 0, -sd), bend: V(-1, -0.35, 0.18 * sd), clavicula: 0.18 * (1 - P.puxa) + 0.05 });
+        // o meio da mão fica entre o médio e o anelar: o médio vai um pouco acima do centro da pega
+        const G = H.clone().add(V(0.02, 0.012, 0.065 * sd));
+        const { E, W, S } = h.segurar(s, G, { eixo: V(0, 1, 0), palma: V(0, 0, -sd), bend: V(-1, -0.35, 0.18 * sd), clavicula: 0.18 * (1 - P.puxa) + 0.05, raio: 0.02 });
         cotovelos[i].copy(E); maos[i].copy(W); ombros[i].copy(S);
       }
       pescoco.copy(h.loc(h.B.Neck));
@@ -182,7 +189,7 @@ export function criarRemada(o: OpcoesCena): CenaRoteiro {
       h.aim(h.B.Neck, pescoco.clone().add(V(0.06, 0.2, 0)));
     }
     tri.position.copy(H).add(V(0.02, 0, 0));
-    ligar(cabo, tri.position.clone().add(V(0.08, 0, 0)), POLIA.clone().add(V(-0.04, 0, 0)));
+    ligar(cabo, tri.position.clone().add(V(GANCHO_X - 0.01, 0, 0)), POLIA.clone().add(V(-0.04, 0, 0)));
   }
 
   return cenaComRoteiro<Pose>(o, {

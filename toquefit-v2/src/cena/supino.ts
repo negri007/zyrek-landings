@@ -266,11 +266,13 @@ export function criarSupino(o: OpcoesCena) {
   }
 
   // braço da instrutora: G = centro da barra na mão; k = 0 solta, 1 segurando
+  const EIXO_BARRA = V(0, 0, 1);
   const palmaH = V(-0.42, 0.9, 0).normalize(), palmaN = V(1, 0, 0).sub(palmaH.clone().multiplyScalar(palmaH.x)).normalize();
   function bracoNaBarra(h: Pessoa, s: Lado, G: V3, bend: V3, k: number) {
     const W = G.clone().sub(palmaH.clone().multiplyScalar(s.hand.palmLen * 0.62 * k)).sub(palmaN.clone().multiplyScalar(0.028 * k));
     const { M: E, P: Wp } = ik2(s.S, W, s.L1, s.L2, bend, s.braco);
     h.aim(s.A, E); h.aim(s.F, Wp); h.orientHand(s, palmaH, palmaN, k); h.setGrip(s, k);
+    h.envolverPolegar(s, G, EIXO_BARRA, palmaH, palmaN, 0.016, k);
     if (import.meta.env.DEV) s.dbg = { S: s.S.toArray(), E: E.toArray(), Ereal: h.loc(s.F).toArray(), W: Wp.toArray(), Wreal: h.loc(h.B[s.P + "Hand"]).toArray() };
     return { E, H: Wp };
   }

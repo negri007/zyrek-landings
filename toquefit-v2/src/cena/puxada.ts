@@ -180,7 +180,7 @@ export function criarPuxada(o: OpcoesCena): CenaRoteiro {
         h.setLeg(s, ankle, V(0, 1, 0), ankle.clone().add(V(0.16, -0.04, 0.02 * sd)));
         // pegada pronada na barra: palmas para a frente; com os braços em cima o ombro sobe junto
         const G = B.clone().setZ(PEGA_Z * sd);
-        const { E, W, S } = h.segurar(s, G, { eixo: V(0, 0, 1), palma: V(1, 0, 0), bend: V(-0.15, -1, 0.9 * sd), clavicula: 0.3 * (1 - P.puxa) + 0.08 });
+        const { E, W, S } = h.segurar(s, G, { eixo: V(0, 0, 1), palma: V(1, 0, 0), bend: V(-0.15, -1, 0.9 * sd), clavicula: 0.3 * (1 - P.puxa) + 0.08, raio: 0.022 });
         cotovelos[i].copy(E); maos[i].copy(W); ombros[i].copy(S);
         ombroL[i].visible = ombroOp > 0.02;
         if (ombroL[i].visible) ligar(ombroL[i], V(S.x + 0.03, S.y - 0.25, S.z), V(S.x + 0.03, alto.y + 0.12, S.z));

@@ -53,8 +53,9 @@ export default async (req, context) => {
       if (blobs.length >= MAX_POR_SALA) return json({ erro: "Sala cheia: atenda ou encerre alguns chamados" }, 429);
       /** @type {Chamado} */
       const c = { id: novoId(), slug, at: Date.now(), done: false };
-      // aluno conectado à área do aluno: o painel mostra quem chamou
-      const nome = typeof body?.nome === "string" ? body.nome.replace(/[\u0000-\u001f]/g, " ").trim().slice(0, 40) : "";
+      // aluno conectado à área do aluno: o painel mostra quem chamou, só pelo primeiro nome
+      // (quem tem o código da sala vê os chamados)
+      const nome = typeof body?.nome === "string" ? body.nome.replace(/[\u0000-\u001f]/g, " ").trim().split(/\s+/)[0].slice(0, 40) : "";
       if (nome) c.nome = nome;
       await store.setJSON(prefixo + c.id, c, { onlyIfNew: true });
       return json({ chamado: c }, 201);

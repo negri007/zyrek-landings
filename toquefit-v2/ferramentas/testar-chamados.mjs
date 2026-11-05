@@ -40,6 +40,8 @@ try {
   conf("sobra 1", r.b.chamados.length === 1);
   r = await chamar("PATCH", "TESTE1", "0123456789abcdef");
   conf("atender inexistente = 404", r.s === 404);
+  r = await chamar("POST", "NOMES1", null, { slug: "supino-reto", nome: "  Ana Maria Souza " });
+  conf("chamado guarda só o primeiro nome", r.s === 201 && r.b.chamado.nome === "Ana", JSON.stringify(r.b));
   conf("sala inválida = 400", (await chamar("GET", "xx")).s === 400);
   conf("sala com barra = 400", (await chamar("GET", "AB/CD1")).s === 400);
   conf("slug com HTML = 400", (await chamar("POST", "TESTE1", null, { slug: "<script>" })).s === 400);

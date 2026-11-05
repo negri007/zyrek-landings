@@ -206,7 +206,7 @@ export function desenharCta(origem: "local" | "sync" = "local") {
     $("call").onclick = async () => {
       // aparece na hora; com sala ao vivo, o servidor confirma em seguida
       // só o primeiro nome: quem tem o código da sala vê os chamados
-      const quem = meuTreinoSalvo()?.aluno.nome.split(/s+/)[0];
+      const quem = meuTreinoSalvo()?.aluno.nome.trim().split(/\s+/)[0];
       const novo = { id: salaAtual() ? "tmp-" + Date.now() : S.nextCall++, slug, at: Date.now(), done: false, ...(quem ? { nome: quem } : {}) };
       const tmp = novo.id;
       S.calls.unshift(novo);

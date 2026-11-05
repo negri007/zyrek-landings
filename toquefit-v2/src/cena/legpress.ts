@@ -37,7 +37,7 @@ interface Pose extends PoseBase {
   guias: boolean;
   /** contorno vermelho dos joelhos caídos, para comparar com o certo */
   fantasma: boolean;
-  /** pés: deslocamento na plataforma (negativo = mais em cima), largura (0 = juntos, 1 = do quadril) e pontas para fora (0 a 1) */
+  /** pés: deslocamento na plataforma (positivo = mais em cima, para a borda de cima), largura (0 = juntos, 1 = do quadril) e pontas para fora (0 a 1) */
   peAlt: number;
   peLarg: number;
   pePonta: number;
@@ -259,10 +259,11 @@ export function criarLegPress(o: OpcoesCena): CenaRoteiro {
         break;
       }
       case "pes-altura": {
-        // pé baixo demais e alto demais, depois de volta ao meio
+        // pé baixo demais e alto demais, depois de volta ao meio. +RP sobe pela plataforma: antes o "Muito embaixo"
+        // aparecia com os pés na borda de cima e o "Muito em cima" com os pés na de baixo
         P.ext = PE_VISTA; P.trava = 0; P.marcas = 1;
         const b = tr.cue("embaixo"), c = tr.cue("cima"), m = tr.cue("inteiro");
-        P.peAlt = u < c - 0.3 ? 0.16 * seg(u, b - 0.6, b + 0.2) : u < m - 0.3 ? lerp(0.16, -0.17, seg(u, c - 0.5, c + 0.3)) : lerp(-0.17, 0, seg(u, m - 0.4, m + 0.4));
+        P.peAlt = u < c - 0.3 ? -0.16 * seg(u, b - 0.6, b + 0.2) : u < m - 0.3 ? lerp(-0.16, 0.17, seg(u, c - 0.5, c + 0.3)) : lerp(0.17, 0, seg(u, m - 0.4, m + 0.4));
         const pe = pePlataforma(PE_VISTA).addScaledVector(RP, P.peAlt);
         if (u > b && u < c - 0.4) P.labels.push({ tx: "Muito embaixo", at: pe.clone().addScaledVector(RP, -0.12).setZ(0.24), tom: "bad" });
         else if (u > c && u < m - 0.4) P.labels.push({ tx: "Muito em cima", at: pe.clone().addScaledVector(RP, 0.2).setZ(0.24), tom: "bad" });

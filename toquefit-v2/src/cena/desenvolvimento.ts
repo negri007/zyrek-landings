@@ -140,7 +140,9 @@ export function criarDesenvolvimento(o: OpcoesCena): CenaRoteiro {
       }
       case "fundo-errado": {
         const c = tr.cue("Descer"), fim = tr.cue("Assim") + 0.8;
-        P.alt = u < c ? lerp(1, 0, seg(u, 0, Math.max(0.3, c))) : u < fim ? lerp(0, -0.55, seg(u, c, c + 0.9)) : lerp(-0.55, 0, seg(u, fim, fim + 1.0));
+        // o erro comum: descer até a linha dos ombros (uns 12 cm abaixo do queixo); antes ia até a barriga
+        const fundo = -0.14 / (Y_TOPO - Y_QUEIXO);
+        P.alt = u < c ? lerp(1, 0, seg(u, 0, Math.max(0.3, c))) : u < fim ? lerp(0, fundo, seg(u, c, c + 0.9)) : lerp(fundo, 0, seg(u, fim, fim + 1.0));
         P.queixo = true;
         if (u > tr.cue("abaixo") - 0.2 && u < fim + 0.6) P.labels.push({ tx: "Abaixo do queixo", at: pegaLbl(), tom: "bad" });
         break;
@@ -220,7 +222,9 @@ export function criarDesenvolvimento(o: OpcoesCena): CenaRoteiro {
         h.setLeg(s, ankle, V(0, 1, 0), ankle.clone().add(V(0.16, -0.04, 0.02 * s.sd)));
       }
       const S = h.side[1].S, cab = h.cabeca();
-      Y_QUEIXO = lerp(S.y, cab.y, 0.55);
+      // queixo na altura do osso da cabeça (base do crânio): medido de lado, a ponta do queixo fica ali.
+      // Antes era 55% do caminho entre ombro e cabeça, que dá na base do pescoço (3 a 4 cm abaixo do queixo)
+      Y_QUEIXO = cab.y - 0.005;
       Y_TOPO = S.y + Math.sqrt(Math.max(0, (s1(h) * 0.97) ** 2 - (PEGA_Z - Math.abs(S.z)) ** 2));
       PEGA_X = S.x + 0.06;
       montarCarro();

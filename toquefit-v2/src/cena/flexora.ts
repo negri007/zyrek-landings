@@ -17,6 +17,8 @@ const MEIO = 30;
 
 interface Pose extends PoseBase {
   ang: number;
+  /** apoio das coxas: 0 = levantado, 1 = baixado */
+  apoio: number;
   tranco: number;
   eixo: boolean;
   /** linha tracejada até onde a perna deveria voltar (erro de encurtar o movimento) */
@@ -50,17 +52,21 @@ export function criarFlexora(o: OpcoesCena): CenaRoteiro {
   let faltaOp = 0;
 
   function pose(tr: Trecho, u: number): Pose {
-    const P: Pose = { ang: INICIO, tranco: 0, eixo: false, falta: false, labels: [] };
+    const P: Pose = { ang: INICIO, tranco: 0, apoio: 1, eixo: false, falta: false, labels: [] };
     const D = tr.t1 - tr.t0;
     switch (tr.id) {
       case "ajuste": {
+        // o apoio só desce no próximo trecho, quando a instrutora fala dele
         P.eixo = true;
+        P.apoio = 0;
         if (u > tr.cue("joelho") - 0.2) P.labels.push({ tx: "Eixo da máquina no joelho", at: cad.eixo.clone().setZ(0.36) });
         if (u > tr.cue("rolo")) P.labels.push({ tx: "Rolo atrás do tornozelo", at: cad.rolo(INICIO) });
         break;
       }
       case "apoio": {
-        if (u > tr.cue("apoio") - 0.2) P.labels.push({ tx: "Apoio travando as coxas", at: cad.eixo.clone().add(V(-0.12, 0.32, 0.24)) });
+        const d = tr.cue("Desça");
+        P.apoio = seg(u, d, tr.cue("coxas") + 0.2);
+        if (u > tr.cue("apoio") - 0.2) P.labels.push({ tx: "Apoio travando as coxas", at: cad.eixo.clone().add(V(-0.12, 0.14 + 0.18 * (1 - P.apoio), 0.24)) });
         if (u > tr.cue("alças")) P.labels.push({ tx: "Alças laterais", at: V(0.12, 0.47, 0.32) });
         break;
       }
@@ -107,7 +113,10 @@ export function criarFlexora(o: OpcoesCena): CenaRoteiro {
         break;
       }
       case "final": {
-        if (u > tr.cue("descanse")) P.labels.push({ tx: "1 min entre as séries", at: QUADRIL.clone().addScaledVector(T, 0.75).setZ(0.22), tom: "dim" });
+        // "faça assim todas as repetições": uma repetição controlada; depois descansa parada
+        const r = Math.max(0.1, tr.cue("Faça") - 0.1), d = tr.cue("descanse");
+        P.ang = lerp(INICIO, FIM, ciclo(u - r, 1.1, 0.3, 1.6, 0, 3.0));
+        if (u > Math.max(d, r + 3.0)) P.labels.push({ tx: "1 min entre as séries", at: QUADRIL.clone().addScaledVector(T, 0.75).setZ(0.22), tom: "dim" });
         break;
       }
     }
@@ -120,7 +129,7 @@ export function criarFlexora(o: OpcoesCena): CenaRoteiro {
     pessoa: () => cad.pessoa,
     pose,
     aplicar(P, now, dt) {
-      cad.aplicar(P.ang, P.tranco, carga(P.ang), 0, P.eixo, now, dt);
+      cad.aplicar(P.ang, P.tranco, carga(P.ang), 0, P.eixo, now, dt, P.apoio);
       // linha do eixo até onde o rolo deveria voltar
       faltaOp = o.reduzido ? +P.falta : faltaOp + ((P.falta ? 1 : 0) - faltaOp) * Math.min(1, dt * 6);
       faltaMat.opacity = 0.9 * faltaOp;

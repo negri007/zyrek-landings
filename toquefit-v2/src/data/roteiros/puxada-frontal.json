@@ -1,7 +1,8 @@
 {
   "slug": "puxada-frontal",
   "instrutora": "Prof.ª Camila Rocha · CREF 054321-G/SP",
-  "voz": "pt-BR-FranciscaNeural",
+  "voz": "pt-BR-ThalitaMultilingualNeural",
+  "ritmo": "+4%",
   "nota": "Mesma marcação do supino-reto.json. As câmeras (cam) estão em src/cena/puxada.ts: side, tq, front, tras e lento (replay).",
   "trechos": [
     { "id": "ajuste", "ch": "Ajuste", "cam": "side", "step": 0, "pausa": 1.4,

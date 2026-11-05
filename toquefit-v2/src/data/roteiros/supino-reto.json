@@ -1,7 +1,8 @@
 {
   "slug": "supino-reto",
   "instrutora": "Prof.ª Camila Rocha · CREF 054321-G/SP",
-  "voz": "pt-BR-FranciscaNeural",
+  "voz": "pt-BR-ThalitaMultilingualNeural",
+  "ritmo": "+4%",
   "nota": "Marcação: [[texto|tom]] destaca o termo na legenda (tom ok = neon, bad = vermelho). Acrescente |grande para o número aparecer grande sobre o vídeo. 'pausa' é o tempo em segundos que o trecho continua depois da fala; 'antes' atrasa a fala para o movimento começar primeiro; 'replay' revê [de, ate] do trecho em câmera lenta depois da fala.",
   "trechos": [
     { "id": "posicao", "ch": "Posição", "cam": "side", "step": 0, "pausa": 1.6,

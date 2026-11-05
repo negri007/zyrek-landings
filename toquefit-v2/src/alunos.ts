@@ -202,7 +202,11 @@ function semAcademia(el: HTMLElement) {
     <div class="al-ativar">
       <div class="al-ativar-t"><span class="k">Novo · Área do aluno</span><h2>Cada aluno com a sua ficha no celular</h2>
         <p>O instrutor monta a ficha semanal, o aluno recebe um link pelo WhatsApp e, quando encosta o celular na tag do aparelho, vê o que fazer ali: séries, carga e o vídeo. A academia acompanha quem está treinando.</p></div>
-      <form class="al-form" id="al-criar" novalidate>
+      <div class="al-form al-abrir" id="al-abrir-box">
+        <button class="btn" type="button" id="al-abrir">Ativar área do aluno</button>
+        <button class="btn sm al-link" type="button" id="al-tenho-1">Já tenho a chave</button>
+      </div>
+      <form class="al-form" id="al-criar" novalidate hidden>
         <div class="f"><label for="al-nome-ac">Nome da academia</label><input type="text" id="al-nome-ac" autocomplete="organization" maxlength="60" placeholder="Ex.: Academia Força Total"></div>
         <button class="btn primary" type="submit">Ativar área do aluno</button>
         <button class="btn sm al-link" type="button" id="al-tenho">Já tenho a chave</button>
@@ -216,6 +220,10 @@ function semAcademia(el: HTMLElement) {
     </div>`;
   const criar = $<HTMLFormElement>("al-criar"), entrar = $<HTMLFormElement>("al-entrar");
   $("al-tenho").onclick = () => { criar.hidden = true; entrar.hidden = false; $("al-cod").focus(); };
+  // o cartão fica fechado no fim do painel: o formulário só aparece quando a academia decide ativar
+  const abrirBox = $("al-abrir-box");
+  $("al-abrir").onclick = () => { abrirBox.hidden = true; criar.hidden = false; $("al-nome-ac").focus(); };
+  $("al-tenho-1").onclick = () => { abrirBox.hidden = true; entrar.hidden = false; $("al-cod").focus(); };
   $("al-volta").onclick = () => { entrar.hidden = true; criar.hidden = false; $("al-nome-ac").focus(); };
   criar.onsubmit = async (e) => {
     e.preventDefault();

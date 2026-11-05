@@ -8,7 +8,8 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const RAIZ = join(dirname(fileURLToPath(import.meta.url)), "..");
-const ler = (p) => readFileSync(join(RAIZ, p), "utf8");
+// no Windows o git entrega os arquivos com CRLF: normaliza para as expressões abaixo acharem o último case
+const ler = (p) => readFileSync(join(RAIZ, p), "utf8").replace(/\r\n/g, "\n");
 const semAcento = (s) => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 const limpar = (s) => s.replace(/\[\[([^\]|]+)(\|[^\]]*)?\]\]/g, "$1");
 

@@ -1,0 +1,5 @@
+# links curtos das tags e dos QR codes (Netlify / Cloudflare Pages)
+/n/*  /index.html  200
+/q/*  /index.html  200
+/N/*  /index.html  200
+/Q/*  /index.html  200

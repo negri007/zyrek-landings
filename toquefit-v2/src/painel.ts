@@ -37,12 +37,17 @@ function renderAoVivo() {
   }
   el.dataset.sala = sala || "";
   el.classList.toggle("on", !!sala);
+  // sem sala, o teste com celular é só um botão no topo; o cartão com o QR aparece quando a sala abre
+  const ligar = $("av-ligar");
+  el.hidden = ligar.hidden = false;
   if (!sala) {
-    el.innerHTML = `<div class="av-t"><b>Teste com um celular de verdade</b><span>Conecte um celular e toque em "Chamar instrutor": o chamado aparece aqui na hora.</span></div>
-      <button class="btn sm primary" type="button" id="av-ligar">${icone("nfc")} Conectar celular</button>`;
-    $("av-ligar").onclick = () => { criarSala(); S.calls = []; save(); window.dispatchEvent(new Event("tf-sala")); };
+    el.hidden = true;
+    el.innerHTML = "";
+    ligar.title = "Conecte um celular e toque em \"Chamar instrutor\": o chamado aparece aqui na hora";
+    ligar.onclick = () => { criarSala(); S.calls = []; save(); window.dispatchEvent(new Event("tf-sala")); };
     return;
   }
+  ligar.hidden = true;
   const link = linkDaSala(sala, S.machines[0].slug);
   const daAcademia = instrutor()?.cod === sala; // sala fixa da área do aluno: não se encerra
   el.innerHTML = `<div class="av-qr">${qrSvg(link, "QR Code da sala " + sala)}</div>
@@ -66,11 +71,14 @@ export function renderPainel(animar: boolean) {
   const motivo = Object.entries(S.motivos).sort((a, b) => b[1] - a[1])[0]?.[0];
   // aba do navegador mostra quantos alunos estão esperando, como um contador de mensagens
   document.title = (pend ? `(${pend}) ` : "") + "Painel · ToqueFit";
+  const vivo = $("ph-vivo");
+  vivo.classList.toggle("alerta", !!pend);
+  vivo.innerHTML = `<i></i>${pend ? `<b>${pend} ${pend > 1 ? "alunos esperando" : "aluno esperando"}</b> instrutor agora` : "<b>Ao vivo</b> · ninguém esperando"}`;
   $("kpis").innerHTML = `
-    <div class="card kpi hero"><span class="l">Toques hoje</span><span class="v num" data-n="${today}">${fmt(today)}</span><span class="s">Alunos que encostaram numa tag</span>
-      <div class="kpi-barra">${barraCarregada(Math.round(today / (TOQUES_POR_ANILHA * 2)))}<span class="kb-leg">cada anilha = ${TOQUES_POR_ANILHA} toques</span></div></div>
-    <div class="card kpi"><span class="l">Últimos 7 dias</span><span class="v num" data-n="${week}">${fmt(week)}</span><span class="s"><span class="${diff >= 0 ? "up" : "down"}">${diff >= 0 ? "+" : ""}${diff}%</span> sobre a semana anterior</span></div>
-    <div class="card kpi"><span class="l">Vídeos que ajudaram</span><span class="v num" data-n="${help}" data-s="%">${help}%</span><span class="s">${fmt(S.help.yes + S.help.no)} respostas de alunos</span>${motivo ? `<span class="s motivo">Mais citado quando não ajuda: <b>${esc(motivo)}</b></span>` : ""}</div>`;
+    <div class="card kpi hero"><span class="l">Toques hoje</span><span class="v num" data-n="${today}">${fmt(today)}</span><span class="s">${fmt(S.origem.nfc)} pelo NFC · ${fmt(S.origem.qr)} pelo QR code</span>
+      <div class="kpi-barra" title="Cada anilha = ${TOQUES_POR_ANILHA} toques">${barraCarregada(Math.round(today / (TOQUES_POR_ANILHA * 2)))}</div></div>
+    <div class="card kpi"><span class="l">Últimos 7 dias</span><span class="v num" data-n="${week}">${fmt(week)}</span><span class="s"><span class="${diff >= 0 ? "up" : "down"}">${diff >= 0 ? "▲" : "▼"} ${Math.abs(diff)}%</span> sobre a semana anterior</span></div>
+    <div class="card kpi"><span class="l">Vídeos que ajudaram</span><span class="v num" data-n="${help}" data-s="%">${help}%</span><div class="medidor" aria-hidden="true"><i style="--w:${help}%"></i></div><span class="s">${fmt(S.help.yes + S.help.no)} respostas de alunos</span>${motivo ? `<span class="s motivo">Mais citado quando não ajuda: <b>${esc(motivo)}</b></span>` : ""}</div>`;
   if (animar) document.querySelectorAll<HTMLElement>("#kpis [data-n]").forEach((el) => contar(el, +el.dataset.n!, el.dataset.s));
   renderGrafico(today, animar);
 
@@ -79,13 +87,17 @@ export function renderPainel(animar: boolean) {
   $("mcount").textContent = S.machines.length + " com tag NFC";
   const dia = new Date().toLocaleDateString("pt-BR", { weekday: "long", day: "numeric", month: "long" });
   $("ph-sub").textContent = dia.charAt(0).toUpperCase() + dia.slice(1) + " · " + S.machines.length + " aparelhos com tag";
-  $("tbody").innerHTML = S.machines.map((m) => `<tr>
-    <td><b>${esc(m.name)}</b><small>${esc(m.group)}</small></td>
+  // tabela só com o que muda de uma linha para outra: o selo aparece só no aparelho sem vídeo,
+  // a coluna "Treino hoje" só quando algum aluno já registrou treino, e o nome abre a página do aparelho
+  const algumHoje = S.machines.some((m) => (S.series[m.slug] || 0) + (S.fins[m.slug] || 0) > 0);
+  $("tbody").closest("table")!.classList.toggle("sem-hoje", !algumHoje);
+  const topo = sorted[0]?.t7 ? sorted[0].slug : "";
+  $("tbody").innerHTML = S.machines.map((m) => `<tr${m.slug === topo ? ` class="topo"` : ""}>
+    <td><a class="m-nome" href="#m-${m.slug}" title="Ver a página que o aluno vê"><b>${esc(m.name)}</b></a>${m.slug === topo ? `<span class="pill neon mais-usado">Mais usado</span>` : ""}<small>${esc(m.group)}${!m.video ? ` <span class="pill no">Sem vídeo</span>` : ""}</small></td>
     <td><span class="tg">${esc(m.tag)}</span></td>
-    <td>${!m.video ? `<span class="pill no">Sem vídeo</span>` : m.roteiro ? `<span class="pill neon">Instrutora 3D</span>` : `<span class="pill ok">Com vídeo</span>`}</td>
     <td><div class="cell-n"><span class="num">${fmt(m.t7)}</span>${haltere(m.t7 / max, "mini-h")}</div></td>
     <td>${hoje(m.slug)}</td>
-    <td><div class="row-acts"><a href="#m-${m.slug}" aria-label="Ver página do aparelho ${esc(m.name)}">Ver página</a><button type="button" data-edit="${m.slug}" aria-label="${m.video ? "Editar" : "Enviar vídeo do"} ${esc(m.name)}">${m.video ? "Editar" : "Enviar vídeo"}</button></div></td></tr>`).join("");
+    <td><div class="row-acts"><button type="button" data-edit="${m.slug}" aria-label="${m.video ? "Editar" : "Enviar vídeo do"} ${esc(m.name)}">${m.video ? "Editar" : "Enviar vídeo"}</button></div></td></tr>`).join("");
   // halteres: o eixo acende até o valor e as anilhas deslizam até lá
   const halteres = document.querySelectorAll<HTMLElement>(".haltere");
   halteres.forEach((h, k) => {
@@ -106,14 +118,15 @@ export function renderPainel(animar: boolean) {
     ? espera.map((c) => {
       const m = bySlug(c.slug);
       const atraso = Date.now() - c.at > 5 * 60e3;
-      return `<li class="wait${atraso ? " atraso" : ""}" data-id="${c.id}"><div><b>${c.nome ? `${esc(c.nome)} · ` : ""}${esc(m ? m.name : "Aparelho removido")}</b><small>${m ? esc(m.tag) + " · " : ""}chamou ${ago(c.at)}${atraso ? " · esperando faz tempo" : ""}</small></div><button class="btn sm primary" type="button" data-done="${c.id}" aria-label="Marcar chamado do ${esc(m ? m.name : "aparelho")} como atendido">Atendido</button></li>`;
+      const min = Math.floor((Date.now() - c.at) / 60e3);
+      return `<li class="wait${atraso ? " atraso" : ""}" data-id="${c.id}"><span class="espera-t" aria-hidden="true">${min < 1 ? "<b>agora</b>" : `<b class="num">${min}</b><small>min</small>`}</span><div class="wait-t"><b>${c.nome ? `${esc(c.nome)} · ` : ""}${esc(m ? m.name : "Aparelho removido")}</b><small>${m ? esc(m.tag) : ""}${atraso ? " · esperando faz tempo" : ""}</small></div><button class="btn sm primary" type="button" data-done="${c.id}" aria-label="Marcar chamado do ${esc(m ? m.name : "aparelho")} como atendido">Atendido</button></li>`;
     }).join("")
     : `<li class="empty-s">${icone("check", "ok-ic")}Ninguém esperando agora. Quando um aluno tocar em "Chamar instrutor", ele aparece aqui.</li>`)
     + (atendidos.length ? `<li class="hist">${atendidos.length} ${atendidos.length > 1 ? "chamados atendidos" : "chamado atendido"} · último ${ago(Math.max(...atendidos.map((c) => c.at)))}</li>` : "");
   const semVideo = S.machines.filter((m) => !m.video);
   $("vcount").textContent = semVideo.length ? String(semVideo.length) : "";
   $("pend").innerHTML = semVideo.length
-    ? semVideo.map((m) => `<li><div><b>${esc(m.name)}</b><small>${fmt(m.t7)} ${m.t7 === 1 ? "aluno tocou" : "alunos tocaram"} na tag esta semana e não viram vídeo</small></div><button class="btn sm" type="button" data-edit="${m.slug}" aria-label="Enviar vídeo do ${esc(m.name)}">Enviar vídeo</button></li>`).join("")
+    ? semVideo.map((m) => `<li><div><b>${esc(m.name)}</b><small><b class="num">${fmt(m.t7)}</b> ${m.t7 === 1 ? "aluno tocou" : "alunos tocaram"} na tag esta semana e não viram vídeo</small></div><button class="btn sm" type="button" data-edit="${m.slug}" aria-label="Enviar vídeo do ${esc(m.name)}">Enviar vídeo</button></li>`).join("")
     : `<li class="empty-s">${icone("check", "ok-ic")}Todos os aparelhos têm vídeo.</li>`;
   document.querySelectorAll<HTMLButtonElement>("#pend [data-edit]").forEach((b) => (b.onclick = () => abrirGaveta(b.dataset.edit!, b)));
   document.querySelectorAll<HTMLButtonElement>("[data-done]").forEach((b) => (b.onclick = async () => {
@@ -332,6 +345,13 @@ export function ligarGaveta() {
     }
   });
   $("add").onclick = (e) => abrirGaveta(null, e.currentTarget as HTMLElement);
+  // menu "Mais": planilha, etiquetas e restaurar ficam juntos, fora da vista
+  const bMais = $("mais-b"), menu = $("mais-m");
+  const abrirMais = (v: boolean) => { menu.hidden = !v; bMais.setAttribute("aria-expanded", String(v)); };
+  bMais.onclick = () => abrirMais(menu.hidden === true);
+  document.addEventListener("click", (e) => { if (!menu.hidden && !$("mais").contains(e.target as Node)) abrirMais(false); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !menu.hidden) { abrirMais(false); bMais.focus(); } });
+  menu.addEventListener("click", (e) => { if ((e.target as HTMLElement).id !== "reset") abrirMais(false); });
   $("etiquetas").onclick = () => imprimirEtiquetas(S.machines.map((m) => m.slug));
   $("planilha").onclick = baixarPlanilha;
   let confirmar = false, tReset = 0;

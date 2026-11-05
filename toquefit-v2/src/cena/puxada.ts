@@ -143,7 +143,10 @@ export function criarPuxada(o: OpcoesCena): CenaRoteiro {
         break;
       }
       case "final": {
-        if (u > tr.cue("descanse")) P.labels.push({ tx: "1 min entre as séries", at: cabeca.clone().add(V(0, 0.2, 0.2)), tom: "dim" });
+        // "faça as séries assim": uma repetição controlada; depois descansa
+        const r = Math.max(0.1, tr.cue("séries") - 0.2), d = tr.cue("descanse");
+        P.puxa = ciclo(u - r, 1.1, 0.3, 1.6, 0, 3.0);
+        if (u > Math.max(d, r + 3.0)) P.labels.push({ tx: "1 min entre as séries", at: cabeca.clone().add(V(0, 0.2, 0.2)), tom: "dim" });
         break;
       }
     }
@@ -214,7 +217,8 @@ export function criarPuxada(o: OpcoesCena): CenaRoteiro {
       });
       const s = h.side[0];
       BRACO = s.L1 + s.L2;
-      ROLO = QUADRIL.clone().add(V(s.Lc * 0.78, 0.15, 0));
+      // rolo por cima da coxa (a calça é larga: com 0,15 ele ficava enterrado na perna e parecia o joelho)
+      ROLO = QUADRIL.clone().add(V(s.Lc * 0.78, 0.21, 0));
       HUM = h;
     },
   });

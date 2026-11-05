@@ -14,6 +14,8 @@ const th = (ENCOSTO * Math.PI) / 180;
 export const T = V(-Math.cos(th), Math.sin(th), 0); // ao longo do tronco, para a cabeça
 export const N = V(Math.sin(th), Math.cos(th), 0); // normal do peito
 const ROLO = 0.4; // distância do eixo ao rolo, ao longo da canela
+const APOIO_CIMA = 0.32; // altura do rolo do apoio (flexora) acima do eixo, levantado
+const APOIO_COXA = 0.135; // altura em que o rolo encosta em cima da coxa
 
 export interface OpcoesCadeira {
   /** flexora: rolo atrás do tornozelo e apoio por cima das coxas */
@@ -90,12 +92,15 @@ export function criarCadeira(maq: THREE.Group, o: OpcoesCadeira) {
     /**
      * ang: giro da alavanca em graus, 0 = canela na vertical (joelho a 90°), positivo estende a perna.
      * tranco: o corpo sobe e joga para trás (0 a 1). k: quanto a carga subiu (0 a 1).
+     * apoio (flexora): 0 = levantado, 1 = baixado em cima das coxas.
      */
-    aplicar(ang: number, tranco: number, k: number, batida: number, mostrarEixo: boolean, now: number, dt: number) {
+    aplicar(ang: number, tranco: number, k: number, batida: number, mostrarEixo: boolean, now: number, dt: number, apoioK = 1) {
       const a = (ang * Math.PI) / 180;
       alav.position.copy(eixo);
       alav.rotation.z = a;
-      apoio.position.copy(eixo).add(V(-0.12, 0, 0));
+      // o rolo do apoio fica a APOIO_CIMA do eixo levantado e encosta na coxa (APOIO_COXA) quando baixa;
+      // a haste é telescópica: o grupo inteiro desce
+      apoio.position.copy(eixo).add(V(-0.12, -(APOIO_CIMA - APOIO_COXA) * apoioK, 0));
       pilha.subir(k, batida, now);
       eixoOp = suave(eixoOp, mostrarEixo ? 1 : 0, dt, 6, o.reduzido);
       eixoMat.opacity = 0.9 * eixoOp;

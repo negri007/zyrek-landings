@@ -109,6 +109,7 @@ export function criarPlayer(host: HTMLElement, o: OpcoesPlayer) {
       .map((e) => { const r = e.getBoundingClientRect(); return { x: r.left - sr.left, y: r.top - sr.top, w: r.width, h: r.height }; });
   };
   const carreg = $(".carregando");
+  let dicaGiroPendente = false;
   const marcarPronto = (modo: string) => {
     if (destruido) return;
     pronto = true;
@@ -116,10 +117,8 @@ export function criarPlayer(host: HTMLElement, o: OpcoesPlayer) {
     stage.dataset.modo = modo;
     let viu = false;
     try { viu = !!localStorage.getItem("tf-giro"); } catch { /* sem armazenamento */ }
-    if (cena?.orbita && !viu) {
-      dica.hidden = false;
-      setTimeout(() => { if (!destruido) dica.hidden = true; }, 5000);
-    }
+    // uma dica por vez no vídeo: com "Toque para ouvir" na tela, a do giro espera a voz ser liberada
+    if (cena?.orbita && !viu) { if ($(".ouvir").hidden) mostrarDicaGiro(); else dicaGiroPendente = true; }
     if (o.reduzido) carreg.remove();
     else animate(carreg, { opacity: 0 }, { duration: 0.35 }).finished.then(() => carreg.remove());
     play();
@@ -223,8 +222,9 @@ export function criarPlayer(host: HTMLElement, o: OpcoesPlayer) {
       a.play().then(() => { if (a !== voz) { a.pause(); a.currentTime = 0; } a.muted = false; }, () => { a.muted = false; });
     }
     if (!bOuvir.hidden) {
-      if (o.reduzido) bOuvir.hidden = true;
-      else animate(bOuvir, { opacity: 0, transform: "translate(-50%,-6px)" }, { duration: 0.25 }).finished.then(() => (bOuvir.hidden = true));
+      const sumiu = () => { bOuvir.hidden = true; if (dicaGiroPendente) { dicaGiroPendente = false; mostrarDicaGiro(); } };
+      if (o.reduzido) sumiu();
+      else animate(bOuvir, { opacity: 0, transform: "translate(-50%,-6px)" }, { duration: 0.25 }).finished.then(sumiu);
     }
     if (!tocando && pronto) play();
     syncVoz(true);
@@ -292,6 +292,10 @@ export function criarPlayer(host: HTMLElement, o: OpcoesPlayer) {
   host.querySelector<HTMLElement>("[data-a=proximo]")?.addEventListener("click", () => o.fim?.proximo?.ir());
   // ---- giro 360°: arrastar gira a câmera em volta da instrutora; toque simples continua pausando ----
   const bVolta = $(".volta"), dica = $(".dica-giro");
+  function mostrarDicaGiro() {
+    dica.hidden = false;
+    setTimeout(() => { if (!destruido) dica.hidden = true; }, 5000);
+  }
   const toques = new Map<number, { x: number; y: number }>();
   let arrastou = false, x0 = 0, y0 = 0, pinca = 0, ultimoGiro = 0;
   const orb = () => cena?.orbita;

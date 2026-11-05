@@ -27,7 +27,7 @@ const CAMS: Record<string, Enquadramento> = {
   close: { p: [1.7, -0.2, 4.3], l: [0.55, -0.6, 0], u: [0, 1, 0] },
   tq: { p: [3.2, 0.9, 5.0], l: [0.2, -0.5, 0], u: [0, 1, 0] },
   // do outro lado do banco, para ver a pilha de anilhas batendo
-  pilha: { p: [-0.5, 0.3, -5.0], l: [-1.0, -0.75, -0.5], u: [0, 1, 0] },
+  pilha: { p: [-3.4, 0.35, -4.4], l: [-0.75, -0.75, -0.35], u: [0, 1, 0] },
   lento: { p: [1.3, -0.55, 3.8], l: [0.45, -0.8, 0], u: [0, 1, 0] },
 };
 
@@ -101,7 +101,10 @@ export function criarExtensora(o: OpcoesCena): CenaRoteiro {
         break;
       }
       case "final": {
-        if (u > tr.cue("descanse")) P.labels.push({ tx: "1 min entre as séries", at: QUADRIL.clone().addScaledVector(T, 0.75).setZ(0.22), tom: "dim" });
+        // "faça as repetições assim": uma repetição controlada; depois descansa parada
+        const r = Math.max(0.1, tr.cue("repetições") - 0.2), d = tr.cue("descanse");
+        P.ang = TOPO * ciclo(u - r, 1.1, 0.3, 1.6, 0, 3.0);
+        if (u > Math.max(d, r + 3.0)) P.labels.push({ tx: "1 min entre as séries", at: QUADRIL.clone().addScaledVector(T, 0.75).setZ(0.22), tom: "dim" });
         break;
       }
     }

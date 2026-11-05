@@ -12,6 +12,7 @@ export interface Estado {
   machines: Maquina[];
   extra: number; // toques feitos hoje nesta demonstração
   help: { yes: number; no: number };
+  origem: { nfc: number; qr: number }; // de onde vieram os toques de hoje
   calls: Chamado[];
   nextTag: number;
   nextCall: number;
@@ -40,6 +41,7 @@ export function fresh(): Estado {
   const now = Date.now();
   return {
     machines: ms, extra: 0,
+    origem: { nfc: DAILY[13] - Math.round(DAILY[13] * 0.14), qr: Math.round(DAILY[13] * 0.14) },
     help: { yes: DADOS.avaliacoes.ajudou, no: DADOS.avaliacoes.naoAjudou },
     calls: DADOS.chamados.map((c) => ({ id: c.id, slug: c.slug, at: now - c.minutosAtras * 60e3, done: c.atendido })),
     nextTag: ms.length + 1, nextCall: Math.max(...DADOS.chamados.map((c) => c.id)) + 1,
@@ -54,12 +56,13 @@ function load(): Estado | null {
     const e = JSON.parse(r) as Estado;
     // roteiros gravados depois que o estado foi salvo passam a valer para os aparelhos de exemplo
     for (const m of e.machines) m.roteiro = DADOS.aparelhos.find((a) => a.slug === m.slug)?.roteiro;
-    // estados salvos antes de existir o registro de treino
+    // estados salvos antes de existir o registro de treino e a origem do toque
     e.fins ||= {};
     e.series ||= {};
     e.motivos ||= { ...DADOS.avaliacoes.motivos };
+    e.origem ||= { nfc: DAILY[13] + e.extra, qr: 0 };
     // virou o dia: séries, vídeos completos e toques de hoje começam do zero
-    if (e.dia !== hojeISO()) { e.dia = hojeISO(); e.fins = {}; e.series = {}; e.extra = 0; }
+    if (e.dia !== hojeISO()) { e.dia = hojeISO(); e.fins = {}; e.series = {}; e.extra = 0; e.origem = { nfc: DAILY[13], qr: 0 }; }
     return e;
   } catch { return null; }
 }

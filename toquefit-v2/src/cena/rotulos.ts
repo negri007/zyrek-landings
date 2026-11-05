@@ -2,7 +2,11 @@
 import * as THREE from "three";
 import type { V3 } from "./util3d";
 
-export interface Rotulo<P = V3> { tx: string; at: P; tom?: "bad" | "good" | "dim" }
+export interface Rotulo<P = V3> {
+  tx: string; at: P; tom?: "bad" | "good" | "dim";
+  /** destaque: rótulo maior, que entra com um pulo quando aparece */
+  forte?: boolean;
+}
 export interface Segmento { ax: number; ay: number; bx: number; by: number }
 export interface Caixa { x: number; y: number; w: number; h: number }
 
@@ -77,8 +81,12 @@ export function criarRotulos(o: OpcoesRotulos) {
     for (let i = 0; i < pool.length; i++) {
       const sp = pool[i], L = list[i];
       if (!L) { sp.style.opacity = "0"; continue; }
-      if (sp.dataset.t !== L.tx) { sp.textContent = L.tx; sp.dataset.t = L.tx; }
-      const c = "lbl" + (L.tom ? " " + L.tom : "");
+      if (sp.dataset.t !== L.tx) {
+        sp.textContent = L.tx; sp.dataset.t = L.tx;
+        // destaque: reinicia o "pop" de entrada a cada texto novo
+        if (L.forte) { sp.style.animation = "none"; void sp.offsetWidth; sp.style.animation = ""; }
+      }
+      const c = "lbl" + (L.tom ? " " + L.tom : "") + (L.forte ? " forte" : "");
       if (sp.className !== c) sp.className = c;
       const pt = proj(L.at);
       const w = sp.offsetWidth, h = sp.offsetHeight, g = 26;
@@ -95,6 +103,8 @@ export function criarRotulos(o: OpcoesRotulos) {
       const pos = livre(ordem.map((k) => cands[k]), w, h, 8, 56, ocupadas);
       sp.dataset.k = String(ordem[pos.i]);
       ocupadas.push({ x: pos.x - 4, y: pos.y - 4, w: w + 8, h: h + 8 });
+      // rótulo que acabou de aparecer já nasce no lugar (sem deslizar do canto por cima do nome da instrutora)
+      sp.style.transition = !sp.style.transform || sp.style.opacity === "0" ? "opacity .35s" : "";
       sp.style.transform = `translate(${pos.x.toFixed(1)}px,${pos.y.toFixed(1)}px)`;
       sp.style.opacity = pt.z < 1 ? "1" : "0";
     }

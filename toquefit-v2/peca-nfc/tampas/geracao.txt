@@ -1,0 +1,8 @@
+A01  Supino reto                  QR versão 2 (25×25, 0.76 mm por quadrado)  leitura: OK
+A02  Leg press 45°                QR versão 2 (25×25, 0.76 mm por quadrado)  leitura: OK
+A03  Puxada frontal               QR versão 2 (25×25, 0.76 mm por quadrado)  leitura: OK
+A04  Cadeira extensora            QR versão 2 (25×25, 0.76 mm por quadrado)  leitura: OK
+A05  Remada baixa                 QR versão 2 (25×25, 0.76 mm por quadrado)  leitura: OK
+A06  Cadeira flexora              QR versão 2 (25×25, 0.76 mm por quadrado)  leitura: OK
+A07  Desenvolvimento na máquina   QR versão 2 (25×25, 0.76 mm por quadrado)  leitura: OK
+A08  Crossover                    QR versão 2 (25×25, 0.76 mm por quadrado)  leitura: OK

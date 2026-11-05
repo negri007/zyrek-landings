@@ -66,7 +66,7 @@ function funcoesLocais(): Plugin {
 const CSP = "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self' data:; connect-src 'self' data: blob:; worker-src 'self' blob:; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'";
 
 export default defineConfig({
-  base: "./",
+  base: "/", // raiz: os links curtos /N/A01 e /Q/A01 precisam achar os arquivos
   preview: { headers: { "Content-Security-Policy": CSP, "X-Content-Type-Options": "nosniff", "X-Frame-Options": "DENY", "Referrer-Policy": "no-referrer" } },
   plugins: [funcoesLocais()],
   build: { target: "es2022", chunkSizeWarningLimit: 900 },

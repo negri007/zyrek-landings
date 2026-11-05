@@ -128,9 +128,10 @@ export function criarPessoa(model: THREE.Object3D, raiz: THREE.Group, ancora: An
         sd.fing.push({ b, axl: ax.clone().applyQuaternion(C.clone().invert()), amt: amts[k - 1], rel: 0.14 + 0.03 * k });
       }
     }
-    // polegar discreto: pouca rotação, só nas falanges de ponta, para não deformar a malha
+    // polegar fechando por cima da barra, oposto aos dedos (valores positivos o abriam para fora,
+    // e ele ficava espetado como um dedo a mais); a base gira pouco para não deformar a malha
     const C = new THREE.Quaternion();
-    for (const [k, a] of [[1, 0.06], [2, 0.22], [3, 0.2]] as const) {
+    for (const [k, a] of [[1, 0.1], [2, -0.75], [3, -0.6]] as const) {
       const b = B[P + "HandThumb" + k];
       if (!b) continue;
       C.multiply(b.userData.rq);

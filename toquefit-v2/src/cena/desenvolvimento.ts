@@ -16,7 +16,8 @@ const QUADRIL = V(0, 0.56, 0);
 const th = (ENCOSTO * Math.PI) / 180;
 const T = V(-Math.cos(th), Math.sin(th), 0);
 const N = V(Math.sin(th), Math.cos(th), 0);
-const TRILHO_X = -0.38, BRACO_Z = 0.42, PEGA_Z = 0.3;
+// trilhos bem atrás do encosto: o carrinho sobe e desce sem passar pelos coques do cabelo da instrutora
+const TRILHO_X = -0.56, BRACO_Z = 0.42, PEGA_Z = 0.3;
 
 interface Pose extends PoseBase {
   /** altura dos pegadores: 0 = queixo, 1 = quase travar; negativo = abaixo do queixo */
@@ -34,7 +35,8 @@ const CAMS: Record<string, Enquadramento> = {
   tq: { p: [3.2, 0.7, 4.8], l: [0.0, -0.2, 0], u: [0, 1, 0] },
   // de frente: cotovelos embaixo das mãos
   front: { p: [4.2, 0.35, 0.001], l: [0.0, -0.05, 0], u: [0, 1, 0] },
-  lento: { p: [1.7, 0.25, 3.6], l: [0.0, -0.05, 0], u: [0, 1, 0] },
+  // replay: afastado e mirando mais alto, para a cabeça e os pegadores caberem no quadro
+  lento: { p: [2.0, 0.6, 4.4], l: [0.0, 0.1, 0], u: [0, 1, 0] },
 };
 
 export function criarDesenvolvimento(o: OpcoesCena): CenaRoteiro {
@@ -91,6 +93,7 @@ export function criarDesenvolvimento(o: OpcoesCena): CenaRoteiro {
   let Y_QUEIXO = 1.26, Y_TOPO = 1.62;
   const altY = (a: number) => lerp(Y_QUEIXO, Y_TOPO, a);
   const cotovelos = [V(), V()], maos = [V(), V()], ombros = [V(), V()];
+  const centroOmbros = V();
 
   function pose(tr: Trecho, u: number): Pose {
     const P: Pose = { alt: 0, arco: 0, queixo: false, antebraco: false, labels: [] };
@@ -150,7 +153,10 @@ export function criarDesenvolvimento(o: OpcoesCena): CenaRoteiro {
         break;
       }
       case "final": {
-        if (u > tr.cue("descanse")) P.labels.push({ tx: "1 min entre as séries", at: QUADRIL.clone().addScaledVector(T, 0.75).setZ(0.24), tom: "dim" });
+        // "faça as repetições assim": uma repetição controlada; depois descansa
+        const r = Math.max(0.1, tr.cue("repetições") - 0.2), d = tr.cue("descanse");
+        P.alt = ciclo(u - r, 1.1, 0.3, 1.6, 0, 3.0);
+        if (u > Math.max(d, r + 3.0)) P.labels.push({ tx: "1 min entre as séries", at: QUADRIL.clone().addScaledVector(T, 0.75).setZ(0.24), tom: "dim" });
         break;
       }
     }
@@ -168,7 +174,10 @@ export function criarDesenvolvimento(o: OpcoesCena): CenaRoteiro {
     anteMat.opacity = 0.85 * anteOp;
     if (!HUM) return;
     const h = HUM;
-    h.curvarColuna(-20 * P.arco);
+    // lombar arqueada: o corpo gira em volta dos ombros (o quadril vem para a frente e a lombar sai do encosto)
+    // e a coluna arqueia um pouco; antes ela só curvava para trás e a cabeça ia contra o carrinho
+    h.girarCorpo(10 * P.arco, centroOmbros);
+    h.curvarColuna(-9 * P.arco);
     for (let i = 0; i < 2; i++) {
       const s = h.side[i], sd = s.sd;
       // pegador horizontal: palmas para a frente, cotovelos para baixo e um pouco para fora; o ombro sobe junto
@@ -215,6 +224,7 @@ export function criarDesenvolvimento(o: OpcoesCena): CenaRoteiro {
       Y_TOPO = S.y + Math.sqrt(Math.max(0, (s1(h) * 0.97) ** 2 - (PEGA_Z - Math.abs(S.z)) ** 2));
       PEGA_X = S.x + 0.06;
       montarCarro();
+      centroOmbros.copy(h.side[0].S).add(h.side[1].S).multiplyScalar(0.5);
       HUM = h;
     },
   });

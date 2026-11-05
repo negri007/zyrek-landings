@@ -86,9 +86,9 @@ def duracao(mp3: Path) -> float:
     return round(float(r.stdout.strip()), 3)
 
 
-async def gerar(trecho, voz, pasta: Path):
+async def gerar(trecho, voz, pasta: Path, ritmo="+2%", tom="+0Hz"):
     txt = texto_limpo(trecho["say"])
-    com = edge_tts.Communicate(txt, voz, rate="+2%", boundary="WordBoundary")
+    com = edge_tts.Communicate(txt, voz, rate=ritmo, pitch=tom, boundary="WordBoundary")
     mp3 = pasta / f"{trecho['id']}.mp3"
     marcas = []
     with open(mp3, "wb") as f:
@@ -120,7 +120,14 @@ async def main():
     so = set(args)
     for t in rot["trechos"]:
         if not so or t["id"] in so:
-            await gerar(t, rot["voz"], pasta)
+            for tentativa in range(4):  # o serviço às vezes devolve áudio vazio: tenta de novo
+                try:
+                    await gerar(t, rot["voz"], pasta, rot.get("ritmo", "+2%"), rot.get("tom", "+0Hz"))
+                    break
+                except edge_tts.exceptions.NoAudioReceived:
+                    if tentativa == 3:
+                        raise
+                    await asyncio.sleep(2 + 3 * tentativa)
 
 
 asyncio.run(main())

@@ -16,6 +16,9 @@ type Player = ReturnType<typeof criarPlayer>;
 let player: Player | null = null;
 let atual: string | null = null;
 let geracao = 0;
+let origemProx: "nfc" | "qr" = "nfc";
+/** o próximo toque veio do QR da tampa ou da tag NFC */
+export function definirOrigem(o: "nfc" | "qr") { origemProx = o; }
 
 export function pararAluno() {
   player?.destruir();
@@ -45,7 +48,8 @@ export async function renderAluno(slug: string, contarToque: boolean) {
   const p = prescricao(slug);
   const m: Maquina = p ? { ...base, sets: p.sets, rest: p.rest || base.rest } : base;
   const g = ++geracao;
-  if (contarToque && slug !== atual) { base.t7++; S.extra++; save(); }
+  if (contarToque && slug !== atual) { base.t7++; S.extra++; S.origem[origemProx]++; save(); }
+  origemProx = "nfc";
   atual = slug;
   pararAluno();
   const blob = blobs[slug];
@@ -61,7 +65,7 @@ export async function renderAluno(slug: string, contarToque: boolean) {
     ${temRoteiro ? `<div class="chapters" id="chapters" role="group" aria-label="Capítulos"></div>` : ""}
     <div class="m-title"><h1>${esc(m.name)}</h1><span class="chip">${esc(m.group)}</span></div>
     ${cartaoDaFicha(slug)}
-    ${m.video && !blob ? `<p class="note">${temRoteiro ? "Demonstração com instrutora 3D. Na versão real toca o vídeo gravado pela academia." : "Prévia da demonstração. Na versão real toca o vídeo gravado pela academia."}</p>` : ""}
+    ${m.video && !blob ? `<p class="note hide-m">${temRoteiro ? "Demonstração com instrutora 3D. Na versão real toca o vídeo gravado pela academia." : "Prévia da demonstração. Na versão real toca o vídeo gravado pela academia."}</p>` : ""}
     ${cartoes(m)}
     <section class="sec"><h2>Passo a passo</h2><ol class="steps" id="steps">${m.steps.map((s) => `<li><span>${esc(s)}</span></li>`).join("")}</ol></section>
     ${m.errs?.length ? `<section class="sec"><h2>Evite</h2><ul class="errs">${m.errs.map((e) => `<li>${esc(e)}</li>`).join("")}</ul></section>` : ""}
@@ -175,10 +179,12 @@ const MOTIVOS = ["O ajuste não ficou claro", "Rápido demais", "Meu aparelho é
 /** chamado do aluno neste aparelho; "sync" quando quem mudou foi o painel em outra aba */
 let tinhaChamado = false;
 const cancelados = new Set<string>();
+const exemplo = new Set<number | string>(DADOS.chamados.map((c) => c.id));
 export function desenharCta(origem: "local" | "sync" = "local") {
   const slug = atual;
   if (!slug) return;
-  const c = S.calls.find((x) => x.slug === slug && !x.done);
+  // chamados de exemplo do painel não são deste aluno: o celular só mostra "avisado" depois que ele chama
+  const c = S.calls.find((x) => x.slug === slug && !x.done && !exemplo.has(x.id));
   if (origem === "sync" && tinhaChamado && !c) toast("Seu chamado foi atendido");
   tinhaChamado = !!c;
   const cta = $("p-cta");

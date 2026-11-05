@@ -3,7 +3,8 @@
 import * as THREE from "three";
 import { easeIO } from "./util3d";
 
-export interface Enquadramento { p: number[]; l: number[]; u: number[] }
+/** fov: abertura da lente em graus (padrão 32); vistas em primeira pessoa usam uma lente mais aberta */
+export interface Enquadramento { p: number[]; l: number[]; u: number[]; fov?: number }
 
 /** Câmera livre: o aluno arrasta para girar em volta do ponto que a aula estava mostrando. */
 export interface Orbita {
@@ -27,7 +28,7 @@ export function criarRig(camera: THREE.PerspectiveCamera, cams: Record<string, E
   const cam = { p: new THREE.Vector3(...(ini.p as [number, number, number])), l: new THREE.Vector3(...(ini.l as [number, number, number])), u: new THREE.Vector3(0, 1, 0) };
   const de = { p: new THREE.Vector3(), l: new THREE.Vector3(), u: new THREE.Vector3() };
   const _t = new THREE.Vector3(), _d = new THREE.Vector3(), _s = new THREE.Vector3();
-  let atual = "", k01 = 1, lado = 1;
+  let atual = "", k01 = 1, lado = 1, fovDe = camera.fov;
   // câmera livre: ângulos em volta do alvo e quanto ela pesa sobre a câmera da aula (0 a 1)
   const orb = { on: false, peso: 0, alvo: new THREE.Vector3(), centro: new THREE.Vector3(), yaw: 0, pitch: 0, raio: 1, raioFim: 1, raio0: 1 };
   const _o = new THREE.Vector3(), _up = new THREE.Vector3(0, 1, 0), _caixa = new THREE.Box3(), _tam = new THREE.Vector3();
@@ -79,6 +80,7 @@ export function criarRig(camera: THREE.PerspectiveCamera, cams: Record<string, E
     ir(nome: string, imediato: boolean) {
       if (nome === atual) return;
       de.p.copy(cam.p); de.l.copy(cam.l); de.u.copy(cam.u);
+      fovDe = camera.fov;
       atual = nome;
       k01 = imediato || reduzido ? 1 : 0;
       lado = -lado;
@@ -98,6 +100,8 @@ export function criarRig(camera: THREE.PerspectiveCamera, cams: Record<string, E
       }
       cam.l.lerpVectors(de.l, _t.set(C.l[0], C.l[1], C.l[2]), k);
       cam.u.lerpVectors(de.u, _t.set(C.u[0], C.u[1], C.u[2]), k);
+      const fov = fovDe + ((C.fov ?? 32) - fovDe) * k;
+      if (Math.abs(camera.fov - fov) > 0.01) { camera.fov = fov; camera.updateProjectionMatrix(); }
       camera.position.copy(cam.p);
       camera.up.copy(cam.u).normalize();
       camera.lookAt(cam.l);

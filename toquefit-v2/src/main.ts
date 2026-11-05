@@ -6,7 +6,7 @@ import "./styles/telas.css";
 import "./styles/fichas.css";
 import { CHAVE, S, bySlug, fresh, recarregar, save } from "./estado";
 import { atendendo, entrarNaSala, sairDaSala, salaAtual, sincronizarSala } from "./sala";
-import { desenharCta, esquecerAtual, pararAluno, renderAluno, renderLista, slugAtual } from "./aluno";
+import { definirOrigem, desenharCta, esquecerAtual, pararAluno, renderAluno, renderLista, slugAtual } from "./aluno";
 import { aluno, instrutor, lerLinkDeAcesso, nomeAcademia } from "./conta";
 import { editorEstaAberto, montarEditor, vigiarAlunos } from "./alunos";
 import { renderMeuTreino } from "./meutreino";
@@ -49,6 +49,7 @@ $("app").innerHTML = `
     <aside class="aside">
       <div class="aside-h">
         <h2>Encostou o celular, o vídeo já começa</h2>
+        <span class="aside-k">Outros aparelhos</span>
         <a class="btn sm so-m" href="#painel">Ver o painel da academia</a>
         <p class="hide-m">O aluno aproxima o celular da tag NFC do aparelho e o vídeo abre tocando, sem app e sem precisar rolar a tela. Escolha um aparelho para simular.</p>
       </div>
@@ -62,13 +63,20 @@ $("app").innerHTML = `
   <section id="view-painel" class="painel" hidden aria-labelledby="painel-t">
     <div class="ph">
       <div>
+        <p class="ph-vivo" id="ph-vivo" aria-live="polite"></p>
         <h1 id="painel-t">${esc(nomeAcademia())}</h1>
         <p class="ph-sub" id="ph-sub"></p>
       </div>
       <div class="acts">
-        <button class="btn" type="button" id="reset">Restaurar exemplo</button>
-        <button class="btn" type="button" id="planilha">Baixar planilha</button>
-        <button class="btn" type="button" id="etiquetas">Imprimir etiquetas</button>
+        <button class="btn" type="button" id="av-ligar" hidden>${icone("nfc")} Testar no celular</button>
+        <div class="mais" id="mais">
+          <button class="btn" type="button" id="mais-b" aria-haspopup="true" aria-expanded="false" aria-controls="mais-m">Mais<span class="mais-seta" aria-hidden="true"></span></button>
+          <div class="mais-m" id="mais-m" hidden>
+            <button type="button" id="planilha">Baixar planilha</button>
+            <button type="button" id="etiquetas">Imprimir etiquetas</button>
+            <button type="button" id="reset">Restaurar exemplo</button>
+          </div>
+        </div>
         <button class="btn primary" type="button" id="add">Cadastrar aparelho</button>
       </div>
     </div>
@@ -88,7 +96,7 @@ $("app").innerHTML = `
     <div class="card chart"><div class="card-h"><h2>Toques por dia</h2><span>Últimos 14 dias</span></div><div id="chart"></div></div>
     <div class="card aparelhos"><div class="card-h"><h2>Aparelhos</h2><span id="mcount"></span></div>
       <div class="tbl-wrap"><table>
-        <thead><tr><th scope="col">Aparelho</th><th scope="col">Tag</th><th scope="col">Vídeo</th><th scope="col">Toques 7 dias</th><th scope="col">Treino hoje</th><th scope="col"><span class="sr">Ações</span></th></tr></thead>
+        <thead><tr><th scope="col">Aparelho</th><th scope="col">Tag</th><th scope="col">Toques 7 dias</th><th scope="col">Treino hoje</th><th scope="col"><span class="sr">Ações</span></th></tr></thead>
         <tbody id="tbody"></tbody>
       </table></div>
     </div>
@@ -148,6 +156,15 @@ function mostrar(v: "aluno" | "painel") {
   document.querySelector(".credit")!.textContent = instrutor() ? "Gráficos de exemplo" : "Dados de exemplo";
   $("meu-link").setAttribute("aria-current", String(location.hash === "#treino"));
   vigiarAlunos(v === "painel");
+}
+
+// links curtos gravados nas tags (/N/A01) e nos QR das tampas (/Q/A01): abrem o aparelho e contam a origem
+const curto = location.pathname.match(/^\/(n|q)\/([a-z0-9]+)\/?$/i);
+if (curto) {
+  const cod = curto[2].toUpperCase();
+  const m = S.machines.find((x) => x.tag.toUpperCase().endsWith("-" + cod));
+  definirOrigem(curto[1].toLowerCase() === "q" ? "qr" : "nfc");
+  history.replaceState(null, "", "/#m-" + (m ? m.slug : S.machines[0].slug));
 }
 
 function rota() {

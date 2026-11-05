@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1220" height="470" viewBox="0 0 1220 470">
+<style>
+ text{font-family:"Archivo","Segoe UI",system-ui,sans-serif;fill:#ECEFF2}
+ .t{font-size:20px;font-weight:800} .c{font-size:15px;font-weight:700} .n{font-size:13px;fill:#C9CFD6} .l{font-size:12px;fill:#969EA8}
+</style>
+<defs><marker id="s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#ECEFF2"/></marker><pattern id="h" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="8" height="8" fill="#2B3037"/><line x1="0" y1="0" x2="0" y2="8" stroke="#5D656F" stroke-width="2"/></pattern></defs>
+<rect width="1220" height="470" fill="#14171B"/>
+<text x="24" y="38" class="t">Corte da peça montada (medidas em mm)</text>
+<text x="24" y="60" class="l">Plano que passa por uma trava já presa no rasgo. Tag de 25 mm a 10 mm do metal.</text>
+<rect x="130" y="350" width="780" height="26" fill="url(#h)"/>
+<text x="138" y="368" class="l" style="fill:#C9CFD6">metal do aparelho</text>
+<path d=" M -22,9 L -18.5,9 L -18.5,3 L 18.5,3 L 18.5,3.7 L 20,3.7  L 20,7 L 18.5,7 L 18.5,9 L 22,9 L 22,-0 L 3,-0  L 3,1.59 L -3,1.59 L -3,-0 L -22,-0 L -22,2.83207 L -21.5047,2.82954  L -21.5047,2.92234 L -21.5047,2.94206 L -21.5047,3.05646 L -21.5047,3.09576 L -21.5047,3.1579 L -21.5047,3.20606  L -21.5047,3.23846 L -21.5047,3.29067 L -21.5047,3.30497 L -21.5047,3.35892 L -21.5047,3.36163 L -21.5047,3.3778  L -22,3.386 z " transform="translate(520 350) scale(15 -15)" fill="#3A4048" stroke="#0D0F12" stroke-width="0.04"/>
+<path d=" M -21.9933,11 L -20.3938,11 L -20.3938,10.6 L -19.694,10.6 L -19.694,11 L -18.3239,11  L -18.3239,10.6 L -17.9128,10.6 L -17.9128,11 L -16.4224,11 L -16.4224,10.6 L -16.0152,10.6  L -16.0152,11 L 8.14998,11 L 8.14998,10.6 L 9.04999,10.6 L 9.04999,11 L 9.64998,11  L 9.64998,10.6 L 10.55,10.6 L 10.55,11 L 11.15,11 L 11.15,10.6 L 12.05,10.6  L 12.05,11 L 16.5491,11 L 16.5491,10.6 L 18.085,10.6 L 18.085,11 L 19.694,11  L 19.694,10.6 L 20.3938,10.6 L 20.3938,11 L 21.9933,11 L 21.9933,9 L 18.1945,9  L 18.1945,6.7 L 18.2044,6.7 L 19.1711,5.72659 L 19.694,5.2 L 19.694,4 L 14.4956,4  L 14.4956,9 L 13.4959,9 L 13.4959,10 L -13.4959,10 L -13.4959,9 L -14.4956,9  L -14.4956,4 L -18.1945,4 L -18.1945,9 L -21.9933,9 z " transform="translate(520 350) scale(15 -15)" fill="#E6EE2A" stroke="#0D0F12" stroke-width="0.04"/>
+<path d=" M -12.5,10 L 12.5,10 L 12.5,9.7 L -12.5,9.7 z " transform="translate(520 350) scale(15 -15)" fill="#3A7BD5" stroke="#0D0F12" stroke-width="0.04"/>
+<text x="520" y="257.0" text-anchor="middle" class="l" style="fill:#C9CFD6">ar (espaçamento)</text>
+<line x1="877.0" y1="350" x2="877.0" y2="200" stroke="#ECEFF2" stroke-width="1.4" marker-start="url(#s)" marker-end="url(#s)"/><text x="889.0" y="280.0" text-anchor="start" class="c">10 até a tag</text>
+<line x1="137.5" y1="350" x2="137.5" y2="185" stroke="#ECEFF2" stroke-width="1.4" marker-start="url(#s)" marker-end="url(#s)"/><text x="125.5" y="272.5" text-anchor="end" class="c">11 total</text>
+<line x1="190" y1="131.0" x2="850" y2="131.0" stroke="#ECEFF2" stroke-width="1.4" marker-start="url(#s)" marker-end="url(#s)"/>
+<text x="520" y="123.0" text-anchor="middle" class="c">Ø 44</text>
+<polyline points="430.0,202.2 330,150" fill="none" stroke="#969EA8" stroke-width="1"/><circle cx="430" cy="202.25" r="2.5" fill="#ECEFF2"/><text x="324" y="154" text-anchor="end" class="n">tag Ø25 colada no rebaixo Ø27 (1 mm de folga)</text>
+<polyline points="580.0,192.5 640,150" fill="none" stroke="#969EA8" stroke-width="1"/><circle cx="580" cy="192.5" r="2.5" fill="#ECEFF2"/><text x="646" y="154" text-anchor="start" class="n">1 mm de plástico até o celular</text>
+<polyline points="805.0,270.5 1010,420" fill="none" stroke="#969EA8" stroke-width="1"/><circle cx="805" cy="270.5" r="2.5" fill="#ECEFF2"/><text x="1016" y="424" text-anchor="start" class="n">trava presa no rasgo</text>
+<polyline points="767.5,207.5 1010,205" fill="none" stroke="#969EA8" stroke-width="1"/><circle cx="767.5" cy="207.5" r="2.5" fill="#ECEFF2"/><text x="1016" y="209" text-anchor="start" class="n">tampa: encaixe e travas</text>
+<polyline points="220.0,282.5 140,420" fill="none" stroke="#969EA8" stroke-width="1"/><circle cx="220" cy="282.5" r="2.5" fill="#ECEFF2"/><text x="146" y="424" text-anchor="start" class="n">base: parede 3,5 mm</text>
+<polyline points="520.0,338.0 640,420" fill="none" stroke="#969EA8" stroke-width="1"/><circle cx="520" cy="338.0" r="2.5" fill="#ECEFF2"/><text x="646" y="424" text-anchor="start" class="n">canal da abraçadeira 6 × 1,6</text>
+</svg>

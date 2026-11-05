@@ -12,7 +12,8 @@ import { V, ciclo, lerp, seg, type V3 } from "./util3d";
 import type { Trecho } from "../player/timeline";
 
 const QUADRIL = V(0, 0.36, 0);
-const PE = V(0.93, 0.3, 0); // tornozelos no apoio: joelhos levemente dobrados
+const PE = V(0.93, 0.3, 0); // tornozelos no apoio (x ajustado ao carregar: joelho a ~155°, levemente dobrado)
+const JOELHO = 155;
 const POLIA = V(1.22, 0.4, 0);
 
 interface Pose extends PoseBase {
@@ -31,7 +32,8 @@ const CAMS: Record<string, Enquadramento> = {
   tq: { p: [3.4, 0.7, 4.8], l: [0.7, -0.75, 0], u: [0, 1, 0] },
   // de trás e de cima: mostra as escápulas
   costas: { p: [-2.6, 1.3, 2.0], l: [0.15, -0.5, 0], u: [0, 1, 0] },
-  lento: { p: [0.7, -0.55, 3.6], l: [0.55, -0.7, 0], u: [0, 1, 0] },
+  // replay: afastado o bastante para a cabeça não sair do quadro
+  lento: { p: [1.0, 0.3, 5.4], l: [0.5, -0.42, 0], u: [0, 1, 0] },
 };
 
 export function criarRemada(o: OpcoesCena): CenaRoteiro {
@@ -51,10 +53,13 @@ export function criarRemada(o: OpcoesCena): CenaRoteiro {
   peca(2.4, 0.05, 0.5, metal, V(0.45, 0.025, 0));
   peca(0.95, 0.07, 0.36, estofado, V(-0.12, 0.25, 0));
   for (const x of [-0.5, 0.25]) tubo(0.03, V(x, 0.22, 0), V(x, 0.05, 0), metal);
+  // apoio dos pés num grupo: ao carregar o modelo ele vai para onde o pé alcança com o joelho levemente dobrado
+  const apoioG = new THREE.Group();
+  maq.add(apoioG);
   const apoioPe = PE.clone().add(V(0.09, 0.05, 0));
-  peca(0.04, 0.26, 0.46, metal, apoioPe, V(Math.cos(1.35), Math.sin(1.35), 0));
-  for (const sd of [-1, 1]) peca(0.045, 0.27, 0.02, neon, apoioPe.clone().add(V(0, 0, 0.23 * sd)), V(Math.cos(1.35), Math.sin(1.35), 0));
-  tubo(0.026, apoioPe.clone().add(V(0.02, -0.12, 0)), V(apoioPe.x + 0.05, 0.05, 0), metal);
+  peca(0.04, 0.26, 0.46, metal, apoioPe, V(Math.cos(1.35), Math.sin(1.35), 0), apoioG);
+  for (const sd of [-1, 1]) peca(0.045, 0.27, 0.02, neon, apoioPe.clone().add(V(0, 0, 0.23 * sd)), V(Math.cos(1.35), Math.sin(1.35), 0), apoioG);
+  tubo(0.026, apoioPe.clone().add(V(0.02, -0.12, 0)), V(apoioPe.x + 0.05, 0.05, 0), metal, apoioG);
   tubo(0.03, V(POLIA.x + 0.06, 0.05, -0.12), V(POLIA.x + 0.06, 1.5, -0.12), metal);
   const polia = new THREE.Mesh(new THREE.TorusGeometry(0.05, 0.014, 8, 24), metal);
   polia.position.copy(POLIA); maq.add(polia);
@@ -136,7 +141,10 @@ export function criarRemada(o: OpcoesCena): CenaRoteiro {
         break;
       }
       case "final": {
-        if (u > tr.cue("descanse")) P.labels.push({ tx: "1 min entre as séries", at: pescoco.clone().add(V(0, 0.2, 0.2)), tom: "dim" });
+        // "faça as séries assim": uma repetição controlada; depois descansa
+        const r = Math.max(0.1, tr.cue("séries") - 0.2), d = tr.cue("descanse");
+        P.puxa = ciclo(u - r, 1.1, 0.3, 1.6, 0, 3.0);
+        if (u > Math.max(d, r + 3.0)) P.labels.push({ tx: "1 min entre as séries", at: pescoco.clone().add(V(0, 0.2, 0.2)), tom: "dim" });
         break;
       }
     }
@@ -202,6 +210,13 @@ export function criarRemada(o: OpcoesCena): CenaRoteiro {
       Y_PEGA = QUADRIL.y + 0.3;
       ALCANCE = Math.sqrt(Math.max(0.05, (L * 0.96) ** 2 - (S.y - Y_PEGA) ** 2));
       X_PERTO = 0.13;
+      // pé no apoio a uma distância que deixa o joelho levemente dobrado (~155°), não quase no peito
+      const Lc = h.side[0].Lc, Lp = h.side[0].Lp;
+      const d = Math.sqrt(Lc * Lc + Lp * Lp - 2 * Lc * Lp * Math.cos((JOELHO * Math.PI) / 180));
+      const quad = h.loc(h.side[0].U), dy = PE.y - quad.y;
+      const x = quad.x + Math.sqrt(Math.max(0, d * d - dy * dy));
+      apoioG.position.x = x - PE.x;
+      PE.x = x;
       HUM = h;
     },
   });

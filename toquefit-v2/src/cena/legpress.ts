@@ -37,7 +37,16 @@ interface Pose extends PoseBase {
   guias: boolean;
   /** contorno vermelho dos joelhos caídos, para comparar com o certo */
   fantasma: boolean;
+  /** pés: deslocamento na plataforma (negativo = mais em cima), largura (0 = juntos, 1 = do quadril) e pontas para fora (0 a 1) */
+  peAlt: number;
+  peLarg: number;
+  pePonta: number;
+  /** marcas na plataforma (faixa do meio e contorno dos pés), 0 a 1 */
+  marcas: number;
 }
+
+/** extensão das pernas na visão dos pés: mais esticadas, os joelhos baixam e os pés aparecem por cima deles */
+const PE_VISTA = 0.97;
 
 const CAMS: Record<string, Enquadramento> = {
   side: { p: [0.5, 0.0, 8.8], l: [0.5, -0.22, 0], u: [0, 1, 0] },
@@ -45,8 +54,12 @@ const CAMS: Record<string, Enquadramento> = {
   tq: { p: [3.3, 1.5, 6.3], l: [0.35, -0.3, 0], u: [0, 1, 0] },
   // de cima, cabeça no alto da tela: mostra se o joelho acompanha a linha do pé sem os tênis na frente
   cima: { p: [0.35, 5.2, 0.001], l: [0.35, -0.3, 0], u: [-1, 0, 0] },
-  // replay em câmera lenta: perto do joelho, na altura dele, para ver o ângulo de 90°
-  lento: { p: [0.75, 0.1, 3.0], l: [0.15, -0.2, 0], u: [0, 1, 0] },
+  // replay em câmera lenta: na altura do joelho, longe o bastante para ver a perna inteira e o ângulo de 90°
+  lento: { p: [1.0, 0.3, 4.3], l: [0.3, -0.25, 0], u: [0, 1, 0] },
+  // do lado da trava, na altura do banco: mostra a mão girando a alavanca
+  trava: { p: [0.6, -0.42, 2.35], l: [0.02, -0.8, 0.53], u: [0, 1, 0] },
+  // o que a pessoa vê sentada, olhando para os pés (posição exata calculada ao carregar o modelo)
+  olhos: { p: [-1.0, 0.62, 0], l: [1.1, 0.45, 0], u: [0, 1, 0], fov: 62 },
 };
 
 export function criarLegPress(o: OpcoesCena): CenaRoteiro {
@@ -142,6 +155,28 @@ export function criarLegPress(o: OpcoesCena): CenaRoteiro {
     carro.add(aro);
   }
 
+  // ---- marcas na plataforma: faixa do meio e onde cada pé fica (vistas de quem está sentado) ----
+  const marcasPe = new THREE.Group();
+  // plano da plataforma, virado para o banco: x = lateral, y = para cima na plataforma
+  marcasPe.quaternion.setFromRotationMatrix(new THREE.Matrix4().makeBasis(V(0, 0, 1), RP, R.clone().negate()));
+  marcasPe.position.copy(V().addScaledVector(R, -0.079).addScaledVector(RP, -0.06));
+  carro.add(marcasPe);
+  const marcaMat = new THREE.MeshBasicMaterial({ color: NEON, transparent: true, opacity: 0, depthWrite: false });
+  const faixaMat = new THREE.MeshBasicMaterial({ color: NEON, transparent: true, opacity: 0, depthWrite: false });
+  const faixa = new THREE.Mesh(new THREE.PlaneGeometry(0.62, 0.26), faixaMat);
+  marcasPe.add(faixa);
+  for (const sd of [-1, 1]) {
+    // contorno do pé: elipse vazada, ponta um pouco para fora
+    // contorno largo: de longe ele aparece em volta do tênis
+    const forma = new THREE.Shape().absellipse(0, 0, 0.085, 0.175, 0, Math.PI * 2, false, 0);
+    forma.holes.push(new THREE.Path().absellipse(0, 0, 0.062, 0.152, 0, Math.PI * 2, true, 0));
+    const pe = new THREE.Mesh(new THREE.ShapeGeometry(forma, 32), marcaMat);
+    pe.position.set(0.13 * sd, 0.02, 0.002);
+    pe.rotation.z = -0.2 * sd;
+    marcasPe.add(pe);
+  }
+  let marcaOp = 0;
+
   // ---- marcações: cunha do ângulo do joelho e linhas pé → joelho ----
   const N_CUNHA = 24;
   // por cima da perna (sem teste de profundidade): o ângulo fica no plano dela, dentro da calça.
@@ -199,7 +234,7 @@ export function criarLegPress(o: OpcoesCena): CenaRoteiro {
 
   // ---- coreografia: cada trecho usa o tempo das palavras ditas ----
   function pose(tr: Trecho, u: number): Pose {
-    const P: Pose = { ext: 1, quadril: 0, valgo: 0, trava: 1, plat: 1, cunha: "", guias: false, fantasma: false, labels: [] };
+    const P: Pose = { ext: 1, quadril: 0, valgo: 0, trava: 1, plat: 1, cunha: "", guias: false, fantasma: false, peAlt: 0, peLarg: 1, pePonta: 1, marcas: 0, labels: [] };
     const D = tr.t1 - tr.t0;
     const joelho = V(0.08, 1.06, 0.2);
     switch (tr.id) {
@@ -211,8 +246,27 @@ export function criarLegPress(o: OpcoesCena): CenaRoteiro {
         break;
       }
       case "pes": {
-        P.ext = 0.86; P.trava = 0; P.guias = true;
-        if (u > tr.cue("largura") - 0.2) P.labels.push({ tx: "Largura do quadril", at: pePlataforma(0.86).add(V(0, 0.08, 0.2)) });
+        // visto pelos olhos de quem está sentado: os pés se arrumam no ritmo da fala
+        P.ext = PE_VISTA; P.trava = 0; P.marcas = 1;
+        const m = tr.cue("meio"), l = tr.cue("largura"), p = tr.cue("pontas");
+        P.peAlt = lerp(-0.13, 0, seg(u, m - 0.3, m + 0.5));
+        P.peLarg = lerp(0.35, 1, seg(u, l - 0.2, l + 0.6));
+        P.pePonta = seg(u, p - 0.2, p + 0.6);
+        const c = pePlataforma(PE_VISTA);
+        if (u > m) P.labels.push({ tx: "Meio da plataforma", at: c.clone().addScaledVector(RP, 0.17).setZ(0) });
+        if (u > l) P.labels.push({ tx: "Largura do quadril", at: c.clone().addScaledVector(RP, -0.1).setZ(0.24) });
+        if (u > p) P.labels.push({ tx: "Pontas um pouco para fora", at: c.clone().addScaledVector(RP, 0.12).setZ(-0.24) });
+        break;
+      }
+      case "pes-altura": {
+        // pé baixo demais e alto demais, depois de volta ao meio
+        P.ext = PE_VISTA; P.trava = 0; P.marcas = 1;
+        const b = tr.cue("embaixo"), c = tr.cue("cima"), m = tr.cue("inteiro");
+        P.peAlt = u < c - 0.3 ? 0.16 * seg(u, b - 0.6, b + 0.2) : u < m - 0.3 ? lerp(0.16, -0.17, seg(u, c - 0.5, c + 0.3)) : lerp(-0.17, 0, seg(u, m - 0.4, m + 0.4));
+        const pe = pePlataforma(PE_VISTA).addScaledVector(RP, P.peAlt);
+        if (u > b && u < c - 0.4) P.labels.push({ tx: "Muito embaixo", at: pe.clone().addScaledVector(RP, -0.12).setZ(0.24), tom: "bad" });
+        else if (u > c && u < m - 0.4) P.labels.push({ tx: "Muito em cima", at: pe.clone().addScaledVector(RP, 0.2).setZ(0.24), tom: "bad" });
+        else if (u > m) P.labels.push({ tx: "Pé inteiro no meio", at: pe.clone().addScaledVector(RP, 0.2).setZ(0), tom: "good" });
         break;
       }
       case "destravar": {
@@ -241,11 +295,11 @@ export function criarLegPress(o: OpcoesCena): CenaRoteiro {
         break;
       }
       case "joelhos-errado": {
-        const c = tr.cue("caindo"), fim = tr.cue("machucam") + 0.6;
+        const c = tr.cue("caem"), fim = tr.cue("sofre") + 0.6;
         const p = u < c ? seg(u, c - 1.4, c) : u < fim ? 1 : 1 - seg(u, fim, fim + 1.2);
         P.ext = lerp(1, 0.15, p);
         P.valgo = seg(p, 0.3, 1);
-        P.plat = 0.14; P.guias = true;
+        P.plat = 0.14;
         if (p > 0.8) P.labels.push({ tx: "Joelhos para dentro", at: joelho.clone().setZ(0), tom: "bad" });
         break;
       }
@@ -253,14 +307,13 @@ export function criarLegPress(o: OpcoesCena): CenaRoteiro {
         const c = tr.cue("certo"), fim = tr.cue("fora") + 0.6;
         const p = u < c ? seg(u, c - 1.0, c + 0.4) : u < fim ? 1 : 1 - seg(u, fim, fim + 1.2);
         P.ext = lerp(1, 0.15, p);
-        P.plat = 0.14; P.guias = true;
-        P.fantasma = p > 0.5;
+        P.plat = 0.14;
         if (u > tr.cue("linha")) P.labels.push({ tx: "Joelho na linha do pé", at: joelho });
         break;
       }
       case "subida": {
         // desce antes da fala; o "Empurre" começa a subida, que para antes de travar os joelhos
-        const c = tr.cue("Empurre"), e = tr.cue("final") + 0.2;
+        const c = tr.cue("Empurre"), e = tr.cue("joelhos") + 0.2;
         const p = u < c ? seg(u, 0, Math.min(1.3, c)) : 1 - seg(u, c, e);
         P.ext = lerp(0.96, 0, p);
         if (u > c - 0.2 && u < e) P.labels.push({ tx: "Força no calcanhar", at: pePlataforma(P.ext).add(V(0, -0.1, 0.22)) });
@@ -286,8 +339,10 @@ export function criarLegPress(o: OpcoesCena): CenaRoteiro {
 
   const joelhos = [V(), V()], tornozelos = [V(), V()], quadris = [V(), V()];
   function aplicar(P: Pose) {
-    const pe = pePlataforma(P.ext);
-    carro.position.copy(pe).addScaledVector(R, 0.075).addScaledVector(RP, 0.06);
+    const plat = pePlataforma(P.ext);
+    carro.position.copy(plat).addScaledVector(R, 0.075).addScaledVector(RP, 0.06);
+    // os pés podem estar mais em cima ou embaixo na plataforma, sem mexer a plataforma
+    const pe = plat.clone().addScaledVector(RP, P.peAlt);
     // gira para fora, junto com a mão (pontaTrava usa o mesmo ângulo)
     travas.forEach((t) => (t.g.rotation.x = t.sd * P.trava * 1.15));
     if (!HUM) return;
@@ -297,10 +352,12 @@ export function criarLegPress(o: OpcoesCena): CenaRoteiro {
     h.curvarColuna();
     for (let i = 0; i < 2; i++) {
       const s = h.side[i], sd = s.sd;
-      const ankle = pe.clone().setZ(0.13 * sd);
+      const ankle = pe.clone().setZ(lerp(0.07, 0.13, P.peLarg) * sd);
       // joelho acompanha a ponta do pé (levemente para fora); no valgo cai para a linha do meio
-      const bend = RP.clone().add(V(0, 0, lerp(0.28, -1.1, P.valgo) * sd));
-      const ponta = ankle.clone().addScaledVector(RP, 0.2).addScaledVector(R, 0.06).add(V(0, 0, 0.05 * sd));
+      // no erro os joelhos vêm para dentro, mas sem passar da linha do meio (antes as pernas se cruzavam)
+      // certo: joelhos acompanhando a ponta dos pés (para fora); errado: caem para dentro, mas sem se tocar
+      const bend = RP.clone().add(V(0, 0, lerp(0.42, 0.04, P.valgo) * sd));
+      const ponta = ankle.clone().addScaledVector(RP, 0.2).addScaledVector(R, 0.06).add(V(0, 0, lerp(0, 0.06, P.pePonta) * sd));
       const r = h.setLeg(s, ankle, bend, ponta);
       joelhos[i].copy(r.K); tornozelos[i].copy(r.A); quadris[i].copy(r.Q);
       // braços nas travas
@@ -318,6 +375,10 @@ export function criarLegPress(o: OpcoesCena): CenaRoteiro {
   const _a = V(), _b = V(), _ax = V();
   function atualizarMarcas(P: Pose, dt: number) {
     platOp = suave(platOp, P.plat, dt, 8, o.reduzido);
+    marcaOp = suave(marcaOp, P.marcas, dt, 6, o.reduzido);
+    marcaMat.opacity = 0.95 * marcaOp;
+    faixaMat.opacity = 0.3 * marcaOp;
+    marcasPe.visible = marcaOp > 0.02;
     for (const m of platMats) { m.opacity = platOp; m.depthWrite = platOp > 0.98; }
     for (let i = 0; i < 2; i++) {
       const K = joelhos[i];
@@ -367,7 +428,7 @@ export function criarLegPress(o: OpcoesCena): CenaRoteiro {
   }
 
   return cenaComRoteiro<Pose>(o, {
-    scene, camera, raiz: maq, cams: CAMS, fixas: ["cima"],
+    scene, camera, raiz: maq, cams: CAMS, fixas: ["cima", "olhos", "trava"],
     pessoa: () => HUM,
     obstaculos() {
       const pts: { a: V3; b: V3 }[] = [];
@@ -379,7 +440,12 @@ export function criarLegPress(o: OpcoesCena): CenaRoteiro {
       }
       return pts;
     },
-    pose,
+    // no leg press os rótulos são os pontos-chave da explicação: maiores e com entrada marcada
+    pose(tr, u) {
+      const P = pose(tr, u);
+      for (const l of P.labels) l.forte = true;
+      return P;
+    },
     // replay da descida: plataforma translúcida; depois as pernas voltam para cima antes do próximo capítulo
     noReplay(P) { P.plat = 0.35; },
     aposReplay(P, k) { P.ext = lerp(P.ext, 1, easeIO(k)); P.cunha = ""; },
@@ -397,6 +463,13 @@ export function criarLegPress(o: OpcoesCena): CenaRoteiro {
       const s = HUM.side[0];
       LC = s.Lc; LP = s.Lp; D90 = distDe(90); D160 = distDe(158);
       ombros.copy(HUM.side[0].S).add(HUM.side[1].S).multiplyScalar(0.5);
+      // câmera "olhos": acima do rosto, como quem levanta a cabeça e olha por cima dos joelhos para os pés
+      maq.updateMatrixWorld(true);
+      // primeira pessoa: nos olhos dela (logo à frente do rosto), lente aberta, olhando para os pés na plataforma
+      const olho = maq.localToWorld(HUM.cabeca().addScaledVector(N, 0.38).addScaledVector(T, 0.16));
+      const alvo = maq.localToWorld(pePlataforma(PE_VISTA).addScaledVector(RP, -0.04));
+      CAMS.olhos.p = olho.toArray();
+      CAMS.olhos.l = alvo.toArray();
     },
   });
 }

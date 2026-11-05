@@ -81,10 +81,10 @@ Para trocar um texto, edite o roteiro e rode `npm run voz`. A duração dos trec
 
 Há dois geradores com a mesma saída (MP3 + tempos de cada palavra):
 
-- `npm run voz` usa o edge-tts (voz Francisca, neural). Precisa de Python, `pip install edge-tts` e ffmpeg. É a voz do supino.
-- `npm run voz:windows` usa a voz Maria que já vem no Windows 10/11 (`ferramentas/voz-windows.ps1`). Não precisa de internet nem de instalar nada. A voz é menos natural que a Francisca. `--voz Daniel` troca para a voz masculina e `--taxa 1.1` acelera.
+- `npm run voz` usa o edge-tts (voz Thalita, neural, 4% mais rápida; a voz e o ritmo ficam em `voz` e `ritmo` de cada roteiro). Precisa de Python, `pip install edge-tts` e ffmpeg. Os 7 roteiros usam essa voz.
+- `npm run voz:windows` usa a voz Maria que já vem no Windows 10/11 (`ferramentas/voz-windows.ps1`). Não precisa de internet nem de instalar nada. A voz é menos natural que a Thalita. `--voz Daniel` troca para a voz masculina e `--taxa 1.1` acelera.
 
-Hoje o supino está com a Francisca e os outros seis roteiros com a Maria do Windows. Para deixar tudo com a mesma voz, rode `npm run voz -- --roteiro <slug>` em cada um (Francisca) ou `npm run voz:windows -- --roteiro supino-reto` (Maria).
+Hoje os sete roteiros estão com voz neural do edge-tts (o leg press com a Thalita, definida no próprio roteiro). O gerador do Windows fica como alternativa sem internet. Depois de mudar uma fala, rode o gerador só para o trecho alterado.
 
 Antes de publicar, rode `npm run checar`: confere se cada palavra que a coreografia espera está na fala da instrutora, se todo trecho tem coreografia e se o roteiro está registrado em todos os lugares, e roda a checagem de tipos.
 
@@ -95,6 +95,9 @@ No modo dev, `__ir("descida", "Desça")` no console pausa o vídeo e pula para a
 ```bash
 node tests/geral.mjs              # prints 375/1280 de cada capítulo e do painel, console, rolagem lateral
 node tests/sincronia.mjs "?sem3d" # legenda × voz
+node tests/analise.mjs            # 2 quadros por trecho dos 6 aparelhos com instrutora (fora o supino)
+node tests/quadros.mjs leg-press-45 pes:0.5 descida:0.8   # quadros de trechos escolhidos (fração do trecho)
+node tests/maos.mjs remada-baixa 1 3                      # close nas duas mãos nos trechos indicados
 ```
 
 Créditos e licenças: [CREDITOS.md](CREDITOS.md).

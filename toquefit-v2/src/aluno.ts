@@ -205,7 +205,8 @@ export function desenharCta(origem: "local" | "sync" = "local") {
     cta.innerHTML = `<button class="btn primary" type="button" id="call">${icone("chamar")} Chamar instrutor</button>`;
     $("call").onclick = async () => {
       // aparece na hora; com sala ao vivo, o servidor confirma em seguida
-      const quem = meuTreinoSalvo()?.aluno.nome;
+      // só o primeiro nome: quem tem o código da sala vê os chamados
+      const quem = meuTreinoSalvo()?.aluno.nome.split(/s+/)[0];
       const novo = { id: salaAtual() ? "tmp-" + Date.now() : S.nextCall++, slug, at: Date.now(), done: false, ...(quem ? { nome: quem } : {}) };
       const tmp = novo.id;
       S.calls.unshift(novo);
@@ -214,7 +215,7 @@ export function desenharCta(origem: "local" | "sync" = "local") {
       document.getElementById("cancelar")?.focus();
       if (!salaAtual()) { toast("Instrutor avisado"); return; }
       try {
-        const doServidor = await criarChamado(slug, meuTreinoSalvo()?.aluno.nome);
+        const doServidor = await criarChamado(slug, quem);
         // o aluno cancelou enquanto o pedido estava no ar: apaga também no servidor
         if (cancelados.delete(String(tmp))) { void cancelarChamado(String(doServidor.id)).catch(() => {}); return; }
         // a consulta da sala pode ter trazido este mesmo chamado antes da resposta: não duplica

@@ -98,7 +98,7 @@ const hojeBR = () => new Date(Date.now() - 3 * 3600e3).toISOString().slice(0, 10
 const diasAtras = (n) => new Date(Date.now() - 3 * 3600e3 - n * 86400e3).toISOString().slice(0, 10);
 
 /** o que o painel vê de cada aluno sem abrir os treinos: datas tiradas só do nome das chaves */
-function resumo(aluno, datas) {
+function resumo(aluno, datas, retorno) {
   const desde7 = diasAtras(6);
   const previstos = new Set(aluno.ficha.treinos.flatMap((t) => t.dias)).size;
   return {
@@ -107,7 +107,7 @@ function resumo(aluno, datas) {
     ultimo: datas[0] || null,
     semana: datas.filter((d) => d >= desde7).length,
     previstos,
-    ultimoRetorno: aluno.ultimoRetorno || null,
+    ultimoRetorno: retorno || null,
   };
 }
 
@@ -138,6 +138,8 @@ export default async (req, context) => {
   const meta = await store.get(cod + "/meta", { type: "json" });
   if (!meta) return erro("Academia não encontrada", 404);
   const chaveAluno = (i) => `${cod}/alunos/${i}`;
+  // o retorno do aluno fica num registro só dele: o celular nunca regrava o cadastro (e não desfaz um link novo)
+  const chaveRetorno = (i) => `${cod}/retorno/${i}`;
   const prefTreinos = (i) => `${cod}/treinos/${i}/`;
   const datasDe = async (i) => (await store.list({ prefix: prefTreinos(i) })).blobs.map((b) => b.key.slice(-10)).sort().reverse();
   const ultimosTreinos = async (i, n = DIAS_HISTORICO) => {
@@ -162,12 +164,9 @@ export default async (req, context) => {
       await store.setJSON(prefTreinos(idA) + data, t);
       // o painel mostra o retorno do último treino sem abrir os registros
       // (e desmarcar "senti dor" também tira o alerta do painel)
-      const antes = aluno.ultimoRetorno;
-      const agora = t.sensacao || t.dor ? { data, sensacao: t.sensacao, dor: t.dor } : antes?.data === data ? null : antes;
-      if (JSON.stringify(antes ?? null) !== JSON.stringify(agora ?? null)) {
-        aluno.ultimoRetorno = agora;
-        await store.setJSON(chaveAluno(idA), aluno);
-      }
+      const antes = await store.get(chaveRetorno(idA), { type: "json" });
+      if (t.sensacao || t.dor) await store.setJSON(chaveRetorno(idA), { data, sensacao: t.sensacao, dor: t.dor });
+      else if (antes?.data === data) await store.delete(chaveRetorno(idA));
       return json({ treino: t });
     }
     return erro("Método não suportado", 405);
@@ -181,7 +180,7 @@ export default async (req, context) => {
     if (req.method !== "GET") return erro("Método não suportado", 405);
     const { blobs } = await store.list({ prefix: cod + "/alunos/" });
     const alunos = (await Promise.all(blobs.map((b) => store.get(b.key, { type: "json" })))).filter(Boolean);
-    const resumos = await Promise.all(alunos.map(async (a) => resumo(a, await datasDe(a.id))));
+    const resumos = await Promise.all(alunos.map(async (a) => resumo(a, await datasDe(a.id), await store.get(chaveRetorno(a.id), { type: "json" }))));
     resumos.sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"));
     return json({ academia: { cod, nome: meta.nome }, alunos: resumos, hoje: hojeBR() });
   }
@@ -231,6 +230,7 @@ export default async (req, context) => {
   if (req.method === "DELETE") {
     const { blobs } = await store.list({ prefix: prefTreinos(id) });
     await Promise.all(blobs.map((b) => store.delete(b.key)));
+    await store.delete(chaveRetorno(id));
     await store.delete(chaveAluno(id));
     return vazio();
   }

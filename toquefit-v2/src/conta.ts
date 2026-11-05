@@ -23,6 +23,8 @@ const gravar = (k: string, v: unknown) => { try { v == null ? localStorage.remov
 
 /* ---------- link pessoal: #acesso=COD-ID-TOKEN ---------- */
 // depois do # de propósito: essa parte do endereço nunca sai do celular (não vai para o servidor nem para logs)
+const meuTreinoSalvoDe = (id?: string) => { const m = ler<{ aluno: { id: string; nome: string } }>(K_FICHA); return m && m.aluno.id === id ? m : null; };
+
 /** lê o link de acesso do aluno, se o endereço for um; true quando trocou de aluno */
 export function lerLinkDeAcesso() {
   const m = location.hash.match(/^#acesso=([A-Za-z0-9]{6})-([a-f0-9]{12})-([a-f0-9]{32})$/);
@@ -30,8 +32,15 @@ export function lerLinkDeAcesso() {
   if (m) {
     const [, a, u, t] = m;
     const antes = ler<SessaoAluno>(K_ALUNO);
-    if (antes?.id !== u) { gravar(K_FICHA, null); gravar(K_DIA, null); }
-    gravar(K_ALUNO, { cod: a.toUpperCase(), id: u, token: t });
+    // link de outra pessoa não troca a ficha deste celular sem o aluno confirmar
+    const nome = meuTreinoSalvoDe(antes?.id)?.aluno.nome;
+    const trocar = !antes || antes.id === u || confirm(`Este celular está com a ficha de ${nome || "outro aluno"}. Trocar para a ficha deste link?`);
+    if (trocar) {
+      if (antes?.id !== u) { gravar(K_FICHA, null); gravar(K_DIA, null); }
+      gravar(K_ALUNO, { cod: a.toUpperCase(), id: u, token: t });
+    }
+    history.replaceState(null, "", location.pathname + location.search + "#treino");
+    return trocar;
   }
   // o token também não fica no endereço: some do histórico e de um print da tela
   history.replaceState(null, "", location.pathname + location.search + "#treino");

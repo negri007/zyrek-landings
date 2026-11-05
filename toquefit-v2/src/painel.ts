@@ -1,12 +1,13 @@
 // Painel da academia: tudo o que o aluno faz no celular aparece aqui.
 import { animate, stagger } from "motion";
 import { DAILY, S, blobs, bySlug, restaurar, save } from "./estado";
-import { DADOS } from "./data/carregar";
 import { esquecerAtual } from "./aluno";
 import { $, RM, ago, contar, esc, fmt, toast } from "./ui/util";
 import { animarBarraCarregada, barraCarregada } from "./ui/academia";
 import { icone } from "./ui/icones";
 import { linkDaTag, qrSvg } from "./ui/qr";
+import { instrutor, nomeAcademia } from "./conta";
+import { renderAlunos } from "./alunos";
 import { atendendo, atenderChamado, atualizarSalaJa, criarSala, linkDaSala, sairDaSala, salaAtual } from "./sala";
 
 const TOQUES_POR_ANILHA = 10;
@@ -43,16 +44,19 @@ function renderAoVivo() {
     return;
   }
   const link = linkDaSala(sala, S.machines[0].slug);
+  const daAcademia = instrutor()?.cod === sala; // sala fixa da área do aluno: não se encerra
   el.innerHTML = `<div class="av-qr">${qrSvg(link, "QR Code da sala " + sala)}</div>
     <div class="av-t"><b>Sala ao vivo <code class="av-cod">${sala}</code></b>
-      <span>Aponte a câmera do celular para o QR Code e toque em "Chamar instrutor" em qualquer aparelho.</span>
+      <span>${daAcademia ? "Alunos conectados já entram nesta sala. Para testar sem login, aponte a câmera para o QR Code e toque em \"Chamar instrutor\"." : "Aponte a câmera do celular para o QR Code e toque em \"Chamar instrutor\" em qualquer aparelho."}</span>
       <span class="av-st" aria-live="polite">${textoConexao()}</span></div>
-    <button class="btn sm" type="button" id="av-sair">Encerrar sala</button>`;
+    ${daAcademia ? "" : `<button class="btn sm" type="button" id="av-sair">Encerrar sala</button>`}`;
+  if (daAcademia) return;
   $("av-sair").onclick = () => { sairDaSala(); window.dispatchEvent(new Event("tf-sala")); };
 }
 
 export function renderPainel(animar: boolean) {
   renderAoVivo();
+  renderAlunos(animar);
   const today = DAILY[13] + S.extra;
   const week = DAILY.slice(7, 13).reduce((a, b) => a + b, 0) + today;
   const prevWeek = DAILY.slice(0, 7).reduce((a, b) => a + b, 0);
@@ -102,7 +106,7 @@ export function renderPainel(animar: boolean) {
     ? espera.map((c) => {
       const m = bySlug(c.slug);
       const atraso = Date.now() - c.at > 5 * 60e3;
-      return `<li class="wait${atraso ? " atraso" : ""}" data-id="${c.id}"><div><b>${esc(m ? m.name : "Aparelho removido")}</b><small>${m ? esc(m.tag) + " · " : ""}chamou ${ago(c.at)}${atraso ? " · esperando faz tempo" : ""}</small></div><button class="btn sm primary" type="button" data-done="${c.id}" aria-label="Marcar chamado do ${esc(m ? m.name : "aparelho")} como atendido">Atendido</button></li>`;
+      return `<li class="wait${atraso ? " atraso" : ""}" data-id="${c.id}"><div><b>${c.nome ? `${esc(c.nome)} · ` : ""}${esc(m ? m.name : "Aparelho removido")}</b><small>${m ? esc(m.tag) + " · " : ""}chamou ${ago(c.at)}${atraso ? " · esperando faz tempo" : ""}</small></div><button class="btn sm primary" type="button" data-done="${c.id}" aria-label="Marcar chamado do ${esc(m ? m.name : "aparelho")} como atendido">Atendido</button></li>`;
     }).join("")
     : `<li class="empty-s">${icone("check", "ok-ic")}Ninguém esperando agora. Quando um aluno tocar em "Chamar instrutor", ele aparece aqui.</li>`)
     + (atendidos.length ? `<li class="hist">${atendidos.length} ${atendidos.length > 1 ? "chamados atendidos" : "chamado atendido"} · último ${ago(Math.max(...atendidos.map((c) => c.at)))}</li>` : "");
@@ -189,7 +193,7 @@ export function imprimirEtiquetas(slugs: string[]) {
       <b class="etq-n">${esc(m.name)}</b>
       ${qrSvg(linkDaTag(m.slug), "QR Code do " + esc(m.name))}
       <p class="etq-p">Encoste o celular aqui ou aponte a câmera para ver como usar o aparelho</p>
-      <small class="etq-a">${esc(DADOS.academia)}</small></div>`).join("");
+      <small class="etq-a">${esc(nomeAcademia())}</small></div>`).join("");
   document.body.classList.add("imprimindo");
   const fim = () => { document.body.classList.remove("imprimindo"); window.removeEventListener("afterprint", fim); };
   window.addEventListener("afterprint", fim);

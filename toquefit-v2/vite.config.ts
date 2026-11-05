@@ -22,18 +22,34 @@ function funcoesLocais(): Plugin {
       (globalThis as { netlifyBlobsContext?: string }).netlifyBlobsContext =
         Buffer.from(JSON.stringify({ edgeURL: url, uncachedEdgeURL: url, token: "dev", siteID: "dev" })).toString("base64");
       server.httpServer?.once("close", () => void blobs.stop());
-      const arquivo = pathToFileURL(join(server.config.root, "netlify", "functions", "chamados.mjs")).href;
+      const funcoes = ["chamados.mjs", "academias.mjs"].map((f) => pathToFileURL(join(server.config.root, "netlify", "functions", f)).href);
+      /** "/api/salas/:sala/chamados" vira uma regex que devolve { sala } */
+      const casar = (padrao: string, caminho: string) => {
+        const nomes: string[] = [];
+        const re = new RegExp("^" + padrao.replace(/:(\w+)/g, (_, n) => { nomes.push(n); return "([^/]+)"; }) + "$");
+        const m = caminho.match(re);
+        return m ? Object.fromEntries(nomes.map((n, i) => [n, decodeURIComponent(m[i + 1])])) : null;
+      };
       server.middlewares.use(async (req, res, next) => {
-        const m = req.url?.match(/^\/api\/salas\/([^/?]+)\/chamados(?:\/([^/?]+))?/);
-        if (!m) return next();
+        const caminho = (req.url || "").split("?")[0];
+        if (!caminho.startsWith("/api/")) return next();
         try {
           // recarrega a cada pedido: editar a função vale sem reiniciar o servidor
-          const fn = (await import(arquivo + "?t=" + Date.now())).default;
+          let achou: { fn: (r: Request, c: unknown) => Promise<Response>; params: Record<string, string> } | null = null;
+          for (const f of funcoes) {
+            const mod = await import(f + "?t=" + Date.now());
+            for (const p of mod.config.path as string[]) {
+              const params = casar(p, caminho);
+              if (params) { achou = { fn: mod.default, params }; break; }
+            }
+            if (achou) break;
+          }
+          if (!achou) return next();
           const partes: Buffer[] = [];
           for await (const p of req) partes.push(p as Buffer);
           const corpo = partes.length ? Buffer.concat(partes) : undefined;
-          const r: Response = await fn(new Request("http://localhost" + req.url, { method: req.method, headers: req.headers as Record<string, string>, body: corpo }),
-            { params: { sala: decodeURIComponent(m[1]), ...(m[2] ? { id: decodeURIComponent(m[2]) } : {}) } });
+          const r: Response = await achou.fn(new Request("http://localhost" + req.url, { method: req.method, headers: req.headers as Record<string, string>, body: corpo }),
+            { params: achou.params });
           res.statusCode = r.status;
           r.headers.forEach((v, k) => res.setHeader(k, v));
           res.end(Buffer.from(await r.arrayBuffer()));

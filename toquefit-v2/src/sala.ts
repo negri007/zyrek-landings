@@ -42,6 +42,13 @@ export function criarSala() {
   return atual;
 }
 
+/** a academia com área do aluno usa o próprio código como sala: aluno conectado e painel se acham sozinhos */
+export function entrarNaSala(cod: string) {
+  if (!FORMATO.test(cod)) return;
+  atual = cod;
+  guardar(cod); // renova a validade a cada visita
+}
+
 export function sairDaSala() {
   atual = null;
   guardar(null);
@@ -53,7 +60,7 @@ export function sairDaSala() {
 /** Link que o QR Code do painel abre no celular. */
 export const linkDaSala = (sala: string, slug: string) => `${location.origin}${location.pathname}?sala=${sala}#m-${slug}`;
 
-// a função fica na raiz do domínio (netlify/functions/chamados.mts)
+// a função fica na raiz do domínio (netlify/functions/chamados.mjs)
 const base = () => `/api/salas/${atual}/chamados`;
 
 async function pedir<T>(url: string, init?: RequestInit): Promise<T> {
@@ -66,15 +73,15 @@ async function pedir<T>(url: string, init?: RequestInit): Promise<T> {
 }
 
 /** o que o servidor devolve (com doneAt) vira o chamado que a interface usa */
-interface ChamadoServidor { id: string; slug: string; at: number; done: boolean; doneAt?: number }
-const doServidor = (c: ChamadoServidor): Chamado => ({ id: c.id, slug: c.slug, at: c.at, done: c.done });
+interface ChamadoServidor { id: string; slug: string; at: number; done: boolean; doneAt?: number; nome?: string }
+const doServidor = (c: ChamadoServidor): Chamado => ({ id: c.id, slug: c.slug, at: c.at, done: c.done, ...(c.nome ? { nome: c.nome } : {}) });
 
 export async function listarChamados() {
   const r = await pedir<{ chamados: ChamadoServidor[] }>(base());
   return r.chamados.map(doServidor);
 }
-export async function criarChamado(slug: string) {
-  const r = await pedir<{ chamado: ChamadoServidor }>(base(), { method: "POST", body: JSON.stringify({ slug }) });
+export async function criarChamado(slug: string, nome?: string) {
+  const r = await pedir<{ chamado: ChamadoServidor }>(base(), { method: "POST", body: JSON.stringify({ slug, nome }) });
   return doServidor(r.chamado);
 }
 export const atenderChamado = (id: string) => pedir<unknown>(`${base()}/${id}`, { method: "PATCH" });

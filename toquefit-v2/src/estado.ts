@@ -7,7 +7,7 @@ export interface Maquina extends Aparelho {
   videoName: string;
 }
 /** id é número nos chamados de exemplo e texto nos que vêm da sala ao vivo */
-export interface Chamado { id: number | string; slug: string; at: number; done: boolean }
+export interface Chamado { id: number | string; slug: string; at: number; done: boolean; /** aluno conectado que chamou */ nome?: string }
 export interface Estado {
   machines: Maquina[];
   extra: number; // toques feitos hoje nesta demonstração

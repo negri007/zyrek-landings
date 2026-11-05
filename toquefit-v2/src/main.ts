@@ -3,10 +3,13 @@ import "@fontsource-variable/figtree";
 import "@fontsource-variable/jetbrains-mono";
 import "./styles/app.css";
 import "./styles/telas.css";
-import { DADOS } from "./data/carregar";
+import "./styles/fichas.css";
 import { CHAVE, S, bySlug, fresh, recarregar, save } from "./estado";
-import { atendendo, salaAtual, sincronizarSala } from "./sala";
-import { desenharCta, pararAluno, renderAluno, slugAtual } from "./aluno";
+import { atendendo, entrarNaSala, sairDaSala, salaAtual, sincronizarSala } from "./sala";
+import { desenharCta, esquecerAtual, pararAluno, renderAluno, renderLista, slugAtual } from "./aluno";
+import { aluno, instrutor, lerLinkDeAcesso, nomeAcademia } from "./conta";
+import { editorEstaAberto, montarEditor, vigiarAlunos } from "./alunos";
+import { renderMeuTreino } from "./meutreino";
 import { ligarGaveta, renderPainel, fecharGaveta } from "./painel";
 import { icone } from "./ui/icones";
 import { animate } from "motion";
@@ -49,6 +52,7 @@ $("app").innerHTML = `
         <a class="btn sm so-m" href="#painel">Ver o painel da academia</a>
         <p class="hide-m">O aluno aproxima o celular da tag NFC do aparelho e o vídeo abre tocando, sem app e sem precisar rolar a tela. Escolha um aparelho para simular.</p>
       </div>
+      <a class="meu-link" id="meu-link" href="#treino" hidden><b>Meu treino</b><span>A ficha que o instrutor montou para este aluno</span></a>
       <p class="treino-hoje" id="treino-hoje" aria-live="polite" hidden></p>
       <div class="mlist" id="mlist" role="group" aria-label="Aparelhos com tag"></div>
       <div class="linkbox hide-m"><span>Link gravado nesta tag termina em</span><code id="taglink">#m-supino-reto</code></div>
@@ -58,7 +62,7 @@ $("app").innerHTML = `
   <section id="view-painel" class="painel" hidden aria-labelledby="painel-t">
     <div class="ph">
       <div>
-        <h1 id="painel-t">${esc(DADOS.academia)}</h1>
+        <h1 id="painel-t">${esc(nomeAcademia())}</h1>
         <p class="ph-sub" id="ph-sub"></p>
       </div>
       <div class="acts">
@@ -79,6 +83,7 @@ $("app").innerHTML = `
         <ul class="calls pend" id="pend"></ul>
       </div>
     </section>
+    <section class="card alunos" id="alunos" aria-label="Alunos e fichas"></section>
     <div class="kpis" id="kpis"></div>
     <div class="card chart"><div class="card-h"><h2>Toques por dia</h2><span>Últimos 14 dias</span></div><div id="chart"></div></div>
     <div class="card aparelhos"><div class="card-h"><h2>Aparelhos</h2><span id="mcount"></span></div>
@@ -113,6 +118,7 @@ $("app").innerHTML = `
 <div class="toast" id="toast" role="status" aria-live="polite"></div>`;
 
 ligarGaveta();
+montarEditor();
 
 /* ---------- Rotas por hash: #m-<aparelho> e #painel ---------- */
 let visao: "aluno" | "painel" | null = null;
@@ -134,10 +140,17 @@ function mostrar(v: "aluno" | "painel") {
   if (visao !== v) { if (!emTransicao) entrar(v === "aluno" ? a : p.querySelector(".ph")!); visao = v; }
   $("tab-aluno").setAttribute("aria-current", v === "aluno" ? "page" : "false");
   $("tab-painel").setAttribute("aria-current", v === "painel" ? "page" : "false");
-  $<HTMLAnchorElement>("tab-aluno").href = "#m-" + (slugAtual() || S.machines[0].slug);
+  $<HTMLAnchorElement>("tab-aluno").href = aluno() && !slugAtual() ? "#treino" : "#m-" + (slugAtual() || S.machines[0].slug);
+  $("meu-link").hidden = !aluno();
+  // com a área do aluno ativa, alunos e fichas são reais; só gráficos e toques continuam de exemplo
+  document.querySelector(".credit")!.textContent = instrutor() ? "Gráficos de exemplo" : "Dados de exemplo";
+  $("meu-link").setAttribute("aria-current", String(location.hash === "#treino"));
+  vigiarAlunos(v === "painel");
 }
 
 function rota() {
+  // link pessoal aberto com a página já aberta (só o # muda, sem recarregar)
+  if (location.hash.startsWith("#acesso=")) { lerLinkDeAcesso(); window.dispatchEvent(new Event("tf-aluno")); return; }
   // trocar de aparelho só mexe no conteúdo do celular; trocar de visão mexe na tela toda
   const vai = location.hash === "#painel" ? "painel" : "aluno";
   document.documentElement.classList.toggle("vt-aparelho", vai === visao);
@@ -150,6 +163,16 @@ function trocarTela() {
     pararAluno();
     mostrar("painel");
     renderPainel(true);
+    return;
+  }
+  if (h === "treino") {
+    // a ficha do aluno abre dentro do mesmo celular, no lugar da página do aparelho
+    pararAluno();
+    esquecerAtual();
+    mostrar("aluno");
+    document.title = "Meu treino · ToqueFit";
+    renderMeuTreino();
+    renderLista(""); // no computador, a lista ao lado simula encostar na tag de um aparelho
     return;
   }
   let slug = h.startsWith("m-") ? h.slice(2) : null;
@@ -167,7 +190,7 @@ const pendentes = () => S.calls.filter((c) => !c.done).length;
 function chamadosMudaram(antes: number) {
   const pend = pendentes();
   if (visao === "painel") {
-    if (!document.getElementById("drawer")!.hidden) return; // não mexe no painel com a gaveta aberta
+    if (!document.getElementById("drawer")!.hidden || editorEstaAberto()) return; // não mexe no painel com uma gaveta aberta
     renderPainel(false);
     if (pend > antes) {
       toast("Novo chamado: aluno esperando instrutor");
@@ -205,7 +228,7 @@ function ligarSala() {
     chamadosMudaram(antes);
   }, (estado) => {
     document.documentElement.dataset.conexao = estado;
-    if (visao === "painel" && document.getElementById("drawer")!.hidden) renderPainel(false);
+    if (visao === "painel" && document.getElementById("drawer")!.hidden && !editorEstaAberto()) renderPainel(false);
     else if (visao === "aluno") desenharCta();
   });
 }
@@ -216,6 +239,22 @@ window.addEventListener("tf-sala", () => {
   if (visao === "painel") renderPainel(false);
   else desenharCta();
 });
+/* academia com área do aluno: o código dela é a sala; o aluno conectado entra nela sozinho */
+let codConta: string | null = null;
+function salaDaConta() {
+  const c = aluno()?.cod || instrutor()?.cod || null;
+  // desconectou: sai da sala que era da academia (uma sala de teste aberta à mão continua)
+  if (codConta && codConta !== c && salaAtual() === codConta) sairDaSala();
+  if (c) entrarNaSala(c);
+  codConta = c;
+}
+for (const ev of ["tf-academia", "tf-aluno"]) window.addEventListener(ev, () => {
+  salaDaConta();
+  $("painel-t").textContent = nomeAcademia();
+  window.dispatchEvent(new Event("tf-sala"));
+  rota();
+});
+salaDaConta();
 ligarSala();
 
 /* depois da primeira visita, a página e a instrutora abrem mesmo com o Wi-Fi da academia fraco */

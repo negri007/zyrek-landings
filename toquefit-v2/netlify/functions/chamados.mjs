@@ -4,12 +4,12 @@
 // Em JavaScript (.mjs) de propósito: o empacotador da Netlify lê .mts com um parser que não roda com o TypeScript 7 do projeto.
 //
 //   GET    /api/salas/:sala/chamados          lista os chamados da sala
-//   POST   /api/salas/:sala/chamados          { slug } cria um chamado
+//   POST   /api/salas/:sala/chamados          { slug, nome? } cria um chamado
 //   PATCH  /api/salas/:sala/chamados/:id      marca como atendido
 //   DELETE /api/salas/:sala/chamados/:id      cancela (o aluno chamou sem querer)
 import { getStore } from "@netlify/blobs";
 
-/** @typedef {{ id: string, slug: string, at: number, done: boolean, doneAt?: number }} Chamado */
+/** @typedef {{ id: string, slug: string, at: number, done: boolean, doneAt?: number, nome?: string }} Chamado */
 
 const SALA = /^[A-Z0-9]{6}$/;
 const SLUG = /^[a-z0-9-]{1,48}$/;
@@ -53,6 +53,9 @@ export default async (req, context) => {
       if (blobs.length >= MAX_POR_SALA) return json({ erro: "Sala cheia: atenda ou encerre alguns chamados" }, 429);
       /** @type {Chamado} */
       const c = { id: novoId(), slug, at: Date.now(), done: false };
+      // aluno conectado à área do aluno: o painel mostra quem chamou
+      const nome = typeof body?.nome === "string" ? body.nome.replace(/[\u0000-\u001f]/g, " ").trim().slice(0, 40) : "";
+      if (nome) c.nome = nome;
       await store.setJSON(prefixo + c.id, c, { onlyIfNew: true });
       return json({ chamado: c }, 201);
     }
@@ -78,6 +81,7 @@ export default async (req, context) => {
 export const config = {
   path: ["/api/salas/:sala/chamados", "/api/salas/:sala/chamados/:id"],
   method: ["GET", "POST", "PATCH", "DELETE"],
-  // painel e celular consultam a cada 4 s; isto deixa folga e barra quem tentar encher a sala
-  rateLimit: { action: "rate_limit", aggregateBy: ["ip", "domain"], windowSize: 60, windowLimit: 120 },
+  // painel e cada celular consultam a cada 4 s (15 por minuto). No Wi-Fi da academia todos saem pelo mesmo IP,
+  // então o limite cobre uns 20 aparelhos juntos e ainda barra quem tentar encher a sala
+  rateLimit: { action: "rate_limit", aggregateBy: ["ip", "domain"], windowSize: 60, windowLimit: 400 },
 };

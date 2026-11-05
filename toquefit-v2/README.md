@@ -28,10 +28,36 @@ npm run build    # site estático em dist/
 
 No painel, "Conectar celular" cria uma sala de 6 letras e mostra um QR Code. O celular que abre esse link (`?sala=CODIGO`) manda o "Chamar instrutor" para o servidor, e o painel, em outro aparelho, vê o chamado em até 4 segundos e pode atender. O aluno é avisado quando o chamado é atendido.
 
-- Servidor: `netlify/functions/chamados.mjs` (Netlify Functions + Netlify Blobs). Um registro por chamado, que some depois de 12 h; até 40 chamados por sala; 120 pedidos por minuto por IP. Fica em JavaScript porque o empacotador da Netlify não lê `.mts` com o TypeScript 7 do projeto.
+- Servidor: `netlify/functions/chamados.mjs` (Netlify Functions + Netlify Blobs). Um registro por chamado, que some depois de 12 h; até 40 chamados por sala; 400 pedidos por minuto por IP (no Wi-Fi da academia todos os celulares saem pelo mesmo IP). Fica em JavaScript porque o empacotador da Netlify não lê `.mts` com o TypeScript 7 do projeto.
 - No `npm run dev` a mesma função roda pelo `vite.config.ts`, com um Blobs local em `.netlify/blobs-dev`. Não precisa da Netlify CLI.
 - `npm run testar:api` testa a função (criar, listar, atender, cancelar, entradas inválidas e sala cheia).
 - Sem sala, ou sem internet, tudo continua funcionando só no navegador. Sem conexão, o aluno vê que o instrutor não foi avisado.
+
+## Área do aluno (ficha semanal no celular)
+
+No painel, "Ativar área do aluno" cria a academia no servidor e guarda neste navegador o **código** (6 letras) e a **chave do instrutor**. Para abrir o mesmo painel em outro computador: "Abrir em outro computador" mostra os dois, e "Já tenho a chave" entra com eles.
+
+1. **Novo aluno**: nome, um modelo de ficha (iniciante, ABC, AB, circuito) e os ajustes: exercício, séries, repetições, carga, descanso, observação e os dias de cada treino. A ficha tem validade.
+2. **Cadastrar e gerar link**: QR Code, "Enviar pelo WhatsApp" e "Copiar link". O link (`#acesso=COD-ID-TOKEN`) abre uma vez e o celular fica conectado. O token vem depois do `#`, então não chega ao servidor nem aos logs, e some do endereço assim que é lido.
+3. No celular, **Meu treino** mostra o treino do dia (pelo dia da semana ou o seguinte ao último feito), a carga da última vez, e o aluno marca cada exercício, anota a carga e diz como foi (leve, na medida, pesado, senti dor). Sem internet, guarda no celular e envia quando voltar.
+4. **Encostar na tag** com o celular conectado: a página do aparelho mostra o exercício da ficha dele ali (séries, carga, última vez, marcar feito) e o contador de séries segue a ficha. O "Chamar instrutor" chega ao painel com o nome do aluno: o código da academia vira a sala ao vivo.
+5. O painel mostra quem treinou na semana, fichas vencendo, quem sumiu há 7 dias e quem sentiu dor, e a ficha de cada aluno traz os treinos feitos e a evolução de carga.
+
+- Servidor: `netlify/functions/academias.mjs` (Netlify Blobs: um registro por aluno e um por dia de treino). O servidor guarda só o hash da chave e dos tokens. "Gerar link novo" invalida o anterior; "Apagar aluno" apaga a ficha e todos os treinos.
+- Só o nome do aluno: sem CPF, telefone ou anamnese (dados de saúde são sensíveis pela LGPD). O "senti dor" é só um aviso para o instrutor conversar.
+- `npm run testar:api` também testa esta função (acesso, isolamento entre academias, limpeza das entradas, link novo, apagar).
+- Para a versão comercial com várias academias e login por e-mail ou WhatsApp, o próximo passo é um banco com login (ex.: Supabase).
+
+## Gravar as tags NFC
+
+Cada tag guarda o link do aparelho: `https://toquefit-demo.netlify.app/#m-<aparelho>` (o painel mostra o link e o QR na gaveta de cada aparelho, e "Imprimir etiquetas" gera a folha com os QR Codes).
+
+1. Instale o app **NFC Tools** (Android ou iPhone).
+2. Gravar → Adicionar registro → **URL / URI** → cole o link do aparelho (ex.: `https://toquefit-demo.netlify.app/#m-leg-press-45`).
+3. Gravar e encoste a tag nas costas do celular. Teste lendo a tag com a tela desbloqueada.
+4. Cole a tag num ponto do aparelho onde o aluno alcança o celular, e a etiqueta com o QR ao lado (para quem tem NFC desligado ou iPhone antigo).
+
+Aparelhos da demonstração: `supino-reto`, `leg-press-45`, `puxada-frontal`, `cadeira-extensora`, `remada-baixa`, `cadeira-flexora`, `desenvolvimento`, `crossover`.
 
 ## Novo aparelho com instrutora
 

@@ -11,7 +11,7 @@
     "voz:windows": "node ferramentas/gerar_voz_windows.mjs",
     "modelo": "gltf-transform optimize assets/michelle.glb public/models/michelle.glb --compress meshopt --texture-compress webp --texture-size 1024 --simplify false",
     "checar": "node ferramentas/checar-roteiros.mjs && tsc --noEmit",
-    "testar:api": "node ferramentas/testar-chamados.mjs"
+    "testar:api": "node ferramentas/testar-chamados.mjs && node ferramentas/testar-academias.mjs"
   },
   "dependencies": {
     "@fontsource-variable/archivo": "^5.3.0",

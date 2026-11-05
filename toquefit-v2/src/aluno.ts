@@ -1,6 +1,8 @@
 // Visão do aluno: o celular que abre ao encostar na tag NFC do aparelho.
 import { animate, inView } from "motion";
 import { DADOS, carregarRoteiro } from "./data/carregar";
+import { aluno, meuTreinoSalvo, nomeAcademia } from "./conta";
+import { cartaoDaFicha, ligarCartaoDaFicha, prescricao } from "./meutreino";
 import { S, blobs, bySlug, contarTreino, save, type Maquina } from "./estado";
 import { criarPlayer } from "./player/player";
 import { montarLinha } from "./player/timeline";
@@ -38,16 +40,19 @@ function estimado(s: string, dur: number) {
 }
 
 export async function renderAluno(slug: string, contarToque: boolean) {
-  const m = bySlug(slug)!;
+  const base = bySlug(slug)!;
+  // aluno conectado: séries e descanso da ficha dele valem no lugar da sugestão do aparelho
+  const p = prescricao(slug);
+  const m: Maquina = p ? { ...base, sets: p.sets, rest: p.rest || base.rest } : base;
   const g = ++geracao;
-  if (contarToque && slug !== atual) { m.t7++; S.extra++; save(); }
+  if (contarToque && slug !== atual) { base.t7++; S.extra++; save(); }
   atual = slug;
   pararAluno();
   const blob = blobs[slug];
   const temRoteiro = !!m.roteiro && m.video && !blob;
   const sc = $("p-scroll");
   sc.innerHTML = `
-    <div class="p-head"><span class="gym">${esc(DADOS.academia)}</span><span class="p-head-r">${salaAtual() ? `<span class="ao-vivo-chip" title="Ligado ao painel da sala ${esc(salaAtual()!)}"><i aria-hidden="true"></i><span class="av-wait">Conectando</span><span class="av-ok">Ao vivo</span><span class="av-off">Sem conexão</span></span>` : ""}<span class="tagcode">${esc(m.tag)}</span></span></div>
+    <div class="p-head"><span class="gym">${esc(nomeAcademia())}</span><span class="p-head-r">${aluno() ? `<a class="p-meu" href="#treino">Meu treino</a>` : ""}${salaAtual() ? `<span class="ao-vivo-chip" title="Ligado ao painel da sala ${esc(salaAtual()!)}"><i aria-hidden="true"></i><span class="av-wait">Conectando</span><span class="av-ok">Ao vivo</span><span class="av-off">Sem conexão</span></span>` : ""}<span class="tagcode">${esc(m.tag)}</span></span></div>
     ${!m.video
       ? `<div class="player vazio"><div>${icone("nfc", "vazio-ic")}<b>Vídeo em gravação</b><p>A academia ainda está gravando este aparelho. Siga o passo a passo ou chame um instrutor.</p></div></div>`
       : blob
@@ -55,12 +60,13 @@ export async function renderAluno(slug: string, contarToque: boolean) {
         : `<div id="player"></div>`}
     ${temRoteiro ? `<div class="chapters" id="chapters" role="group" aria-label="Capítulos"></div>` : ""}
     <div class="m-title"><h1>${esc(m.name)}</h1><span class="chip">${esc(m.group)}</span></div>
+    ${cartaoDaFicha(slug)}
     ${m.video && !blob ? `<p class="note">${temRoteiro ? "Demonstração com instrutora 3D. Na versão real toca o vídeo gravado pela academia." : "Prévia da demonstração. Na versão real toca o vídeo gravado pela academia."}</p>` : ""}
     ${cartoes(m)}
     <section class="sec"><h2>Passo a passo</h2><ol class="steps" id="steps">${m.steps.map((s) => `<li><span>${esc(s)}</span></li>`).join("")}</ol></section>
     ${m.errs?.length ? `<section class="sec"><h2>Evite</h2><ul class="errs">${m.errs.map((e) => `<li>${esc(e)}</li>`).join("")}</ul></section>` : ""}
     <section class="sec" id="fbsec"><h2>Esse vídeo te ajudou?</h2><div class="fb"><button class="btn" type="button" data-fb="yes">Ajudou</button><button class="btn" type="button" data-fb="no">Não ajudou</button></div></section>
-    <p class="p-foot">${esc(DADOS.academia)} · com tecnologia ToqueFit</p>`;
+    <p class="p-foot">${esc(nomeAcademia())} · com tecnologia ToqueFit</p>`;
   tinhaChamado = false;
   desenharCta();
   sc.scrollTop = 0;
@@ -89,6 +95,7 @@ export async function renderAluno(slug: string, contarToque: boolean) {
     }));
     (fb.querySelector("[data-mot]") as HTMLElement).focus();
   }));
+  ligarCartaoDaFicha(slug, () => { if (atual === slug) void renderAluno(slug, false); });
   $("taglink").textContent = "#m-" + slug;
   renderLista(slug);
 
@@ -198,7 +205,8 @@ export function desenharCta(origem: "local" | "sync" = "local") {
     cta.innerHTML = `<button class="btn primary" type="button" id="call">${icone("chamar")} Chamar instrutor</button>`;
     $("call").onclick = async () => {
       // aparece na hora; com sala ao vivo, o servidor confirma em seguida
-      const novo = { id: salaAtual() ? "tmp-" + Date.now() : S.nextCall++, slug, at: Date.now(), done: false };
+      const quem = meuTreinoSalvo()?.aluno.nome;
+      const novo = { id: salaAtual() ? "tmp-" + Date.now() : S.nextCall++, slug, at: Date.now(), done: false, ...(quem ? { nome: quem } : {}) };
       const tmp = novo.id;
       S.calls.unshift(novo);
       save();
@@ -206,7 +214,7 @@ export function desenharCta(origem: "local" | "sync" = "local") {
       document.getElementById("cancelar")?.focus();
       if (!salaAtual()) { toast("Instrutor avisado"); return; }
       try {
-        const doServidor = await criarChamado(slug);
+        const doServidor = await criarChamado(slug, meuTreinoSalvo()?.aluno.nome);
         // o aluno cancelou enquanto o pedido estava no ar: apaga também no servidor
         if (cancelados.delete(String(tmp))) { void cancelarChamado(String(doServidor.id)).catch(() => {}); return; }
         // a consulta da sala pode ter trazido este mesmo chamado antes da resposta: não duplica
@@ -273,7 +281,7 @@ function resumoHoje() {
 
 const jaFeitos = new Set<string>();
 let listaPronta = false;
-function renderLista(slug: string) {
+export function renderLista(slug: string) {
   resumoHoje();
   const ml = $("mlist");
   ml.innerHTML = S.machines.map((m) => `<button class="mbtn${feitoHoje(m.slug) ? " feito" : ""}" type="button" data-go="${m.slug}" aria-current="${m.slug === slug}">

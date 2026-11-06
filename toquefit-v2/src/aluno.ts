@@ -3,6 +3,7 @@ import { animate, inView } from "motion";
 import { DADOS, carregarRoteiro } from "./data/carregar";
 import { aluno, meuTreinoSalvo, nomeAcademia } from "./conta";
 import { cartaoDaFicha, ligarCartaoDaFicha, prescricao, slugsDeHoje } from "./meutreino";
+import { avisoHtml, ligarAviso } from "./problemas";
 import { S, blobs, bySlug, contarTreino, save, type Maquina } from "./estado";
 import { criarPlayer } from "./player/player";
 import { montarLinha } from "./player/timeline";
@@ -66,6 +67,7 @@ export async function renderAluno(slug: string, contarToque: boolean) {
     <section class="sec"><h2>Passo a passo</h2><ol class="steps" id="steps">${m.steps.map((s) => `<li><span>${esc(s)}</span></li>`).join("")}</ol></section>
     ${m.errs?.length ? `<section class="sec"><h2>Evite</h2><ul class="errs">${m.errs.map((e) => `<li>${esc(e)}</li>`).join("")}</ul></section>` : ""}
     <section class="sec" id="fbsec"><h2>Esse vídeo te ajudou?</h2><div class="fb"><button class="btn" type="button" data-fb="yes">Ajudou</button><button class="btn" type="button" data-fb="no">Não ajudou</button></div></section>
+    ${avisoHtml()}
     <p class="p-foot">${esc(nomeAcademia())} · com tecnologia ToqueFit</p>`;
   tinhaChamado = false;
   desenharCta();
@@ -95,6 +97,7 @@ export async function renderAluno(slug: string, contarToque: boolean) {
     }));
     (fb.querySelector("[data-mot]") as HTMLElement).focus();
   }));
+  ligarAviso(slug);
   ligarCartaoDaFicha(slug, () => { if (atual === slug) void renderAluno(slug, false); });
   $("taglink").textContent = "#m-" + slug;
   renderLista(slug);

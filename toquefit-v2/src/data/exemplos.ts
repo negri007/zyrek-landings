@@ -1,12 +1,14 @@
 // Alunos de exemplo para a apresentação: cada um mostra uma situação que o painel resolve
 // (constante e evoluindo, sumido, sentiu dor, ficha vencendo, ficha vencida). Nomes inventados.
-import type { Ficha, Registro } from "../conta";
+import type { Exemplos, Ficha, Registro } from "../conta";
 import { MODELOS } from "./modelos";
 
 const iso = (offset: number) => { const d = new Date(); d.setDate(d.getDate() + offset); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; };
 
 interface Perfil {
   nome: string; modelo: string; validade: number; obs?: string;
+  /** dias desde o cadastro (padrão 30) */
+  cadastro?: number;
   /** carga inicial por exercício (kg), na ordem dos itens de cada treino */
   cargas: Record<string, number[]>;
   /** dias atrás em que treinou, do mais antigo ao mais recente */
@@ -31,10 +33,13 @@ const PERFIS: Perfil[] = [
   { nome: "Beatriz Nunes", modelo: "circuito", validade: -5,
     cargas: { A: [50, 25, 10, 15, 25, 0] },
     dias: [-25, -21, -18, -14, -11, -7, -4], fim: { sensacao: "ok" } },
+  // aluno novo que ainda não veio: o primeiro mês é quando mais se desiste
+  { nome: "Lucas Andrade", modelo: "iniciante", validade: 38, cadastro: 4, obs: "Bem-vindo! Comece com cargas leves",
+    cargas: { A: [40, 8, 20, 15, 0], B: [15, 20, 4, 0, 0] }, dias: [] },
 ];
 
-export function alunosDeExemplo() {
-  return PERFIS.map((p) => {
+export function alunosDeExemplo(): Exemplos {
+  const alunos = PERFIS.map((p) => {
     const base = MODELOS.find((m) => m.id === p.modelo)!.ficha();
     const ficha: Ficha = { treinos: base.treinos, validade: iso(p.validade), obs: p.obs || "" };
     // carga prescrita = a inicial + o que o aluno evoluiu
@@ -56,8 +61,15 @@ export function alunosDeExemplo() {
       const ultimo = k === n - 1;
       return { data: iso(d), treino: t.id, itens, sensacao: ultimo ? p.fim?.sensacao ?? null : (["ok", "ok", "pesado", "leve"] as const)[k % 4], dor: ultimo ? !!p.fim?.dor : false };
     });
-    return { nome: p.nome, ficha, treinos };
+    return { nome: p.nome, ficha, treinos, diasCadastro: p.cadastro ?? 30 };
   });
+  return {
+    alunos,
+    problemas: [
+      { slug: "cadeira-flexora", tipo: "peca", quem: "Juliana", horasAtras: 3 },
+      { slug: "remada-baixa", tipo: "quebrado", quem: "Carla", horasAtras: 20 },
+    ],
+  };
 }
 
 /** quanto sobe a carga de cada vez: 1 kg em halteres leves, 5 kg em máquinas pesadas */

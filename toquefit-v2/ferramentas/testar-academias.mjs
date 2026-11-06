@@ -88,6 +88,7 @@ try {
 
   r = await chamar("POST", `/api/academias/${cod}/alunos/${id}/link`, { cab: I });
   conf("gera link novo", r.s === 200 && r.b.token !== token);
+  const tokenNovo = r.b.token;
   conf("link antigo deixa de funcionar", (await chamar("GET", `/api/academias/${cod}/eu`, { cab: A })).s === 401);
   conf("link novo funciona", (await chamar("GET", `/api/academias/${cod}/eu`, { cab: { "x-aluno": id, "x-token": r.b.token } })).s === 200);
 
@@ -96,10 +97,29 @@ try {
   conf("chave de outra academia = 401", (await chamar("GET", `/api/academias/${cod}`, { cab: { "x-chave": outra.chave } })).s === 401);
   conf("id fora do formato = 400", (await chamar("GET", `/api/academias/${cod}/alunos/..%2F..`, { cab: I })).s === 400);
 
+  // aparelhos com problema
+  const B = { cab: { "x-aluno": id, "x-token": tokenNovo } };
+  r = await chamar("POST", `/api/academias/${cod}/eu/problemas`, { ...B, body: { slug: "leg-press-45", tipo: "quebrado" } });
+  conf("aluno avisa problema no aparelho", r.s === 201 && r.b.problema.quem === "Ana" && r.b.problema.vezes === 1, JSON.stringify(r.b));
+  const pid = r.b.problema.id;
+  r = await chamar("POST", `/api/academias/${cod}/eu/problemas`, { ...B, body: { slug: "leg-press-45", tipo: "quebrado" } });
+  conf("o mesmo problema de novo só soma", r.s === 200 && r.b.problema.id === pid && r.b.problema.vezes === 2);
+  conf("tipo inválido = 400", (await chamar("POST", `/api/academias/${cod}/eu/problemas`, { ...B, body: { slug: "leg-press-45", tipo: "<x>" } })).s === 400);
+  conf("sem token não avisa", (await chamar("POST", `/api/academias/${cod}/eu/problemas`, { body: { slug: "leg-press-45", tipo: "quebrado" } })).s === 401);
+  conf("aluno não lista os problemas", (await chamar("GET", `/api/academias/${cod}/problemas`, { cab: { "x-chave": "2".repeat(32) } })).s === 401);
+  r = await chamar("POST", `/api/academias/${cod}/problemas`, { cab: I, body: { slug: "supino-reto", tipo: "limpeza" } });
+  conf("equipe registra problema", r.s === 201 && r.b.problema.quem === "Equipe");
+  r = await chamar("PATCH", `/api/academias/${cod}/problemas/${pid}`, { cab: I });
+  conf("resolve problema", r.s === 200 && r.b.problema.resolvido === true);
+  r = await chamar("GET", `/api/academias/${cod}/problemas`, { cab: I });
+  conf("lista: aberto primeiro, resolvido depois", r.b.problemas.length === 2 && !r.b.problemas[0].resolvido && r.b.problemas[1].resolvido);
+  conf("pid fora do formato = 400", (await chamar("PATCH", `/api/academias/${cod}/problemas/xyz`, { cab: I })).s === 400);
+
   const ontem = new Date(Date.now() - 3 * 3600e3 - 86400e3).toISOString().slice(0, 10);
   r = await chamar("POST", `/api/academias/${cod}/exemplo`, { cab: I, body: { alunos: [
     { nome: "Exemplo Um", ficha, treinos: [{ data: ontem, treino: "A", itens: { "A.0": { feito: true, cargas: ["20 kg"] } }, sensacao: "leve" }, { data: "2001-01-01", treino: "A", itens: {} }] },
-    { nome: "Exemplo Dois", ficha },
+    { nome: "Exemplo Dois", ficha, diasCadastro: 3 },
+  ], problemas: [{ slug: "remada-baixa", tipo: "peca", quem: "Carla", horasAtras: 5 }
   ] } });
   conf("cria alunos de exemplo", r.s === 201 && r.b.criados === 2);
   conf("exemplo de novo = 409", (await chamar("POST", `/api/academias/${cod}/exemplo`, { cab: I, body: { alunos: [{ nome: "X", ficha }] } })).s === 409);
@@ -107,7 +127,12 @@ try {
   r = await chamar("GET", `/api/academias/${cod}`, { cab: I });
   const ex1 = r.b.alunos.find((a) => a.nome === "Exemplo Um");
   conf("exemplo aparece marcado, com o treino de ontem e sem a data antiga", ex1?.exemplo === true && ex1.ultimo === ontem && ex1.semana === 1 && ex1.ultimoRetorno?.sensacao === "leve", JSON.stringify(ex1));
+  const ex2 = r.b.alunos.find((a) => a.nome === "Exemplo Dois");
+  conf("exemplo pode ser aluno novo (cadastrado há 3 dias)", ex2 && Date.now() - ex2.criado < 4 * 86400e3 && Date.now() - ex2.criado > 2 * 86400e3);
+  r = await chamar("GET", `/api/academias/${cod}/problemas`, { cab: I });
+  conf("problema de exemplo aparece", r.b.problemas.some((x) => x.exemplo && x.slug === "remada-baixa" && x.quem === "Carla"));
   r = await chamar("DELETE", `/api/academias/${cod}/exemplo`, { cab: I });
+  conf("apagar exemplos tira o problema de exemplo", !(await chamar("GET", `/api/academias/${cod}/problemas`, { cab: I })).b.problemas.some((x) => x.exemplo));
   conf("apaga só os exemplos", r.s === 200 && r.b.apagados === 2 && (await chamar("GET", `/api/academias/${cod}`, { cab: I })).b.alunos.length === 1);
 
   conf("apaga aluno",(await chamar("DELETE", `/api/academias/${cod}/alunos/${id}`, { cab: I })).s === 204);

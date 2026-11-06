@@ -7,6 +7,7 @@ import {
   type Item, type MeuTreino, type Registro, type Treino,
 } from "./conta";
 import { bySlug } from "./estado";
+import { ehRecorde, recordesNoMes, semanasSeguidas, treinosNoMes } from "./conquistas";
 import { icone } from "./ui/icones";
 import { $, RM, esc, toast } from "./ui/util";
 
@@ -68,6 +69,7 @@ export function renderMeuTreino(primeira = true) {
       ${sit.tipo === "vencida" ? `<p class="mt-aviso crit">Sua ficha venceu em ${dataCurta(ficha.validade)}. Fale com o instrutor para montar a próxima.</p>`
         : sit.tipo === "vence" ? `<p class="mt-aviso warn">Sua ficha vence em ${sit.dias === 0 ? "hoje" : sit.dias === 1 ? "1 dia" : sit.dias + " dias"}. Combine a troca com o instrutor.</p>`
         : ficha.validade ? `<p class="mt-val">Ficha válida até ${dataCurta(ficha.validade)}</p>` : ""}
+      ${conquistasHtml(m)}
       ${ficha.obs ? `<p class="mt-obs"><b>Recado do instrutor:</b> ${esc(ficha.obs)}</p>` : ""}
     </div>
     ${!t ? `<div class="mt-vazio"><p>Sua ficha ainda está vazia. O instrutor vai montar os treinos.</p></div>` : `
@@ -134,7 +136,7 @@ function itemHtml(t: Treino, i: number, it: Item, reg: Registro, treinos: Regist
   return `<li class="mt-it${feito ? " feito" : ""}${compacto ? " compacto" : ""}" data-k="${esc(k)}">
     ${compacto ? "" : `<span class="mt-n num" aria-hidden="true">${i + 1}</span>`}
     <div class="mt-c">
-      <b class="mt-ex">${esc(it.nome)}</b>
+      <b class="mt-ex">${esc(it.nome)}<span class="mt-rec"${r?.cargas[0] && ehRecorde(treinos, k, r.cargas[0]) ? "" : " hidden"}>Recorde</span></b>
       <span class="mt-l">${linha}</span>
       ${ult ? `<span class="mt-ult">Última vez: <b>${esc(ult.carga)}</b> em ${dataCurta(ult.data)}</span>` : ""}
       ${it.obs ? `<span class="mt-o">${esc(it.obs)}</span>` : ""}
@@ -159,7 +161,20 @@ function ligarItens(root: ParentNode, t: Treino, _reg: Registro, aoMudar?: () =>
       r.itens[k] = atual;
       r.treino = t.id;
       guardarRegistro(r);
+      avisarRecorde(atual.cargas[0]);
       return atual;
+    };
+    // carga acima de tudo o que o aluno já fez neste exercício: comemora uma vez
+    const avisarRecorde = (carga: string | undefined) => {
+      const treinos = meuTreinoSalvo()?.treinos || [];
+      const rec = !!carga && ehRecorde(treinos, k, carga);
+      const selo = li.querySelector<HTMLElement>(".mt-rec");
+      if (selo) selo.hidden = !rec;
+      if (rec && li.dataset.rec !== carga) {
+        li.dataset.rec = carga;
+        toast(`Novo recorde em ${it.nome}: ${carga}!`);
+        if (selo && !RM) animate(selo, { transform: ["scale(.4)", "scale(1)"], opacity: [0, 1] }, { type: "spring", bounce: 0.5, visualDuration: 0.4 });
+      }
     };
     inp.onchange = () => { gravarItem(); };
     inp.onkeydown = (e) => { if (e.key === "Enter") inp.blur(); };
@@ -188,6 +203,17 @@ function progresso(t: Treino) {
     toast("Treino completo! Conta como foi lá embaixo");
     if (!RM) animate("#mt-fim", { transform: ["scale(.98)", "scale(1)"] }, { type: "spring", bounce: 0.4, visualDuration: 0.4 });
   } else if (el && feitos < t.itens.length) el.dataset.fim = "";
+}
+
+/** sequência de semanas, treinos no mês e recordes: o aluno vê que está evoluindo */
+function conquistasHtml(m: MeuTreino) {
+  const seq = semanasSeguidas(m.treinos), mes = treinosNoMes(m.treinos), rec = recordesNoMes(m.treinos);
+  if (!seq && !mes) return "";
+  const item = (n: number, um: string, varios: string, destaque = false) => `<li${destaque ? ' class="on"' : ""}><b class="num">${n}</b><span>${n === 1 ? um : varios}</span></li>`;
+  return `<ul class="mt-conq" aria-label="Suas conquistas">
+    ${item(seq, "semana seguida treinando", "semanas seguidas treinando", seq >= 3)}
+    ${item(mes, "treino este mês", "treinos este mês")}
+    ${rec ? item(rec, "recorde de carga no mês", "recordes de carga no mês", true) : ""}</ul>`;
 }
 
 /** últimos treinos: o aluno vê a própria constância */

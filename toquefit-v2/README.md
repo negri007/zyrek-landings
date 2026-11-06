@@ -48,6 +48,15 @@ No painel, "Ativar área do aluno" cria a academia no servidor e guarda neste na
 - `npm run testar:api` também testa esta função (acesso, isolamento entre academias, limpeza das entradas, link novo, apagar).
 - Para a versão comercial com várias academias e login por e-mail ou WhatsApp, o próximo passo é um banco com login (ex.: Supabase).
 
+## Aparelho com problema, conquistas e retenção
+
+- **Aparelho com problema**: na página do aparelho, "Algo errado com este aparelho?" (quebrado, faltando peça, limpeza, outro). Com o aluno conectado vai para o servidor (`/api/academias/:cod/eu/problemas`, só o primeiro nome de quem avisou); sem área do aluno fica neste navegador. O painel mostra a lista em "Aparelhos com problema" e a equipe marca "Resolvido". O mesmo aviso repetido só soma; resolvidos somem depois de 14 dias.
+- **Conquistas do aluno** (`src/conquistas.ts`, calculadas no celular): semanas seguidas treinando, treinos no mês e recordes de carga. Carga acima de tudo o que o aluno já fez naquele exercício mostra "Recorde" e comemora.
+- **Primeiro mês**: aluno cadastrado há menos de 30 dias ganha a marca "1º mês"; quem está no 1º mês e não treinou na semana sobe na lista e vira alerta (é quando mais se desiste).
+- **Semana da academia**: treinos registrados nos últimos 7 dias e quantos alunos estão ativos.
+- **Falar com o aluno**: na ficha, mensagens prontas para o WhatsApp (sentimos sua falta, como está a dor, ficha nova, boas-vindas, parabéns), com a mais indicada em destaque. O telefone não é guardado: o WhatsApp pede o contato.
+- Os alunos de exemplo agora incluem um aluno novo que ainda não treinou e dois avisos de aparelho.
+
 ## Gravar as tags NFC
 
 Cada tag guarda o link do aparelho: `https://toquefit-demo.netlify.app/#m-<aparelho>` (o painel mostra o link e o QR na gaveta de cada aparelho, e "Imprimir etiquetas" gera a folha com os QR Codes).

@@ -8,6 +8,7 @@ import { icone } from "./ui/icones";
 import { linkDaTag, qrSvg } from "./ui/qr";
 import { instrutor, nomeAcademia } from "./conta";
 import { renderAlunos } from "./alunos";
+import { buscarProblemas, renderProblemas } from "./problemas";
 import { atendendo, atenderChamado, atualizarSalaJa, criarSala, linkDaSala, sairDaSala, salaAtual } from "./sala";
 
 const TOQUES_POR_ANILHA = 10;
@@ -57,6 +58,8 @@ function renderAoVivo() {
 export function renderPainel(animar: boolean) {
   renderAoVivo();
   renderAlunos(animar);
+  renderProblemas();
+  if (animar) void buscarProblemas();
   const today = DAILY[13] + S.extra;
   const week = DAILY.slice(7, 13).reduce((a, b) => a + b, 0) + today;
   const prevWeek = DAILY.slice(0, 7).reduce((a, b) => a + b, 0);

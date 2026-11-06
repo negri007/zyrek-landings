@@ -17,11 +17,11 @@ Fale do problema deles, não da tecnologia. Três dores que o ToqueFit resolve:
 1. **Tags**: grave 3 ou 4 tags com o app NFC Tools (Gravar → URL), uma por aparelho que a Red Dragon tem:
    `https://toquefit-demo.netlify.app/#m-leg-press-45` (troque o final: `supino-reto`, `puxada-frontal`, `cadeira-extensora`, `remada-baixa`, `cadeira-flexora`, `desenvolvimento`, `crossover`). Teste cada tag no seu celular.
 2. **Painel no notebook**: abra o link + `#painel` → "Ativar área do aluno" com o nome **Red Dragon**. A chave aparece aberta: **copie e guarde** (sem ela o painel não abre em outro navegador).
-3. Clique em **"Colocar alunos de exemplo"**: entram 5 alunos com 4 semanas de treino, um em cada situação (constante, sumido, sentiu dor, ficha vencendo, ficha vencida).
+3. Clique em **"Colocar alunos de exemplo"**: entram 6 alunos com 4 semanas de treino, um em cada situação (constante, sumido, sentiu dor, ficha vencendo, ficha vencida, aluno novo que ainda não veio), e 2 avisos de aparelho com problema.
 4. Cadastre **um aluno com o nome de cada dono** (modelo "Hipertrofia · ABC") e deixe os links prontos para mandar no WhatsApp na hora.
 5. Celular carregado, notebook na tomada, e teste o Wi-Fi do local. Sem Wi-Fi, use o 4G do celular para o notebook.
 
-## Roteiro da reunião (15 minutos)
+## Roteiro da reunião (17 minutos)
 
 | Tempo | O que fazer | O que dizer |
 |---|---|---|
@@ -30,6 +30,7 @@ Fale do problema deles, não da tecnologia. Três dores que o ToqueFit resolve:
 | 3 min | **Mande o link para o celular do dono** pelo WhatsApp. Ele abre "Meu treino" e vê a ficha dele. Peça para ele **encostar na tag**: aparece o exercício da ficha dele naquele aparelho. Ele anota a carga e marca "feito". | "Cada aluno tem a sua ficha. O instrutor monta em 1 minuto a partir de um modelo." |
 | 2 min | Peça para ele tocar em **"Chamar instrutor"**. No notebook, o chamado aparece com o nome dele. Clique em "Atendido" e o celular dele avisa. | "O instrutor não precisa ficar rodando a academia procurando quem precisa de ajuda." |
 | 4 min | **Painel**: mostre os alertas (sentiu dor, sumido, ficha vencendo), abra a ficha da "Carla Mendes" e mostre a **evolução de carga**. Mostre "Baixar planilha". | "Isso é retenção: vocês sabem quem está desanimando antes de cancelar." |
+| 2 min | **Aparelho com problema**: no celular, role a página do aparelho até "Algo errado com este aparelho?" e avise "Faltando peça". No notebook, aparece em "Aparelhos com problema". Mostre também, em "Meu treino", as **conquistas** (semanas seguidas e recordes) e, na ficha de um aluno, as **mensagens prontas de WhatsApp**. | "Aparelho parado sem ninguém saber vira reclamação no Google. Aqui o próprio aluno avisa." |
 | 1 min | Fechamento: proposta de **piloto** (abaixo). | — |
 
 **Se der errado**: sem internet, o celular do aluno guarda os treinos e envia depois. Se a tag não ler, abra a câmera no QR da etiqueta (botão "Imprimir etiquetas" no painel). Se o painel não abrir, use "Já tenho a chave" com o código e a chave que você guardou.

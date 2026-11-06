@@ -227,3 +227,33 @@ a.btn:not(.primary) { color: var(--ink) }
 .al-exemplo b { color: var(--muted) }
 .mt-instalar { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 14px; border-radius: var(--r-md); border: 1px dashed var(--edge-2); font-size: 13.5px; color: var(--ink-2) }
 .mbtn .mb-hoje { position: absolute; top: -8px; right: 10px; font: 700 10.5px/1 var(--body); letter-spacing: .04em; text-transform: uppercase; color: var(--neon-ink); background: var(--neon); padding: 4px 7px; border-radius: 999px }
+
+/* ---------- aparelho com problema ---------- */
+.prob { gap: 10px }
+.prob-abrir { display: inline-flex; align-items: center; gap: 8px; align-self: flex-start; min-height: 44px; padding: 0; border: 0; background: transparent; color: var(--muted); font-size: 14px; text-decoration: underline; text-underline-offset: .25em }
+.prob-abrir:hover { color: var(--ink) }
+.prob-abrir .ic { width: 18px; height: 18px }
+.prob-opcoes { display: flex; flex-wrap: wrap; gap: 8px }
+.calls .prob-it small::before { content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--warn); margin-right: 7px }
+.calls .prob-it.crit small::before { background: var(--crit); box-shadow: 0 0 8px var(--crit) }
+@media (min-width: 1100px) {
+  .agora { grid-template-columns: repeat(3, minmax(0, 1fr)) }
+}
+@media (min-width: 761px) and (max-width: 1099px) {
+  .agora { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) }
+  .agora .ag-col:nth-child(3) { grid-column: 1 / -1; border-left: 0; padding-left: 0; border-top: 1px solid var(--edge); padding-top: 18px }
+}
+
+/* ---------- conquistas do aluno ---------- */
+.mt-conq { list-style: none; margin: 6px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(96px, 1fr)); gap: 8px }
+.mt-conq li { display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; border-radius: var(--r-sm); background: rgba(255, 255, 255, .04); border: 1px solid var(--edge) }
+.mt-conq b { font: 820 24px/1 var(--display); color: var(--ink) }
+.mt-conq span { font-size: 12px; line-height: 1.3; color: var(--muted) }
+.mt-conq li.on { border-color: rgba(243, 255, 44, .45); background: var(--neon-soft) }
+.mt-conq li.on b { color: var(--neon) }
+.mt-rec { display: inline-block; margin-left: 8px; vertical-align: 2px; font: 700 10.5px/1 var(--body); letter-spacing: .05em; text-transform: uppercase; color: var(--neon-ink); background: var(--neon); padding: 4px 7px; border-radius: 999px }
+
+/* ---------- painel: semana e mensagens ---------- */
+.al-semana { margin: 0; display: flex; flex-wrap: wrap; gap: 6px 22px; font-size: 13.5px; color: var(--muted) }
+.al-semana b { font: 800 17px/1 var(--display); color: var(--ink); margin-right: 3px }
+.ed-wa .btn { white-space: nowrap }

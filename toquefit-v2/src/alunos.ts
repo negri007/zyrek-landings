@@ -8,6 +8,7 @@ import {
 } from "./conta";
 import { LIVRES, MODELOS, fichaVazia } from "./data/modelos";
 import { S } from "./estado";
+import { buscarProblemas } from "./problemas";
 import { icone } from "./ui/icones";
 import { qrSvg } from "./ui/qr";
 import { $, RM, esc, toast } from "./ui/util";
@@ -39,8 +40,10 @@ export function renderAlunos(buscar = true) {
       <dl><dt>Código</dt><dd><code>${esc(s.cod)}</code></dd><dt>Chave do instrutor</dt><dd><code>${esc(s.chave)}</code></dd></dl>
       <p class="hint">Quem tem a chave vê e edita todos os alunos. Não mande para alunos.</p>
       <div class="acts"><button class="btn sm" type="button" id="al-copiar">Copiar código e chave</button><button class="btn sm perigo" type="button" id="al-sair">Desconectar este computador</button></div></div>` : ""}
-    ${alertas && (alertas.vence + alertas.sumido + alertas.dor) ? `<ul class="al-alertas" aria-label="Precisa de atenção">
+    ${lista?.length ? resumoSemana(lista) : ""}
+    ${alertas && (alertas.vence + alertas.sumido + alertas.dor + alertas.novos) ? `<ul class="al-alertas" aria-label="Precisa de atenção">
       ${alertas.dor ? `<li class="crit"><b class="num">${alertas.dor}</b> ${alertas.dor > 1 ? "sentiram" : "sentiu"} dor no último treino</li>` : ""}
+      ${alertas.novos ? `<li class="warn"><b class="num">${alertas.novos}</b> no 1º mês sem treinar esta semana</li>` : ""}
       ${alertas.sumido ? `<li class="warn"><b class="num">${alertas.sumido}</b> sem treinar há 7 dias ou mais</li>` : ""}
       ${alertas.vence ? `<li class="warn"><b class="num">${alertas.vence}</b> ${alertas.vence > 1 ? "fichas vencidas ou vencendo" : "ficha vencida ou vencendo"} em 7 dias</li>` : ""}
     </ul>` : ""}
@@ -48,7 +51,7 @@ export function renderAlunos(buscar = true) {
     <div id="al-lista" aria-live="polite">${listaHtml()}</div>
     ${lista ? `<div class="al-exemplo">${temExemplo
       ? `<span>Os alunos marcados como <b>Exemplo</b> são de demonstração.</span><button class="btn sm" type="button" id="al-ex-tirar">Apagar alunos de exemplo</button>`
-      : `<span>Vai apresentar? Coloque 5 alunos de exemplo com 4 semanas de treino para mostrar os alertas e a evolução de carga.</span><button class="btn sm" type="button" id="al-ex-por">Colocar alunos de exemplo</button>`}</div>` : ""}`;
+      : `<span>Vai apresentar? Coloque 6 alunos de exemplo com 4 semanas de treino e 2 avisos de aparelho para mostrar os alertas e a evolução de carga.</span><button class="btn sm" type="button" id="al-ex-por">Colocar alunos de exemplo</button>`}</div>` : ""}`;
   const assinatura = s.cod + "|" + html;
   if (el.dataset.modo === "lista" && el.dataset.assin === assinatura) return;
   // o campo de busca não perde o foco quando a lista se atualiza
@@ -83,10 +86,12 @@ async function exemplos(por: boolean, bt: HTMLButtonElement) {
     if (por) {
       const { alunosDeExemplo } = await import("./data/exemplos");
       await criarExemplos(alunosDeExemplo());
-      toast("5 alunos de exemplo no painel. Abra a ficha de cada um");
+      toast("Alunos de exemplo no painel. Abra a ficha de cada um");
+      void buscarProblemas();
     } else {
       const r = await apagarExemplos();
       toast(`${r.apagados} alunos de exemplo apagados`);
+      void buscarProblemas();
     }
     await recarregar(true);
   } catch (e) { toast((e as Error).message); bt.disabled = false; bt.textContent = por ? "Colocar alunos de exemplo" : "Apagar alunos de exemplo"; }
@@ -97,21 +102,34 @@ async function exemplos(por: boolean, bt: HTMLButtonElement) {
 function prioridade(a: ResumoAluno) {
   const sit = situacaoFicha(a.validade);
   if (a.ultimoRetorno?.dor && a.ultimoRetorno.data === a.ultimo) return 0;
-  if (sit.tipo === "vencida") return 1;
-  if (diasSem(a) >= 7) return 2;
-  if (sit.tipo === "vence") return 3;
-  return 4;
+  if (novoParado(a)) return 1;
+  if (sit.tipo === "vencida") return 2;
+  if (diasSem(a) >= 7) return 3;
+  if (sit.tipo === "vence") return 4;
+  return 5;
+}
+
+/** primeiro mês de academia: é quando mais se desiste */
+const primeiroMes = (a: ResumoAluno) => Date.now() - a.criado < 30 * 86400e3;
+const novoParado = (a: ResumoAluno) => primeiroMes(a) && a.semana === 0;
+
+/** a semana da academia numa linha: treinos registrados e quantos alunos estão ativos */
+function resumoSemana(l: ResumoAluno[]) {
+  const treinos = l.reduce((s, a) => s + a.semana, 0), ativos = l.filter((a) => a.semana > 0).length;
+  const pct = Math.round((ativos / l.length) * 100);
+  return `<p class="al-semana"><span><b class="num">${treinos}</b> ${treinos === 1 ? "treino registrado" : "treinos registrados"} nos últimos 7 dias</span><span><b class="num">${ativos} de ${l.length}</b> alunos ativos (${pct}%)</span></p>`;
 }
 
 function contarAlertas(l: ResumoAluno[]) {
-  let vence = 0, sumido = 0, dor = 0;
+  let vence = 0, sumido = 0, dor = 0, novos = 0;
   for (const a of l) {
+    if (novoParado(a)) novos++;
     const sit = situacaoFicha(a.validade);
     if (sit.tipo === "vencida" || sit.tipo === "vence") vence++;
     if (diasSem(a) >= 7) sumido++;
     if (a.ultimoRetorno?.dor && a.ultimoRetorno.data === a.ultimo) dor++;
   }
-  return { vence, sumido, dor };
+  return { vence, sumido, dor, novos };
 }
 /** dias desde o último treino (ou desde o cadastro, para quem nunca treinou) */
 function diasSem(a: ResumoAluno) {
@@ -135,11 +153,12 @@ function listaHtml() {
     const r = a.ultimoRetorno && a.ultimoRetorno.data === a.ultimo ? a.ultimoRetorno : null;
     return `<li><button type="button" class="al-it" data-al="${esc(a.id)}" aria-label="Abrir ficha de ${esc(a.nome)}">
       <span class="al-av" aria-hidden="true">${esc(iniciais(a.nome))}</span>
-      <span class="al-nome"><b>${esc(a.nome)}</b><small class="${parado >= 7 ? "warn" : ""}">${a.ultimo ? "Treinou: " + quando(a.ultimo).toLowerCase() : "Ainda não treinou"}</small></span>
+      <span class="al-nome"><b>${esc(a.nome)}</b><small class="${parado >= 7 || novoParado(a) ? "warn" : ""}">${a.ultimo ? "Treinou: " + quando(a.ultimo).toLowerCase() : "Ainda não treinou"}</small></span>
       <span class="al-sem"><span class="num"><b>${a.semana}</b> de ${prev}</span><small>treinos na semana</small><i class="al-barra" aria-hidden="true"><i style="transform:scaleX(${Math.min(1, a.semana / prev).toFixed(3)})"></i></i></span>
       <span class="al-tags">
         ${sit.tipo === "vencida" ? `<span class="pill crit">Ficha vencida</span>` : sit.tipo === "vence" ? `<span class="pill no">Vence ${sit.dias === 0 ? "hoje" : "em " + sit.dias + "d"}</span>` : sit.tipo === "ok" ? `<span class="pill ok">Até ${dataCurta(a.validade)}</span>` : ""}
         ${r?.dor ? `<span class="pill crit">Sentiu dor</span>` : r?.sensacao === "pesado" ? `<span class="pill no">Achou pesado</span>` : r?.sensacao === "leve" ? `<span class="pill neon">Achou leve</span>` : ""}
+        ${primeiroMes(a) ? `<span class="pill neon">1º mês</span>` : ""}
         ${a.exemplo ? `<span class="pill ex">Exemplo</span>` : ""}
       </span>
       <span class="al-ir" aria-hidden="true">Ficha ›</span></button></li>`;
@@ -194,7 +213,7 @@ async function recarregar(forcar = false) {
 let relogio = 0;
 export function vigiarAlunos(ligado: boolean) {
   clearInterval(relogio);
-  if (ligado) relogio = window.setInterval(() => { if (!document.hidden && instrutor() && !editorAberto) void recarregar(); }, 15000);
+  if (ligado) relogio = window.setInterval(() => { if (!document.hidden && instrutor() && !editorAberto) { void recarregar(); void buscarProblemas(); } }, 15000);
 }
 
 function semAcademia(el: HTMLElement) {
@@ -398,6 +417,7 @@ function desenharEditor(foco?: string) {
   $("ed-b").innerHTML = `
     <div class="f"><label for="ed-nome">Nome do aluno</label><input type="text" id="ed-nome" autocomplete="off" maxlength="60" value="${esc(ed.nome)}" placeholder="Nome e sobrenome"><span class="hint">Só o nome: a ficha não pede CPF, telefone nem dados de saúde.</span></div>
     ${novo ? "" : historicoHtml()}
+    ${novo ? "" : falarHtml()}
     <div class="ed-linha">
       <div class="f"><label for="ed-modelo">Começar de um modelo</label><select id="ed-modelo"><option value="">Escolha um modelo…</option><optgroup label="Modelos">${MODELOS.map((m) => `<option value="${m.id}">${esc(m.nome)} · ${esc(m.desc)}</option>`).join("")}</optgroup>${outros.length ? `<optgroup label="Copiar a ficha de um aluno">${outros.map((a) => `<option value="a:${esc(a.id)}">${esc(a.nome)}</option>`).join("")}</optgroup>` : ""}</select></div>
       <div class="f"><label for="ed-val">Ficha válida até</label><input type="date" id="ed-val" value="${esc(ed.ficha.validade)}"></div>
@@ -544,6 +564,29 @@ function mostrarLink(id: string, nome: string, token: string, novo: boolean) {
   $("ed-copiar").onclick = () => copiar(link, "Link copiado");
   $("ed-ok").onclick = fecharEditor;
   $("ed-ok").focus();
+}
+
+/** mensagens prontas para o WhatsApp: o instrutor puxa o aluno de volta com um toque */
+function falarHtml() {
+  if (!ed?.id) return "";
+  const a = lista?.find((x) => x.id === ed!.id);
+  const nome = ed.nome.trim().split(/\s+/)[0], academia = instrutor()?.nome || "academia";
+  const sit = a ? situacaoFicha(a.validade) : null;
+  const msgs = [
+    { id: "falta", rotulo: "Sentimos sua falta", sugerida: !!a && diasSem(a) >= 7,
+      texto: `Oi, ${nome}! Sentimos sua falta aqui na ${academia}. Está tudo bem? Se a rotina apertou, me fala que eu ajusto sua ficha para caber no seu tempo.` },
+    { id: "dor", rotulo: "Como está a dor?", sugerida: !!a?.ultimoRetorno?.dor,
+      texto: `Oi, ${nome}, vi que você sentiu um desconforto no último treino. Como você está? Antes do próximo treino, me procura que eu ajusto os exercícios.` },
+    { id: "ficha", rotulo: "Ficha nova", sugerida: sit?.tipo === "vencida" || sit?.tipo === "vence",
+      texto: `Oi, ${nome}! Sua ficha de treino está chegando ao fim. Vamos marcar um horário para eu montar a próxima?` },
+    { id: "boas", rotulo: "Boas-vindas", sugerida: !!a && primeiroMes(a) && a.semana === 0,
+      texto: `Bem-vindo(a) à ${academia}, ${nome}! Sua ficha já está no seu celular. Na academia, encoste o celular na tag de cada aparelho para ver as séries, a carga e o vídeo. Qualquer dúvida, é só chamar.` },
+    { id: "parabens", rotulo: "Parabéns", sugerida: false,
+      texto: `Parabéns, ${nome}! Vi aqui que você está mantendo os treinos e subindo as cargas. Continua assim!` },
+  ];
+  return `<section class="ed-sec"><h3>Falar com o aluno <small>abre o WhatsApp com a mensagem pronta</small></h3>
+    <div class="acts ed-wa">${msgs.map((m) => `<a class="btn sm${m.sugerida ? " primary" : ""}" href="https://wa.me/?text=${encodeURIComponent(m.texto)}" target="_blank" rel="noopener">${esc(m.rotulo)}${m.sugerida ? " · sugerida" : ""}</a>`).join("")}</div>
+    <p class="hint">O ToqueFit não guarda o telefone do aluno: o WhatsApp pede para escolher o contato.</p></section>`;
 }
 
 /** últimos treinos e a carga de cada exercício ao longo do tempo */

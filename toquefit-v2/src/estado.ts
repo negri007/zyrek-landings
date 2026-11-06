@@ -23,6 +23,8 @@ export interface Estado {
   dia: string;
   /** por que o vídeo não ajudou, contado por motivo */
   motivos: Record<string, number>;
+  /** aparelhos com problema avisados neste navegador (demonstração sem área do aluno) */
+  problemas: import("./conta").Problema[];
 }
 
 export const CHAVE = "toquefit-demo-v2";
@@ -44,6 +46,7 @@ export function fresh(): Estado {
     calls: DADOS.chamados.map((c) => ({ id: c.id, slug: c.slug, at: now - c.minutosAtras * 60e3, done: c.atendido })),
     nextTag: ms.length + 1, nextCall: Math.max(...DADOS.chamados.map((c) => c.id)) + 1,
     dia: hojeISO(), fins: {}, series: {}, motivos: { ...DADOS.avaliacoes.motivos },
+    problemas: [{ id: "ex1", slug: "cadeira-flexora", tipo: "peca", at: now - 50 * 60e3, ultimoEm: now - 20 * 60e3, vezes: 2, quem: "Aluno", resolvido: false }],
   };
 }
 
@@ -58,6 +61,7 @@ function load(): Estado | null {
     e.fins ||= {};
     e.series ||= {};
     e.motivos ||= { ...DADOS.avaliacoes.motivos };
+    e.problemas ||= [];
     // virou o dia: séries, vídeos completos e toques de hoje começam do zero
     if (e.dia !== hojeISO()) { e.dia = hojeISO(); e.fins = {}; e.series = {}; e.extra = 0; }
     return e;

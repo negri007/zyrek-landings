@@ -17,6 +17,10 @@
 //   PUT    /api/academias/:cod/eu/treinos/:data      aluno   { treino, itens, sensacao, dor } registra o dia
 //   POST   /api/academias/:cod/exemplo               instr.  { alunos: [{ nome, ficha, treinos }] } alunos de exemplo com histórico
 //   DELETE /api/academias/:cod/exemplo               instr.  apaga só os alunos de exemplo
+//   POST   /api/academias/:cod/eu/problemas          aluno   { slug, tipo } avisa que o aparelho está com problema
+//   GET    /api/academias/:cod/problemas             instr.  aparelhos com problema (abertos e resolvidos há pouco)
+//   POST   /api/academias/:cod/problemas             instr.  { slug, tipo } a equipe registra um problema
+//   PATCH  /api/academias/:cod/problemas/:pid        instr.  marca como resolvido
 import { getStore } from "@netlify/blobs";
 
 const COD = /^[A-Z0-9]{6}$/;
@@ -27,6 +31,9 @@ const SLUG = /^[a-z0-9-]{1,48}$/;
 const LETRAS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 const MAX_ALUNOS = 300;
 const DIAS_HISTORICO = 42;
+const PID = /^[a-f0-9]{16}$/;
+const TIPOS = ["quebrado", "peca", "limpeza", "outro"];
+const MAX_PROBLEMAS = 60;
 
 const sem = { "cache-control": "no-store" };
 const json = (body, status = 200) => Response.json(body, { status, headers: sem });
@@ -151,6 +158,39 @@ export default async (req, context) => {
     return lista.filter(Boolean);
   };
 
+  /* ---------- aparelhos com problema: o aluno avisa pela tag, a equipe resolve ---------- */
+  const prefProblemas = cod + "/problemas/";
+  const listarProblemas = async () => {
+    const { blobs } = await store.list({ prefix: prefProblemas });
+    const todos = (await Promise.all(blobs.map((b) => store.get(b.key, { type: "json" })))).filter(Boolean);
+    // resolvido há mais de 14 dias sai da lista (e do armazenamento)
+    const velho = Date.now() - 14 * 86400e3;
+    const vivos = [];
+    for (const pr of todos) {
+      if (pr.resolvido && pr.resolvidoEm < velho) await store.delete(prefProblemas + pr.id);
+      else vivos.push(pr);
+    }
+    return vivos.sort((a, b) => Number(a.resolvido) - Number(b.resolvido) || b.at - a.at);
+  };
+  const registrarProblema = async (b, quem, exemplo = false, at = Date.now()) => {
+    const slug = typeof b?.slug === "string" && SLUG.test(b.slug) ? b.slug : null;
+    const tipo = TIPOS.includes(b?.tipo) ? b.tipo : null;
+    if (!slug || !tipo) return erro("Aparelho ou tipo de problema inválido");
+    const abertos = (await listarProblemas()).filter((x) => !x.resolvido);
+    // o mesmo problema avisado de novo só soma: a lista não enche de repetidos
+    const igualAberto = abertos.find((x) => x.slug === slug && x.tipo === tipo);
+    if (igualAberto) {
+      igualAberto.vezes = (igualAberto.vezes || 1) + 1;
+      igualAberto.ultimoEm = at;
+      await store.setJSON(prefProblemas + igualAberto.id, igualAberto);
+      return json({ problema: igualAberto });
+    }
+    if (abertos.length >= MAX_PROBLEMAS) return erro("Muitos problemas abertos: resolva alguns no painel", 429);
+    const pr = { id: hex(8), slug, tipo, at, ultimoEm: at, vezes: 1, quem: texto(quem, 40), resolvido: false, ...(exemplo ? { exemplo: true } : {}) };
+    await store.setJSON(prefProblemas + pr.id, pr, { onlyIfNew: true });
+    return json({ problema: pr }, 201);
+  };
+
   /* ---------- aluno: o próprio celular ---------- */
   if (partes[3] === "eu") {
     const idA = req.headers.get("x-aluno") || "", token = req.headers.get("x-token") || "";
@@ -171,6 +211,10 @@ export default async (req, context) => {
       else if (antes?.data === data) await store.delete(chaveRetorno(idA));
       return json({ treino: t });
     }
+    if (req.method === "POST" && partes[4] === "problemas" && partes.length === 5) {
+      // só o primeiro nome: o painel mostra quem avisou, sem expor o nome completo
+      return registrarProblema(await corpo(), aluno.nome.trim().split(/\s+/)[0]);
+    }
     return erro("Método não suportado", 405);
   }
 
@@ -187,6 +231,21 @@ export default async (req, context) => {
     return json({ academia: { cod, nome: meta.nome }, alunos: resumos, hoje: hojeBR() });
   }
 
+  if (partes[3] === "problemas") {
+    const { pid } = context.params;
+    if (!pid && partes.length === 4) {
+      if (req.method === "GET") return json({ problemas: await listarProblemas() });
+      if (req.method === "POST") return registrarProblema(await corpo(), "Equipe");
+      return erro("Método não suportado", 405);
+    }
+    if (!pid || !PID.test(pid)) return erro("Problema inválido");
+    if (req.method !== "PATCH") return erro("Método não suportado", 405);
+    const pr = await store.get(prefProblemas + pid, { type: "json" });
+    if (!pr) return erro("Problema não encontrado", 404);
+    if (!pr.resolvido) { pr.resolvido = true; pr.resolvidoEm = Date.now(); await store.setJSON(prefProblemas + pid, pr); }
+    return json({ problema: pr });
+  }
+
   /* ---------- alunos de exemplo: o painel não começa vazio na apresentação ---------- */
   const apagarTudoDe = async (i) => {
     const { blobs } = await store.list({ prefix: prefTreinos(i) });
@@ -200,6 +259,8 @@ export default async (req, context) => {
     if (req.method === "DELETE") {
       const ex = todos.filter((a) => a.exemplo);
       await Promise.all(ex.map((a) => apagarTudoDe(a.id)));
+      const prs = (await listarProblemas()).filter((x) => x.exemplo);
+      await Promise.all(prs.map((x) => store.delete(prefProblemas + x.id)));
       return json({ apagados: ex.length });
     }
     if (req.method !== "POST") return erro("Método não suportado", 405);
@@ -213,7 +274,9 @@ export default async (req, context) => {
       const nome = texto(e?.nome, 60);
       if (!nome) continue;
       // exemplo não tem link: ninguém entra como esse aluno (o token aleatório nem é devolvido)
-      const aluno = { id: hex(6), nome, token: await hash(hex(16)), criado: agora - 30 * 86400e3, atualizado: agora, ficha: limparFicha(e?.ficha), exemplo: true };
+      // dias desde o cadastro: um exemplo pode ser aluno novo (primeiro mês é quando mais se cancela)
+      const dias = inteiro(e?.diasCadastro, 1, DIAS_HISTORICO, 30);
+      const aluno = { id: hex(6), nome, token: await hash(hex(16)), criado: agora - dias * 86400e3, atualizado: agora, ficha: limparFicha(e?.ficha), exemplo: true };
       await store.setJSON(chaveAluno(aluno.id), aluno, { onlyIfNew: true });
       const treinos = (Array.isArray(e?.treinos) ? e.treinos.slice(0, 30) : [])
         .filter((t) => typeof t?.data === "string" && DATA.test(t.data) && t.data >= limite && t.data <= diasAtras(-1));
@@ -225,6 +288,9 @@ export default async (req, context) => {
       }
       if (ultimo && (ultimo.sensacao || ultimo.dor)) await store.setJSON(chaveRetorno(aluno.id), { data: ultimo.data, sensacao: ultimo.sensacao, dor: ultimo.dor });
     }
+    // aparelhos com problema de exemplo
+    const prs = Array.isArray(b?.problemas) ? b.problemas.slice(0, 5) : [];
+    for (const pr of prs) await registrarProblema(pr, texto(pr?.quem, 40) || "Aluno", true, agora - inteiro(pr?.horasAtras, 0, 240, 1) * 3600e3);
     return json({ criados: entrada.length }, 201);
   }
 
@@ -287,9 +353,12 @@ export const config = {
     "/api/academias/:cod/alunos/:id/link",
     "/api/academias/:cod/eu",
     "/api/academias/:cod/exemplo",
+    "/api/academias/:cod/eu/problemas",
+    "/api/academias/:cod/problemas",
+    "/api/academias/:cod/problemas/:pid",
     "/api/academias/:cod/eu/treinos/:data",
   ],
-  method: ["GET", "POST", "PUT", "DELETE"],
+  method: ["GET", "POST", "PUT", "PATCH", "DELETE"],
   // vários celulares no mesmo Wi-Fi da academia saem pelo mesmo IP: o limite é por rede, não por aparelho
   rateLimit: { action: "rate_limit", aggregateBy: ["ip", "domain"], windowSize: 60, windowLimit: 400 },
 };

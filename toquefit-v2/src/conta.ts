@@ -110,14 +110,35 @@ export async function apagarAluno(id: string) {
   return pedir<void>(`${base}/alunos/${id}`, { method: "DELETE" }, cab);
 }
 /** alunos de exemplo com histórico, para o painel não começar vazio na apresentação */
-export async function criarExemplos(alunos: { nome: string; ficha: Ficha; treinos: Registro[] }[]) {
+export interface Exemplos {
+  alunos: { nome: string; ficha: Ficha; treinos: Registro[]; diasCadastro?: number }[];
+  problemas?: { slug: string; tipo: TipoProblema; quem: string; horasAtras: number }[];
+}
+export async function criarExemplos(dados: Exemplos) {
   const { base, cab } = doInstrutor();
-  return pedir<{ criados: number }>(`${base}/exemplo`, { method: "POST", body: corpo({ alunos }) }, cab);
+  return pedir<{ criados: number }>(`${base}/exemplo`, { method: "POST", body: corpo(dados) }, cab);
 }
 export async function apagarExemplos() {
   const { base, cab } = doInstrutor();
   return pedir<{ apagados: number }>(`${base}/exemplo`, { method: "DELETE" }, cab);
 }
+/* ---------- aparelhos com problema ---------- */
+export type TipoProblema = "quebrado" | "peca" | "limpeza" | "outro";
+export interface Problema { id: string; slug: string; tipo: TipoProblema; at: number; ultimoEm: number; vezes: number; quem: string; resolvido: boolean; resolvidoEm?: number; exemplo?: boolean }
+export async function avisarProblema(slug: string, tipo: TipoProblema) {
+  const s = aluno();
+  if (!s) throw new Error("Sem aluno conectado");
+  return pedir<{ problema: Problema }>(`/api/academias/${s.cod}/eu/problemas`, { method: "POST", body: corpo({ slug, tipo }) }, { "x-aluno": s.id, "x-token": s.token });
+}
+export async function listarProblemas() {
+  const { base, cab } = doInstrutor();
+  return pedir<{ problemas: Problema[] }>(`${base}/problemas`, {}, cab);
+}
+export async function resolverProblema(pid: string) {
+  const { base, cab } = doInstrutor();
+  return pedir<{ problema: Problema }>(`${base}/problemas/${pid}`, { method: "PATCH" }, cab);
+}
+
 export async function novoLink(id: string) {
   const { base, cab } = doInstrutor();
   return pedir<{ token: string }>(`${base}/alunos/${id}/link`, { method: "POST" }, cab);

@@ -79,6 +79,10 @@ $("app").innerHTML = `
         <ul class="calls" id="calls" aria-live="polite"></ul>
       </div>
       <div class="ag-col">
+        <div class="card-h"><h2>Aparelhos com problema</h2><span id="pcount"></span></div>
+        <ul class="calls probs" id="probs" aria-live="polite"></ul>
+      </div>
+      <div class="ag-col">
         <div class="card-h"><h2>Aparelhos sem vídeo</h2><span id="vcount"></span></div>
         <ul class="calls pend" id="pend"></ul>
       </div>
